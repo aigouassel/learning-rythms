@@ -1,4 +1,4 @@
-import { moduleByNumber } from '@rythmes/content'
+import { MODULES, moduleByNumber, type Module as ModuleDuCours } from '@rythmes/content'
 import { useEffect, useState } from 'react'
 import { Carte } from './Carte'
 import { Module } from './modules/Module'
@@ -16,6 +16,22 @@ function moduleDuFragment(): number | null {
   return m ? Number(m[1]) : null
 }
 
+/**
+ * Le module qui précède et celui qui suit, dans l'ordre du sommaire.
+ *
+ * L'ordre de lecture n'est pas le graphe des prérequis : les modules 5 et 6
+ * sont indépendants l'un de l'autre, mais un livre les imprime quand même
+ * l'un après l'autre. `MODULES` porte déjà cet ordre — on s'y tient, plutôt
+ * que d'inventer un parcours que le sommaire ne montrerait pas.
+ */
+function voisins(numero: number) {
+  const i = MODULES.findIndex((m) => m.number === numero)
+  return {
+    precedent: (i > 0 ? MODULES[i - 1] : null) ?? null,
+    suivant: (i >= 0 ? MODULES[i + 1] : null) ?? null,
+  }
+}
+
 export function App() {
   const [numero, setNumero] = useState<number | null>(moduleDuFragment)
 
@@ -28,37 +44,114 @@ export function App() {
   const ouvrir = (n: number | null) => {
     window.location.hash = n === null ? '' : `module-${n}`
     setNumero(n)
+    // Sans ça, on arrive au module suivant à la hauteur où on a quitté le
+    // précédent — c'est-à-dire tout en bas, sur ses exercices.
+    window.scrollTo({ top: 0 })
   }
 
   const module = numero === null ? null : moduleByNumber(numero)
 
+  if (!module) {
+    return (
+      <main className="carte-page">
+        <header>
+          <h1>Rythmes</h1>
+          <p className="resume">
+            Un cours de rythme en neuf étapes. Il part de ce que l’oreille sait
+            déjà pour construire ce qui manque : les mots, puis la notation,
+            puis de quoi écrire soi-même.
+          </p>
+        </header>
+        <Carte onOuvrir={ouvrir} />
+      </main>
+    )
+  }
+
+  const { precedent, suivant } = voisins(module.number)
+
   return (
-    <main className={module ? '' : 'carte-page'}>
-      {module ? (
-        <>
-          <header>
-            <button type="button" className="retour" onClick={() => ouvrir(null)}>
-              ← tous les modules
-            </button>
-            <p className="fil">Module {module.number}</p>
-            <h1>{module.title}</h1>
-            <p className="resume">{module.summary}</p>
-          </header>
-          <Module module={module} />
-        </>
-      ) : (
-        <>
-          <header>
-            <h1>Rythmes</h1>
-            <p className="resume">
-              Un cours de rythme en neuf étapes. Il part de ce que l’oreille sait
-              déjà pour construire ce qui manque : les mots, puis la notation,
-              puis de quoi écrire soi-même.
-            </p>
-          </header>
-          <Carte onOuvrir={ouvrir} />
-        </>
-      )}
+    <main className="module-page">
+      <nav className="barre" aria-label="Navigation du cours">
+        <button type="button" className="retour" onClick={() => ouvrir(null)}>
+          <span aria-hidden="true">←</span> Tous les modules
+        </button>
+        <span className="position">
+          Module {module.number} sur {MODULES[MODULES.length - 1]!.number}
+        </span>
+        <span className="voisins">
+          <Fleche sens="avant" module={precedent} onOuvrir={ouvrir} />
+          <Fleche sens="apres" module={suivant} onOuvrir={ouvrir} />
+        </span>
+      </nav>
+
+      <header>
+        <p className="fil">Module {module.number}</p>
+        <h1>{module.title}</h1>
+        <p className="resume">{module.summary}</p>
+      </header>
+
+      <Module module={module} />
+
+      <nav className="suite" aria-label="Module suivant">
+        <Voisin sens="avant" module={precedent} onOuvrir={ouvrir} />
+        <Voisin sens="apres" module={suivant} onOuvrir={ouvrir} />
+      </nav>
     </main>
+  )
+}
+
+/** La flèche compacte de la barre : elle nomme sa cible sans l'afficher. */
+function Fleche({
+  sens,
+  module,
+  onOuvrir,
+}: {
+  readonly sens: 'avant' | 'apres'
+  readonly module: ModuleDuCours | null
+  readonly onOuvrir: (n: number) => void
+}) {
+  const libelle = sens === 'avant' ? 'Module précédent' : 'Module suivant'
+  return (
+    <button
+      type="button"
+      className="fleche"
+      disabled={module === null}
+      title={module ? `${libelle} : ${module.title}` : libelle}
+      aria-label={module ? `${libelle} : ${module.title}` : libelle}
+      onClick={() => module && onOuvrir(module.number)}
+    >
+      {sens === 'avant' ? '←' : '→'}
+    </button>
+  )
+}
+
+/**
+ * Le passage en pied de page.
+ *
+ * Il nomme sa cible, contrairement à la flèche de la barre : arrivée au bout
+ * d'une leçon, la question n'est pas « où puis-je aller » mais « qu'est-ce qui
+ * vient ensuite » — et le titre y répond mieux qu'un numéro.
+ */
+function Voisin({
+  sens,
+  module,
+  onOuvrir,
+}: {
+  readonly sens: 'avant' | 'apres'
+  readonly module: ModuleDuCours | null
+  readonly onOuvrir: (n: number) => void
+}) {
+  // La case vide garde le suivant à droite quand il n'y a pas de précédent.
+  if (!module) return <span className={`voisin vide ${sens}`} />
+
+  return (
+    <button type="button" className={`voisin ${sens}`} onClick={() => onOuvrir(module.number)}>
+      <span className="sens">
+        {sens === 'avant' ? '← Précédent' : 'Suivant →'}
+      </span>
+      <span className="titre">
+        {module.number}. {module.title}
+      </span>
+    </button>
   )
 }

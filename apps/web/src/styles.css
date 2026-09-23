@@ -14,14 +14,75 @@ body {
   color: var(--encre);
 }
 
-/* La page occupe l'écran. La prose, elle, garde sa propre largeur de lecture
-   (voir `.lecon`) : élargir le cadre ne rend pas les lignes moins lisibles, ça
-   laisse seulement respirer ce qui gagne à être large — la carte, les portées
-   longues, les grilles de saisie. */
+/* Deux colonnes nommées, une seule fois.
+
+   La tension de cette application : la prose veut 46 rem (au-delà, l'œil perd
+   la ligne en revenant à la marge) et les portées veulent tout ce qu'on peut
+   leur donner. On ne tranche pas — on déclare les deux largeurs, centrées l'une
+   dans l'autre, et chaque élément choisit la sienne.
+
+   Les marges sont des `1fr` nus : elles n'ont plus à garantir la gouttière,
+   c'est le `padding` de la page qui s'en charge. Sans ça, un exemple qui
+   s'étend d'un bord à l'autre viendrait coller son cadre au bord de la
+   fenêtre dès qu'elle se resserre. */
+:root {
+  --lecture: 46rem;
+  --large: 66rem;
+  --gouttiere: 1.5rem;
+  --colonnes:
+    [large-debut] minmax(0, 1fr)
+    [lecture-debut] min(var(--lecture), 100%)
+    [lecture-fin] minmax(0, 1fr)
+    [large-fin];
+}
+
 main {
-  max-width: 100rem;
   margin: 0 auto;
+  padding: 0 0 4rem;
+}
+
+/* La carte occupe l'écran : c'est une liste qu'on balaye, pas une prose. */
+.carte-page {
+  max-width: 100rem;
   padding: 1.5rem 1.25rem 4rem;
+}
+
+/* Le cours, lui, se lit — donc il se centre.
+
+   `main` et `.lecon` portent la même grille : la leçon s'étend sur toute la
+   largeur, ce qui permet à ses exemples de déborder, mais ses paragraphes
+   retombent exactement sur la colonne de lecture de la page au-dessus. */
+.module-page,
+.module-page > .lecon,
+.module-page > .prise-de-reperes {
+  display: grid;
+  grid-template-columns: var(--colonnes);
+  align-content: start;
+}
+
+.module-page {
+  box-sizing: border-box;
+  max-width: calc(var(--large) + 2 * var(--gouttiere));
+  padding-inline: var(--gouttiere);
+}
+
+.module-page > *,
+.module-page > .lecon > *,
+.module-page > .prise-de-reperes > * {
+  grid-column: lecture-debut / lecture-fin;
+  min-width: 0;
+}
+
+/* Ce qui a le droit d'être large : la navigation, qui encadre la page, et les
+   exemples, dont les portées deviennent illisibles une fois comprimées. */
+.module-page > .barre,
+.module-page > .suite,
+.module-page > .onglets,
+.module-page > .prise-de-reperes,
+.module-page > .prise-de-reperes > .etapes,
+.module-page > .lecon,
+.module-page > .lecon > .exemple {
+  grid-column: large-debut / large-fin;
 }
 
 header h1 {
@@ -200,9 +261,17 @@ code {
 
 /* ── La prose de la leçon ────────────────────────────────────────────── */
 
+/* En grille, les marges verticales ne fusionnent plus entre voisins : deux
+   `margin: 1rem` adjacentes feraient 2 rem au lieu d'une. On les annule donc
+   toutes et c'est `row-gap` qui tient l'interligne — un seul endroit où régler
+   la respiration du texte. */
 .lecon {
-  max-width: 44rem;
   line-height: 1.7;
+  row-gap: 1rem;
+}
+
+.lecon > * {
+  margin-block: 0;
 }
 
 .lecon h1 {
@@ -211,14 +280,14 @@ code {
 }
 
 .lecon h2 {
-  margin: 2.5rem 0 0.75rem;
+  /* 1.5 rem d'écart + 1 rem de gouttière = les 2.5 rem d'avant. */
+  margin-block: 1.5rem 0;
   font-size: 1.25rem;
   letter-spacing: -0.01em;
 }
 
 .lecon table {
   border-collapse: collapse;
-  margin: 1.25rem 0;
   font-size: 0.95rem;
 }
 
@@ -237,9 +306,8 @@ code {
   font-weight: 500;
 }
 
-.lecon .exemple {
-  max-width: none;
-  width: min(100%, 62rem);
+.lecon > .exemple {
+  margin-block: 0.75rem;
 }
 
 .lecon ol,
@@ -249,6 +317,18 @@ code {
 
 .lecon li {
   margin-bottom: 0.4rem;
+}
+
+/* La colonne de lecture est désormais tenue par la grille. Les bornes écrites
+   à la main dans ces règles la rendraient plus étroite qu'elle — et un bloc
+   plus étroit que sa colonne se recolle à gauche, ce qu'on vient justement de
+   corriger. */
+.module-page header p,
+.module-page .resume,
+.module-page .exercice > p,
+.module-page .avertissement,
+.module-page .calibration {
+  max-width: none;
 }
 
 /* ── Les exercices ───────────────────────────────────────────────────── */
@@ -677,19 +757,139 @@ code {
   }
 }
 
+/* ── La barre de navigation ──────────────────────────────────────────── */
+
+/* Elle colle en haut : la sortie et l'enchaînement restent atteignables au
+   milieu d'une leçon de six écrans, au lieu d'obliger à remonter pour trouver
+   comment avancer. */
+.barre {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  margin-bottom: 1.75rem;
+  border-bottom: 1px solid var(--trait);
+  /* Le fond est opaque, sinon la portée qui défile dessous la traverse. Les
+     marges négatives lui rendent les gouttières — un fond qui s'arrête avant
+     le bord laisserait passer le contenu de chaque côté — et le `padding`
+     remet aussitôt son contenu sur l'alignement de la grille. */
+  background: var(--papier);
+  margin-inline: calc(-1 * var(--gouttiere));
+  padding-inline: var(--gouttiere);
+}
+
 .retour {
   font: inherit;
   font-size: 0.85rem;
-  border: none;
-  background: none;
-  padding: 0;
-  margin-bottom: 1rem;
-  color: var(--doux);
+  padding: 0.35rem 0.85rem;
+  border: 1px solid var(--trait);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--encre);
   cursor: pointer;
 }
 
 .retour:hover {
+  border-color: var(--encre);
+}
+
+.barre .position {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--doux);
+}
+
+/* Poussées à droite : ce sont les commandes d'avancement, symétriques du
+   retour qui tient le bord opposé. */
+.barre .voisins {
+  margin-left: auto;
+  display: flex;
+  gap: 0.35rem;
+}
+
+.fleche {
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1;
+  width: 2.1rem;
+  height: 2.1rem;
+  border: 1px solid var(--trait);
+  border-radius: 4px;
+  background: #fff;
   color: var(--encre);
+  cursor: pointer;
+}
+
+.fleche:hover:not(:disabled) {
+  border-color: var(--encre);
+  color: var(--appui);
+}
+
+.fleche:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+/* ── Le passage au module suivant ────────────────────────────────────── */
+
+/* En pied de page, parce que c'est là qu'on arrive quand on a fini. Les deux
+   cases existent toujours — même vide, celle de gauche tient le suivant à
+   droite, où l'œil le cherche. */
+.suite {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 4rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--trait);
+}
+
+.voisin {
+  font: inherit;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--trait);
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.voisin.apres {
+  text-align: right;
+}
+
+.voisin.vide {
+  border: none;
+  background: none;
+  cursor: default;
+}
+
+.voisin:hover:not(.vide) {
+  border-color: var(--encre);
+}
+
+.voisin .sens {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--doux);
+}
+
+.voisin:hover:not(.vide) .sens {
+  color: var(--appui);
+}
+
+.voisin .titre {
+  font-weight: 600;
+  font-size: 0.95rem;
+  line-height: 1.35;
 }
 
 /* ── Le module 0 ─────────────────────────────────────────────────────── */
