@@ -569,6 +569,7 @@ transversal (§6.5). Ce qui reste ouvert est listé ci-dessous.
 | 2026-09-23 | Sa difficulté est dérivée de `module + genre`, et non déclarée par exercice |
 | 2026-09-23 | Son tirage est une fonction pure d'une graine portée par l'adresse |
 | 2026-09-23 | Il ne note pas : le refus de la note unique (§7.2) vaut aussi pour lui |
+| 2026-09-23 | Le sommaire tient dans la fenêtre : son interligne se resserre avec elle |
 | 2026-09-23 | Les neuf modules sont rédigés
 | 2026-09-23 | Page de cours : colonne de lecture centrée, exemples en débordement, navigation en barre collante et passage au module suivant |
 | 2026-09-23 | Fil des sections dans la marge, avec ancres `#module-N/section` |

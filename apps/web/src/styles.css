@@ -61,10 +61,15 @@ main {
   padding: 0 0 4rem;
 }
 
-/* La carte occupe l'écran : c'est une liste qu'on balaye, pas une prose. */
+/* La carte occupe l'écran : c'est une liste qu'on balaye, pas une prose.
+
+   Elle tient donc dans la fenêtre, sans défilement. Le `padding` du bas en était
+   à lui seul la cause : la liste s'arrêtait dix pixels au-dessus du pli, et ces
+   quatre rem — hérités de `main`, où ils servent à dégager la fin d'une leçon —
+   la poussaient dessous. Une page qui ne défile pas n'a rien à dégager. */
 .carte-page {
   max-width: 100rem;
-  padding: 1.5rem 1.25rem 4rem;
+  padding: 1.5rem 1.25rem;
 }
 
 /* Le cours, lui, se lit — donc il se centre.
@@ -792,6 +797,18 @@ code {
   border-top: 1px solid var(--trait);
 }
 
+/* L'interligne suit la hauteur de la fenêtre.
+
+   Neuf modules et un en-tête tiennent tout juste dans une fenêtre d'ordinateur
+   portable : à `0.7rem` de part et d'autre de chaque ligne, il ne restait qu'une
+   dizaine de pixels avant le pli, et une fenêtre à peine plus courte ramenait la
+   barre de défilement. Les lignes se resserrent donc avec la fenêtre, entre deux
+   bornes — jamais plus aérées qu'auparavant, jamais assez serrées pour que le
+   titre et son résumé se touchent.
+
+   C'est la seule dimension de la page qui ait le droit de bouger : neuf lignes
+   sont un nombre connu, et leur laisser négocier leur hauteur coûte moins qu'un
+   sommaire qu'il faut faire défiler pour voir son dernier module. */
 .module {
   display: grid;
   grid-template-columns: 2.5rem 1fr auto;
@@ -800,7 +817,7 @@ code {
   width: 100%;
   text-align: left;
   font: inherit;
-  padding: 0.7rem 0.6rem;
+  padding: clamp(0.45rem, 0.85vh, 0.7rem) 0.6rem;
   border: none;
   background: none;
   cursor: pointer;
