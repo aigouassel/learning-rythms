@@ -160,8 +160,33 @@ function splitOnBeats(
   at: Fraction,
   duration: Fraction,
   bornes: readonly Fraction[],
+  mesure: Fraction,
 ): readonly { at: Fraction; duration: Fraction }[] {
   const fin = add(at, duration)
+
+  // La barre de mesure passe avant tout le reste.
+  //
+  // La tolérance ci-dessous — une note qui part d'un temps et retombe sur un
+  // temps garde un seul signe — vaut à l'intérieur d'une mesure et nulle part
+  // ailleurs. Une note qui part du quatrième temps et finit au premier de la
+  // mesure suivante commence et finit bien sur des temps : sans cette
+  // coupure, elle s'écrivait d'une seule blanche à cheval sur la barre, une
+  // figure qui n'existe pas. C'est exactement le cas où la liaison de
+  // prolongation est obligatoire, et non décorative.
+  const barres: Fraction[] = []
+  for (let b = mesure; compare(b, fin) < 0; b = add(b, mesure)) {
+    if (compare(b, at) > 0) barres.push(b)
+  }
+
+  if (barres.length > 0) {
+    const morceaux: { at: Fraction; duration: Fraction }[] = []
+    let curseur = at
+    for (const coupure of [...barres, fin]) {
+      morceaux.push(...splitOnBeats(curseur, sub(coupure, curseur), bornes, mesure))
+      curseur = coupure
+    }
+    return morceaux
+  }
 
   if (contains(bornes, at) && contains(bornes, fin)) return [{ at, duration }]
   if (figureFor(duration)?.tuplet) return [{ at, duration }]
@@ -267,7 +292,7 @@ export function engraveVoice(p: Pattern, voice: Voice): EngravedVoice {
       continue
     }
 
-    const morceaux = splitOnBeats(span.at, span.duration, bornes)
+    const morceaux = splitOnBeats(span.at, span.duration, bornes, mesure)
 
     morceaux.forEach((morceau, indexMorceau) => {
       const pieces = decompose(morceau.duration)

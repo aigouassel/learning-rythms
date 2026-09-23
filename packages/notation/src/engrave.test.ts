@@ -173,3 +173,38 @@ describe('découpages irréguliers', () => {
     expect(events.every((e) => e.figure.name === 'noire' && e.figure.tuplet)).toBe(true)
   })
 })
+
+describe('la barre de mesure', () => {
+  it('coupe une note qui la traverse, même si elle part et retombe sur un temps', () => {
+    // Le cas qui a échappé à la tolérance « part d'un temps, finit sur un
+    // temps » : une blanche posée sur le quatrième temps satisfait la règle et
+    // déborde pourtant sur la mesure suivante. Aucune figure ne traverse une
+    // barre ; il faut deux signes reliés.
+    const p = pattern({
+      meter: meter(4, 4),
+      length: fraction(2),
+      onsets: [frappe([3, 4], fraction(1, 2)), frappe([5, 4], NOIRE), frappe([3, 2], fraction(1, 2))],
+    })
+
+    expect(ecrits(p)).toEqual([
+      'silence de noire',
+      'silence de noire',
+      'silence de noire',
+      'noire liée',
+      'noire',
+      'noire',
+      'blanche',
+    ])
+  })
+
+  it('laisse intacte une note qui tient dans sa mesure', () => {
+    // Le contrôle négatif : sans lui, on ne saurait pas si la coupure
+    // ci-dessus vient de la barre ou d'un durcissement général de la règle.
+    const p = pattern({
+      meter: meter(4, 4),
+      onsets: [frappe([1, 2], fraction(1, 2))],
+    })
+
+    expect(ecrits(p)).toEqual(['silence de noire', 'silence de noire', 'blanche'])
+  })
+})
