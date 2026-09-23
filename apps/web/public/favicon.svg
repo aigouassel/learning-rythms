@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Rythmes">
+  <!--
+    Un temps fort, deux temps faibles : la première idée du cours, et la seule
+    qui reste lisible à seize pixels — à quatre barres, les faibles se touchent
+    et la mesure devient une tache. Fond plein plutôt que dessin détouré, parce
+    qu'un signe presque noir disparaît sur l'onglet d'un thème sombre.
+  -->
+  <rect width="32" height="32" rx="7" fill="#1c1a17"/>
+  <rect x="5" y="7" width="6" height="18" rx="2" fill="#b4462a"/>
+  <rect x="15" y="11" width="4" height="10" rx="2" fill="#faf8f4"/>
+  <rect x="23" y="11" width="4" height="10" rx="2" fill="#faf8f4"/>
+</svg>
