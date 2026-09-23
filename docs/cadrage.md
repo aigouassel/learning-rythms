@@ -403,7 +403,9 @@ learning-rythms/
   teste dans Node, en millisecondes.
 - `engine` dépend d'une interface `Clock`, **pas** de `AudioContext`. En test on
   injecte une horloge fictive : une polyrythmie 7:5 sur 200 mesures se vérifie
-  instantanément, sans navigateur.
+  instantanément, sans navigateur. L'adaptateur Web Audio vit donc dans
+  `apps/web`, avec le reste de ce qui touche au navigateur : `engine` se compile
+  sans les types du DOM, ce qui rend la règle vérifiable plutôt que promise.
 - `notation` traduit entre les trois représentations. Utilisé deux fois : pour
   afficher un exemple, et pour corriger une dictée.
 - `scoring` est une fonction pure — testable avec des données synthétiques
