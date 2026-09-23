@@ -3,6 +3,9 @@ import Lecon02 from '@rythmes/content/modules/02-temps-forts-et-faibles/lesson.m
 import Lecon03 from '@rythmes/content/modules/03-les-durees/lesson.mdx'
 import Lecon04 from '@rythmes/content/modules/04-lire-et-ecrire/lesson.mdx'
 import Lecon05 from '@rythmes/content/modules/05-enrichir-le-vocabulaire/lesson.mdx'
+import Lecon06 from '@rythmes/content/modules/06-composees-et-ternaire/lesson.mdx'
+import Lecon07 from '@rythmes/content/modules/07-polyrythmie/lesson.mdx'
+import Lecon08 from '@rythmes/content/modules/08-le-rythme-comme-materiau/lesson.mdx'
 import type { ComponentType } from 'react'
 
 /**
@@ -22,4 +25,7 @@ export const LECONS: Readonly<Record<number, ComponentType>> = {
   3: Lecon03,
   4: Lecon04,
   5: Lecon05,
+  6: Lecon06,
+  7: Lecon07,
+  8: Lecon08,
 }
