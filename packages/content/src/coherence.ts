@@ -218,8 +218,10 @@ export function contraintesViolees(
         return !propose.onsets.some(horsDuTemps)
       case 'commence-sur-le-temps':
         return propose.onsets.length === 0 || toNumber(propose.onsets[0]!.at) !== 0
-      case 'finit-avant-la-fin':
-        return propose.onsets.length === 0
+      case 'commence-apres-le-debut':
+        // L'élan d'une levée : quelque chose se joue, mais pas sur la toute
+        // première position.
+        return propose.onsets.length === 0 || toNumber(propose.onsets[0]!.at) === 0
     }
   })
 }

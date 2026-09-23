@@ -1,0 +1,99 @@
+import {
+  claveDeuxTrois,
+  claveTroisDeux,
+  deuxSeul,
+  septHuitCourt,
+  septHuitLong,
+  troisContreDeux,
+  troisSeul,
+} from './patterns'
+
+# Polyrythmie et métriques asymétriques
+
+Jusqu’ici, une chose à la fois : une subdivision, un regroupement, un chiffrage.
+Ce module superpose et déséquilibre. C’est le terrain le plus neuf du cours, et
+aussi le plus riche en matériau à voler.
+
+## Deux divisions en même temps
+
+Voici une voix qui divise un temps long en deux :
+
+<Exemple titre="Deux" pattern={deuxSeul} tempoInitial={60} />
+
+Et une autre qui divise exactement la même durée en trois :
+
+<Exemple titre="Trois" pattern={troisSeul} tempoInitial={60} />
+
+Maintenant les deux ensemble.
+
+<Exemple titre="Trois contre deux" pattern={troisContreDeux} tempoInitial={60} />
+
+Elles ne se contredisent pas : elles partent ensemble, se croisent, et se
+retrouvent au départ suivant. C’est une **polyrythmie** — la superposition de
+deux divisions différentes de la même durée.
+
+Le truc pour la jouer est connu et un peu bête : on ne compte pas deux choses à
+la fois. On compte six, et l’on frappe une main tous les trois, l’autre tous les
+deux. Le plus petit dénominateur commun fait le travail.
+
+Ralentis l’exemple. Le moment où l’oreille bascule — où l’on cesse d’entendre
+deux voix qui se gênent pour entendre une seule texture — est le moment où c’est
+acquis.
+
+Attention à ne pas confondre avec la **polymétrie**, qui superpose deux mesures
+de longueurs différentes. La polyrythmie retombe ensemble à chaque cycle ; la
+polymétrie met parfois des dizaines de mesures à se retrouver.
+
+Cas particulier utile : quand trois groupes binaires se réentendent comme deux
+groupes ternaires — le mètre bascule un instant sans que rien ne change de
+vitesse. Ça s’appelle une **hémiole**, et c’est partout dans la musique
+baroque comme dans la musique latine.
+
+## La cellule qui gouverne
+
+Certaines musiques ne se contentent pas d’un motif : elles s’organisent autour
+d’une cellule que personne ne joue littéralement mais que tout le monde suit.
+
+<Exemple titre="Clave son, 3-2" pattern={claveTroisDeux} tempoInitial={96} />
+
+Cinq attaques, deux mesures : trois dans la première, deux dans la seconde.
+C’est la **clave**, matrice de la musique afro-cubaine.
+
+Retourne-la — deux d’abord, trois ensuite — et le morceau entier change de
+caractère :
+
+<Exemple titre="Clave son, 2-3" pattern={claveDeuxTrois} tempoInitial={96} />
+
+C’est la même cellule, déplacée d’une mesure. Rien n’a été ajouté ni retiré. Ce
+simple décalage est une des opérations les plus puissantes qui existent sur un
+rythme — le module suivant en fait son sujet.
+
+## Des temps inégaux
+
+Dernier déséquilibre, et pas le moindre. Rien n’oblige les temps d’une mesure à
+durer la même chose.
+
+<Exemple titre="Sept croches, 2+2+3" pattern={septHuitLong} tempoInitial={132} />
+
+Sept croches, réparties en trois appuis : deux, deux, trois. Le dernier est plus
+long, et c’est ce boitement qui fait toute la musique des Balkans. On parle de
+**métrique asymétrique**.
+
+Le **groupement** n’est pas décoratif. Voici les mêmes sept croches, réparties
+autrement :
+
+<Exemple titre="Sept croches, 3+2+2" pattern={septHuitCourt} tempoInitial={132} />
+
+Même chiffrage, même durée, autre danse. Comme pour 6/8 contre 3/4 deux modules
+plus tôt : **ce qui compte n’est pas ce qu’on additionne, c’est où l’on appuie**.
+
+## Ce qu’il faut retenir
+
+1. Une **polyrythmie** superpose deux divisions de la même durée ; elles
+   retombent ensemble.
+2. La **polymétrie** superpose deux mesures de longueurs différentes.
+3. Une **hémiole** fait basculer le mètre un instant, sans changer de vitesse.
+4. La **clave** est une cellule de cinq attaques sur deux mesures ; la
+   retourner change tout.
+5. Une **métrique asymétrique** a des temps inégaux, et son **groupement** est
+   ce qui la définit.

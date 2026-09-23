@@ -1,0 +1,119 @@
+import {
+  enDeux,
+  enSixHuit,
+  enTrois,
+  enTroisQuarts,
+  marcheEnSixHuit,
+  shuffle,
+  triolet,
+} from './patterns'
+
+# Mesures composées et ternaire
+
+Depuis le début du cours, chaque durée s’est divisée en deux. Ce module ajoute
+l’autre possibilité — diviser en trois — et il faut le dire tout de suite :
+**ça change tout**, et ça explique une bonne part de la musique que tu aimes.
+
+## Deux, puis trois
+
+Écoute le même temps rempli de deux façons.
+
+<Exemple titre="Deux par temps" pattern={enDeux} tempoInitial={92} />
+
+<Exemple titre="Trois par temps" pattern={enTrois} tempoInitial={92} />
+
+Le tempo n’a pas bougé, les appuis non plus. Seul le nombre de notes à
+l’intérieur d’un temps a changé, et pourtant le second balance là où le premier
+marche.
+
+Ce qu’on entend à l’intérieur d’un temps s’appelle la **subdivision**. Quand
+elle vaut deux, on dit que c’est **binaire** ; quand elle vaut trois,
+**ternaire**.
+
+Retiens bien cette formulation, parce qu’elle porte le piège le plus fréquent de
+tout le solfège : *binaire* et *ternaire* qualifient la **division du temps**,
+jamais le nombre de temps dans la mesure. Un 3/4 a trois temps et il est
+binaire. On y revient dans un instant.
+
+## L’intrus : le triolet
+
+On peut glisser une division ternaire dans un morceau binaire. Ça se signale par
+un petit 3 au-dessus du groupe.
+
+<Exemple titre="Un triolet, puis une noire" pattern={triolet} tempoInitial={66} />
+
+C’est un **triolet** : trois notes occupant la durée de deux de même valeur.
+Un intrus, donc — il vient d’ailleurs et se signale comme tel.
+
+## Quand le ternaire est chez lui
+
+Mais dans des musiques entières, le ternaire n’est pas un intrus : c’est la
+norme. On ne va pas écrire un 3 au-dessus de chaque groupe d’une gigue entière.
+D’où un second système de chiffrages.
+
+<Exemple titre="Six croches, deux appuis" pattern={enSixHuit} tempoInitial={116} />
+
+Six croches, groupées par trois : **deux appuis**, chacun valant trois croches.
+C’est une **mesure composée**, et le chiffrage s’écrit 6/8.
+
+Ici, le chiffre du bas ne nomme plus l’unité de temps mais l’unité de
+**subdivision**. Le temps, lui, vaut trois croches — une noire pointée. C’est
+la seule vraie bizarrerie du système de chiffrage, et elle vient de ce qu’il n’y
+a pas de figure simple pour « trois croches » : il a fallu compter les croches.
+
+## Le faux ami
+
+Voici les mêmes six croches, à la même vitesse, regroupées autrement.
+
+<Exemple titre="6/8 — deux appuis" pattern={enSixHuit} tempoInitial={116} />
+
+<Exemple titre="3/4 — trois appuis" pattern={enTroisQuarts} tempoInitial={116} />
+
+Même durée totale, mêmes figures, même nombre de notes. La seule différence est
+le **regroupement** — 3+3 contre 2+2+2 — et il suffit à produire deux musiques
+qui n’ont rien à voir.
+
+| | Nombre d’appuis | Subdivision |
+| --- | --- | --- |
+| 6/8 | deux | ternaire |
+| 3/4 | trois | binaire |
+
+Si tu ne devais retenir qu’une chose du module : **6/8 n’est pas une mesure à
+six temps**. C’est une mesure à deux temps dont chacun se divise en trois.
+
+## Ton terrain
+
+Une marche en 6/8, c’est de la fanfare pure :
+
+<Exemple titre="Marche en 6/8" pattern={marcheEnSixHuit} tempoInitial={104} />
+
+Tu en as joué. Tu sentais les deux appuis par mesure sans avoir besoin qu’on te
+dise qu’ils étaient ternaires — c’est exactement le genre de savoir que ce cours
+cherche à nommer plutôt qu’à enseigner.
+
+## Le balancement
+
+Dernier cas, et le plus courant de tous. Le blues et le jazz jouent leurs
+figures brèves de façon inégale : la première plus longue, la seconde plus
+courte.
+
+<Exemple titre="Shuffle" pattern={shuffle} tempoInitial={88} />
+
+C’est le **shuffle** — ou *swing*, selon le répertoire. Ce n’est ni une
+imprécision ni un effet : c’est du ternaire, où la première note occupe deux
+tiers du temps et la seconde un tiers.
+
+Sa particularité est qu’on ne l’écrit presque jamais ainsi. Les partitions de
+jazz notent des figures égales et précisent « swing » en tête : le musicien sait
+qu’il doit les balancer. C’est l’un des rares endroits où la notation dit une
+chose et où l’usage en impose une autre — et c’est une convention, pas une
+négligence.
+
+## Ce qu’il faut retenir
+
+1. La **subdivision** est ce qu’on entend à l’intérieur d’un temps.
+2. **Binaire** et **ternaire** qualifient cette division, jamais le nombre de temps.
+3. Le **triolet** est un intrus ternaire dans un contexte binaire.
+4. Une **mesure composée** — 6/8, 9/8 — est ternaire par nature.
+5. **6/8 et 3/4 durent pareil** : seuls les appuis diffèrent.
+6. Le **shuffle** est du ternaire qu’on ne note pas.

@@ -171,7 +171,7 @@ export type Contrainte = {
     | 'au-plus'
     | 'une-hors-du-temps'
     | 'commence-sur-le-temps'
-    | 'finit-avant-la-fin'
+    | 'commence-apres-le-debut'
   readonly n?: number
 }
 
