@@ -1,0 +1,101 @@
+import { contretemps, levee, pointee, skank, surLesAppuis, syncope } from './patterns'
+
+# Enrichir le vocabulaire
+
+Jusqu’ici, presque tout tombait sur les appuis. Ce module s’occupe de ce qui
+tombe **ailleurs** — et c’est là que vit la quasi-totalité de la musique qui
+donne envie de bouger.
+
+## Ce qui se passe entre les appuis
+
+Écoute d’abord une percussion qui frappe chaque appui. C’est carré, et c’est
+plat.
+
+<Exemple titre="Sur les appuis" pattern={surLesAppuis} tempoInitial={76} />
+
+Maintenant, exactement le même nombre de frappes, mais décalées : chacune tombe
+entre deux appuis.
+
+<Exemple titre="Le skank du reggae" pattern={skank} tempoInitial={76} />
+
+C’est le même instrument, la même vitesse, et le résultat n’a rien à voir. Le
+reggae est construit là-dessus : la guitare n’y joue *jamais* sur l’appui.
+
+Ce placement s’appelle le **contretemps** — une attaque qui tombe à côté de
+l’appui et qui s’arrête avant le suivant. L’appui reste vide, et c’est
+précisément son absence qu’on entend.
+
+Regarde la partition du skank : chaque temps s’ouvre sur un silence. Ce n’est
+pas un manque, c’est le sujet.
+
+## Quand la note déborde
+
+Voici une chose différente, qu’on confond tout le temps avec la précédente.
+
+<Exemple titre="Elle déborde" pattern={syncope} tempoInitial={84} />
+
+<Exemple titre="Elle s’arrête" pattern={contretemps} tempoInitial={84} />
+
+Dans les deux cas une note tombe à côté d’un appui. Mais dans le premier
+exemple, elle **continue par-dessus** l’appui suivant, qui n’est donc jamais
+attaqué. Dans le second, elle s’arrête avant, et l’appui reste silencieux.
+
+| | La note tombe à côté | Et ensuite |
+| --- | --- | --- |
+| contretemps | oui | elle s’arrête : l’appui reste vide |
+| syncope | oui | elle déborde dessus : l’appui est confisqué |
+
+Autrement dit : **le contretemps évite l’appui, la syncope le confisque.** Les
+deux déplacent l’élan, mais pas de la même façon — et une fois la distinction
+faite, on ne les confond plus jamais.
+
+À l’écrit, une syncope se reconnaît à la **liaison de prolongation** : un arc
+qui relie deux figures, indiquant qu’on n’attaque que la première et qu’on tient
+jusqu’au bout de la seconde. Une seule attaque, deux signes. C’est ce qui permet
+d’écrire une note qui dépasse une frontière de temps sans cacher cette
+frontière.
+
+## Allonger sans lier
+
+Il existe un moyen plus court d’allonger une figure : le **point de
+prolongation**, un point posé à droite, qui ajoute la moitié de la valeur.
+
+Une croche pointée vaut donc une croche et demie, et appelle presque toujours
+une double croche pour compléter le temps. Ce couple produit un boitement très
+reconnaissable :
+
+<Exemple titre="Le boitement" pattern={pointee} tempoInitial={92} />
+
+Point ou liaison, l’effet sonore est le même. La différence est d’usage : le
+point sert à l’intérieur d’un temps, la liaison à franchir une frontière —
+encore la même règle, celle qui veut que les temps restent visibles.
+
+## Commencer avant de commencer
+
+Un dernier cas, que tu as joué des centaines de fois sans qu’on te le nomme.
+Beaucoup de morceaux ne commencent pas sur le premier appui : une ou deux notes
+d’élan les précèdent.
+
+<Exemple titre="Avec un élan" pattern={levee} tempoInitial={100} />
+
+Ça s’appelle une **anacrouse**, ou plus simplement une **levée** — le mot qu’on
+emploie en fanfare, et c’est le même objet. Elle explique pourquoi le chef lève
+la main avant de la baisser : le geste vers le haut, c’est la levée.
+
+Le morceau ne commence donc pas à la première note, mais au premier **appui**.
+Tout ce qui précède est un élan vers lui.
+
+## Une remarque sur le jazz
+
+Les exemples de ce module sonnent carrés parce qu’ils le sont. Le jazz, lui,
+joue ses figures brèves de façon inégale — plus longue, plus courte, en
+balancement. Ce n’est pas une imprécision, c’est un système, et il a son propre
+module. On l’aborde au suivant.
+
+## Ce qu’il faut retenir
+
+1. Le **contretemps** tombe à côté de l’appui et s’arrête : l’appui reste vide.
+2. La **syncope** tombe à côté et déborde dessus : l’appui est confisqué.
+3. La **liaison de prolongation** écrit une note qui franchit une frontière.
+4. Le **point** allonge de moitié, à l’intérieur d’un temps.
+5. Une **anacrouse** — une levée — est l’élan qui précède le premier appui.

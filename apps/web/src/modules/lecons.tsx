@@ -1,6 +1,8 @@
 import Lecon01 from '@rythmes/content/modules/01-sentir-la-pulsation/lesson.mdx'
 import Lecon02 from '@rythmes/content/modules/02-temps-forts-et-faibles/lesson.mdx'
 import Lecon03 from '@rythmes/content/modules/03-les-durees/lesson.mdx'
+import Lecon04 from '@rythmes/content/modules/04-lire-et-ecrire/lesson.mdx'
+import Lecon05 from '@rythmes/content/modules/05-enrichir-le-vocabulaire/lesson.mdx'
 import type { ComponentType } from 'react'
 
 /**
@@ -18,4 +20,6 @@ export const LECONS: Readonly<Record<number, ComponentType>> = {
   1: Lecon01,
   2: Lecon02,
   3: Lecon03,
+  4: Lecon04,
+  5: Lecon05,
 }

@@ -1,0 +1,87 @@
+import {
+  bienGroupe,
+  cellule,
+  deuxQuarts,
+  quatreQuarts,
+  stompStompClap,
+  troisQuarts,
+} from './patterns'
+
+# Lire et écrire le rythme
+
+Tu as maintenant tout ce qu’il faut : le cycle, les figures, les silences. Ce
+module assemble les trois, et ajoute la seule chose qui manquait — **de quoi
+dire à quelqu’un d’autre ce que tu entends**.
+
+## Les deux chiffres du début
+
+Ils sont là depuis le premier exemple du cours, et on n’en a rien dit. Écoute
+ces trois-là, qui n’emploient que des noires :
+
+<Exemple titre="Quatre par mesure" pattern={quatreQuarts} tempoInitial={92} />
+
+<Exemple titre="Trois par mesure" pattern={troisQuarts} tempoInitial={132} />
+
+<Exemple titre="Deux par mesure" pattern={deuxQuarts} tempoInitial={108} />
+
+Les figures sont identiques. Ce qui change est le nombre de noires entre deux
+barres, et c’est exactement ce que le **chiffrage indicateur** annonce :
+
+| | Ce que dit le chiffre |
+| --- | --- |
+| celui du haut | combien d’unités tiennent dans une mesure |
+| celui du bas | quelle figure sert d’unité |
+
+Le chiffre du bas n’est pas un dénominateur au hasard : **4 désigne la noire, 8
+la croche, 2 la blanche** — la figure qui vaut cette fraction de ronde. Un 3/4
+contient donc trois noires ; un 6/8, six croches.
+
+Attention à ce que ce chiffrage ne dit pas : il compte des **unités**, pas
+forcément des appuis. Cela paraît une subtilité inutile pour l’instant — elle
+deviendra centrale deux modules plus loin.
+
+## Les figures qu’on reconnaît d’un bloc
+
+Certaines suites reviennent si souvent qu’on cesse de les lire note à note. On
+les reconnaît comme on reconnaît un mot, sans en épeler les lettres.
+
+<Exemple titre="Une figure courte" pattern={cellule} tempoInitial={88} />
+
+Deux brèves et une longue. C’est une **cellule rythmique** : une figure d’une
+mesure ou moins, qu’on traite comme une unité.
+
+Tu en connais déjà, sans le savoir. Celle-ci ouvre un des morceaux les plus
+joués de la planète :
+
+<Exemple titre="Deux, deux" pattern={stompStompClap} tempoInitial={84} />
+
+Apprendre à lire, c’est en grande partie **accumuler ces blocs**. Un lecteur
+rapide ne déchiffre pas plus vite qu’un autre : il a simplement moins de choses
+à déchiffrer, parce qu’il en reconnaît la plupart d’un coup d’œil.
+
+## Pourquoi on n’écrit pas n’importe comment
+
+Voici la règle la plus utile de tout le cours, et elle tient en une phrase :
+**la notation doit rendre les temps visibles à l’œil**.
+
+<Exemple titre="Bien groupé" pattern={bienGroupe} tempoInitial={76} />
+
+Regarde les barres qui relient les figures brèves. Elles ne relient jamais
+n’importe quoi : chaque groupe tient dans un seul temps, et s’arrête à sa
+frontière. C’est le **regroupement**.
+
+On pourrait écrire les mêmes durées autrement — la somme serait identique, la
+musique aussi. Mais il faudrait alors **compter** pour savoir où tombe le
+troisième temps, au lieu de le voir. Sur une mesure, l’écart est négligeable ;
+sur une page, c’est la différence entre une partition qui se lit et une
+partition qui se déchiffre.
+
+C’est aussi pourquoi ton déchiffrage a toujours été laborieux avec certaines
+partitions et pas avec d’autres. Ce n’était pas toujours toi.
+
+## Ce qu’il faut retenir
+
+1. Le **chiffrage** dit combien d’unités par mesure, et laquelle sert d’unité.
+2. Le chiffre du bas nomme une figure : 4 pour la noire, 8 pour la croche.
+3. Une **cellule** est une figure courte qu’on lit d’un bloc, sans l’épeler.
+4. Le **regroupement** existe pour que les temps se voient au lieu de se compter.
