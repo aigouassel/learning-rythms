@@ -1,0 +1,11 @@
+{
+  "files": [],
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/notation" },
+    { "path": "./packages/engine" },
+    { "path": "./packages/scoring" },
+    { "path": "./packages/content" },
+    { "path": "./apps/web" }
+  ]
+}
