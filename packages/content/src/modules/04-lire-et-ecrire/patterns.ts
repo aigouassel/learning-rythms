@@ -71,3 +71,54 @@ export const celluleAmputee = pattern({
   style: 'rock',
   onsets: [frappe([0, 1], NOIRE, 'snare', true), frappe([1, 4], NOIRE)],
 })
+
+// ── Les paires du repérage d'erreur ───────────────────────────────────────
+//
+// Chaque motif ci-dessous est le jumeau d'un autre, à une attaque près — pas
+// deux, pas une demie. La contrainte est vérifiée au test : un écart double
+// transformerait l'exercice en « trouve les différences », qui se joue à
+// l'œil et n'apprend rien à lire.
+
+/** La même cellule, avec une attaque de plus à la fin. */
+export const celluleEtendue = pattern({
+  meter: meter(2, 4),
+  style: 'rock',
+  onsets: [0, 1, 2, 3].map((i) => frappe([i, 8], CROCHE, 'snare', i === 0)),
+})
+
+/** Quatre noires dont la dernière arrive un demi-temps trop tôt. */
+export const quatreQuartsDecale = enRock([
+  frappe([0, 1], NOIRE, 'snare', true),
+  frappe([1, 4]),
+  frappe([1, 2], CROCHE),
+  frappe([5, 8], fraction(3, 8)),
+])
+
+/** Le stomp amputé de sa dernière frappe claire. */
+export const stompAmpute = enRock([
+  frappe([0, 1], NOIRE, 'kick', true),
+  frappe([1, 4], NOIRE, 'kick'),
+  frappe([1, 2], NOIRE, 'snare'),
+])
+
+/** Le groupe dense auquel il manque une double. */
+export const bienGroupeAmpute = enRock([
+  frappe([0, 1], CROCHE, 'hihat', true),
+  frappe([1, 8], CROCHE, 'hihat'),
+  frappe([1, 4], CROCHE, 'hihat'),
+  frappe([3, 8], CROCHE, 'hihat'),
+  ...[8, 9, 10].map((i) => frappe([i, 16], DOUBLE, 'hihat')),
+  frappe([3, 4], NOIRE, 'hihat'),
+])
+
+/** Une mesure à trois temps, à écrire sous la dictée. */
+export const dicteeTroisQuarts = pattern({
+  meter: meter(3, 4),
+  style: 'marche',
+  onsets: [
+    frappe([0, 1], NOIRE, 'snare', true),
+    frappe([1, 4], CROCHE),
+    frappe([3, 8], CROCHE),
+    frappe([1, 2], NOIRE),
+  ],
+})
