@@ -49,6 +49,16 @@ export type Transport = {
   stop(): void
   readonly running: boolean
   /**
+   * L'instant, sur l'horloge, où le motif a commencé.
+   *
+   * C'est la référence dont la correction a besoin : sans elle, on ne peut pas
+   * dire à quelle seconde une attaque était attendue, donc pas mesurer un
+   * écart. Vaut zéro tant que rien n'a démarré.
+   */
+  readonly origin: number
+  /** Les instants où les attaques tombent, sur `cycles` passages. */
+  expectedTimes(cycles: number): readonly number[]
+  /**
    * Où en est la lecture, en rondes depuis le début du motif.
    *
    * En flottant, et c'est voulu : cette valeur sert à déplacer un curseur à
@@ -152,6 +162,16 @@ export function transport(options: TransportOptions): Transport {
 
     get running() {
       return arreter !== null
+    },
+
+    get origin() {
+      return origine
+    },
+
+    expectedTimes(cycles) {
+      return Array.from({ length: cycles }, (_, c) =>
+        dates.map((d) => origine + c * dureeCycle + d),
+      ).flat()
     },
 
     positionAt(seconds) {

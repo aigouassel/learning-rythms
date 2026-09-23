@@ -198,3 +198,22 @@ describe('positionAt', () => {
     expect(t.positionAt(6)).toEqual({ cycle: 1, at: 0.5 })
   })
 })
+
+describe('la référence pour la correction', () => {
+  it('dit où le motif a commencé et où chaque attaque tombe', () => {
+    const clock = fakeClock()
+    const output = espion()
+    const p = pattern({
+      meter: meter(2, 4),
+      onsets: [frappe([0, 1]), frappe([1, 4])],
+    })
+
+    const t = transport({ clock, output, pattern: p, tempo: tempo(60, NOIRE), leadMs: 500 })
+    t.start()
+
+    // Une demi-seconde d’amorce, pour ne pas placer la première attaque dans
+    // le passé.
+    expect(t.origin).toBeCloseTo(0.5)
+    expect(t.expectedTimes(2)).toEqual([0.5, 1.5, 2.5, 3.5])
+  })
+})
