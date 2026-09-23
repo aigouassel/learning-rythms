@@ -50,7 +50,24 @@
 | **Tête de note** | *(signe)* | la partie ovale ; pleine ou creuse selon la durée |
 | **Hampe** | *(signe)* | le trait vertical attaché à la tête |
 | **Ligature** | *(signe)* | la barre qui relie plusieurs croches ou doubles en un groupe |
-| **Syllabes rythmiques (Kodály)** | dire le rythme avant de l'écrire | des syllabes parlées associées aux figures — *ta* pour la noire, *ti-ti* pour deux croches. Plusieurs adaptations françaises coexistent ; le cours en fixe une |
+| **Syllabes rythmiques (Kodály)** | dire le rythme avant de l'écrire | des syllabes parlées associées aux figures. Plusieurs adaptations françaises coexistent ; celle du cours est fixée ci-dessous |
+
+**L'adaptation retenue par le cours** — arbitraire mais fixée, car c'est la
+cohérence qui compte :
+
+| Figure | Syllabe |
+|---|---|
+| ronde | *ta-a-a-a* |
+| blanche | *ta-a* |
+| noire | *ta* |
+| croche | *ti* |
+| doubles croches | *ti-ka-ti-ka*, selon le rang dans le temps |
+| silence | *(rien — un geste muet)* |
+| suite d'une liaison | *(rien — une attaque, une syllabe)* |
+
+Les figures pointées et les découpages irréguliers n'ont pas de syllabe : le
+point arrive au module 5 et le triolet au module 6, quand les syllabes ont déjà
+disparu du cours.
 
 > **Les syllabes sont un tremplin.** Elles servent ici, au moment où la notation
 > apparaît, puis disparaissent des modules suivants. Les garder en ferait une
