@@ -151,3 +151,25 @@ describe('le skank du reggae', () => {
     ])
   })
 })
+
+describe('découpages irréguliers', () => {
+  it('ne découpe pas une noire de triolet, qui traverse le temps par nature', () => {
+    // Trois noires de triolet sur une blanche de 4/4 : chacune dure un sixième
+    // de ronde et chevauche forcément un temps. Les couper en deux croches de
+    // triolet liées détruirait la figure.
+    const sixieme = fraction(1, 6)
+    const p = pattern({
+      meter: meter(4, 4),
+      length: fraction(1, 2),
+      onsets: [
+        frappe([0, 1], sixieme, 'cowbell'),
+        frappe([1, 6], sixieme, 'cowbell'),
+        frappe([1, 3], sixieme, 'cowbell'),
+      ],
+    })
+    const events = engraveVoice(p, 'cowbell').beats.flatMap((b) => b.events)
+    expect(events).toHaveLength(3)
+    expect(events.every((e) => e.kind === 'note' && !e.tied)).toBe(true)
+    expect(events.every((e) => e.figure.name === 'noire' && e.figure.tuplet)).toBe(true)
+  })
+})

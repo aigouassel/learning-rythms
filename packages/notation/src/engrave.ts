@@ -145,6 +145,12 @@ function decompose(duration: Fraction): readonly { figure: Figure; duration: Fra
  * chaque temps (voir `splitRest`) : trois temps de silence écrits d'un seul
  * signe cacheraient précisément ce que la notation doit montrer.
  *
+ * Seconde exception, celle des découpages irréguliers : une noire de triolet
+ * dure un sixième de ronde et **traverse le temps par construction** — c'est
+ * sa définition même, trois notes dans la place de deux. La découper la
+ * détruirait. Dès qu'une figure unique existe et qu'elle porte un tuplet, on
+ * la garde entière.
+ *
  * Simplification assumée : la hiérarchie interne de la mesure n'est pas
  * modélisée. Une blanche pointée commençant au deuxième temps d'un 4/4 passe
  * ici, alors qu'une gravure stricte préférerait montrer le troisième temps.
@@ -158,6 +164,7 @@ function splitOnBeats(
   const fin = add(at, duration)
 
   if (contains(bornes, at) && contains(bornes, fin)) return [{ at, duration }]
+  if (figureFor(duration)?.tuplet) return [{ at, duration }]
 
   const coupures = bornes.filter((b) => compare(b, at) > 0 && compare(b, fin) < 0)
   const morceaux: { at: Fraction; duration: Fraction }[] = []
