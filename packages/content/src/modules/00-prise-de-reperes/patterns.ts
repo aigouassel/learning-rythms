@@ -61,3 +61,24 @@ export const quatreCroches = pattern({
   meter: meter(2, 4),
   onsets: [0, 1, 2, 3].map((i) => frappe([i, 8], CROCHE, 'snare', i === 0)),
 })
+
+/** Le temps coupé en quatre, puis entier : l'épreuve de lecture la plus fine. */
+export const doublesPuisNoire = pattern({
+  meter: meter(2, 4),
+  onsets: [
+    ...[0, 1, 2, 3].map((i) => frappe([i, 16], fraction(1, 16), 'snare', i === 0)),
+    frappe([1, 4], NOIRE, 'snare'),
+  ],
+})
+
+/** Deux frappes régulières : l'étalon. */
+export const deuxNoires = pattern({
+  meter: meter(2, 4),
+  onsets: [frappe([0, 1], NOIRE, 'snare', true), frappe([1, 4], NOIRE, 'snare')],
+})
+
+/** La première place est vide : ce qu'on n'entend pas s'écrit aussi. */
+export const silencePuisNoire = pattern({
+  meter: meter(2, 4),
+  onsets: [frappe([1, 4], NOIRE, 'snare', true)],
+})

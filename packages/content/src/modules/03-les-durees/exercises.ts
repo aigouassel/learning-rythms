@@ -193,14 +193,4 @@ export const EXERCISES: readonly Exercise[] = [
     bpm: 84,
     parTemps: NOIRE,
   },
-  {
-    kind: 'dechiffrage',
-    id: '03-lire-l-escalier',
-    module: 3,
-    consigne:
-      'Une mesure, quatre vitesses différentes. Lis-la lentement, temps par temps, avant de la jouer.',
-    aLire: escalier,
-    bpm: 60,
-    parTemps: NOIRE,
-  },
 ]

@@ -307,19 +307,33 @@ pas l'objectif, le sentir l'est.
 
 ### 6.3 Répartition par module
 
-| # | Module | Types retenus | Écartés, et pourquoi |
-|---|---|---|---|
-| 0 | Prise de repères | calibration, mini-diagnostic | — (hors typologie) |
-| 1 | Sentir la pulsation | frappe mesurée · **tenue sans clic** · discrimination de tempo | tout ce qui touche à la notation : elle n'existe pas encore |
-| 2 | Temps forts/faibles | discrimination du nombre de temps · frappe accentuée · QCM chiffrage | dictée : rien à écrire encore |
-| 3 | **Les durées** ⭐ | QCM · appariement · complétion · palette · déchiffrage | — c'est la tranche verticale, elle porte les 4 niveaux |
-| 4 | Lire et écrire | déchiffrage · palette · repérage d'erreur · composition guidée minimale | discrimination : la perception n'est plus le point dur |
-| 5 | Syncope, contretemps | discrimination syncope/contretemps · frappe de contretemps · palette · repérage d'erreur | appariement : redondant avec la discrimination ici |
-| 6 | Composées et ternaire | discrimination binaire/ternaire · QCM 6/8 vs 3/4 · déchiffrage ternaire · frappe | palette : la notation du ternaire arrive trop tôt pour être produite |
-| 7 | Polyrythmie, asymétrique | frappe à deux touches (2 contre 3) · discrimination de groupement · déchiffrage | dictée : transcrire n'est pas l'objectif, sentir l'est |
-| 8 | Le rythme comme matériau | composition guidée · variation d'un motif donné · palette | QCM, discrimination : on ne reconnaît plus, on produit |
+Le nombre d'exercices est fixé : **une quinzaine par module**, neuf pour
+l'unité 0. Les genres, eux, restent choisis par la compétence que le module
+installe — la colonne « écartés » est la partie qui compte.
 
-Trois à cinq types par module. Le chiffre définitif reste ouvert (§9).
+| # | Module | Genres retenus | Écartés, et pourquoi | Nb |
+|---|---|---|---|---|
+| 0 | Prise de repères | frappe · discrimination · QCM | tout le reste : un diagnostic mesure, il n'entraîne pas | 9 |
+| 1 | Sentir la pulsation | frappe · discrimination | tout ce qui touche à la notation : elle n'existe pas encore | 12 |
+| 2 | Temps forts/faibles | discrimination · frappe accentuée | notation : toujours rien à écrire | 13 |
+| 3 | **Les durées** ⭐ | discrimination · QCM · appariement · complétion · dictée · déchiffrage | frappe mesurée : l'exécution est le sujet des modules 1 et 2 | 15 |
+| 4 | Lire et écrire | discrimination de chiffrage · QCM · appariement · déchiffrage · **repérage ×3** · dictée · complétion | frappe libre : le point dur est le passage son ↔ signe | 15 |
+| 5 | Syncope, contretemps | discrimination ×4 · QCM · appariement · frappe ×4 · repérage · dictée · déchiffrage | — chaque notion du module y revient au moins deux fois | 15 |
+| 6 | Composées et ternaire | discrimination ×6 · QCM · appariement · frappe ×4 · déchiffrage · repérage | dictée : écrire du ternaire demande des conventions trop fraîches | 15 |
+| 7 | Polyrythmie, asymétrique | frappe ×4 · discrimination ×7 · appariement · déchiffrage ×2 · repérage | dictée : transcrire n'est pas l'objectif, sentir l'est | 15 |
+| 8 | Le rythme comme matériau | appariement de **transformations** · QCM · repérage · frappe ×3 · déchiffrage ×2 · complétion ×2 · composition ×4 | reconnaissance de figures : les modules 3 et 4 l'ont faite | 15 |
+
+Deux règles se dégagent, et elles valent mieux qu'un quota de genres :
+
+1. **Les discriminations vont par paires.** Une question posée une seule fois
+   se devine à sa formulation — « le deuxième appui est-il occupé ? » appelle
+   *oui*. Posée deux fois sur deux motifs qui ne diffèrent que par un
+   paramètre, elle oblige à écouter.
+2. **Le repérage d'erreur est surreprésenté au module 4**, et délibérément.
+   C'est le seul exercice qu'on ne peut pas réussir à l'oreille : reconnaître,
+   écrire, même lire à voix haute se contournent par l'audiation. Pour un
+   profil dont l'oreille dépasse largement la lecture, c'est l'exercice qui
+   travaille vraiment le point faible.
 
 ### 6.4 La dictée : modalité d'entrée
 
@@ -483,7 +497,6 @@ ouvert est listé ci-dessous.
 - **Système d'acquisition** — que veut dire « module acquis » ? Écarté de la v1 :
   pour un usage personnel, un journal de résultats suffit ; un seuil mal calibré
   n'apporterait que de la frustration.
-- **Nombre définitif d'exercices par module** — 3 à 5 pour commencer.
 - **Échauffement / répétition espacée** en début de session.
 
 ---
@@ -508,3 +521,4 @@ ouvert est listé ci-dessous.
 | 2026-09-23 | Les neuf modules sont rédigés
 | 2026-09-23 | Page de cours : colonne de lecture centrée, exemples en débordement, navigation en barre collante et passage au module suivant |
 | 2026-09-23 | Fil des sections dans la marge, avec ancres `#module-N/section` |
+| 2026-09-23 | Une quinzaine d’exercices par module, neuf pour l’unité 0 ; le tempo d’écoute devient une donnée de l’exercice |

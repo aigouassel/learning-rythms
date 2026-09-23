@@ -74,3 +74,68 @@ export const shuffle = pattern({
     frappe([t * 3 + 2, 12], TIERS, 'hihat'),
   ]),
 })
+
+// ── Les distracteurs et les jumeaux ───────────────────────────────────────
+
+/** Deux croches puis une noire : la réponse binaire au triolet. */
+export const deuxCrochesPuisNoire = pattern({
+  meter: meter(2, 4),
+  style: 'blues-shuffle',
+  onsets: [
+    frappe([0, 1], CROCHE, 'snare', true),
+    frappe([1, 8], CROCHE, 'snare'),
+    frappe([1, 4], NOIRE, 'snare'),
+  ],
+})
+
+/** Quatre doubles puis une noire : l'autre réponse binaire, plus dense. */
+export const quatreDoublesPuisNoire = pattern({
+  meter: meter(2, 4),
+  style: 'blues-shuffle',
+  onsets: [
+    ...[0, 1, 2, 3].map((i) => frappe([i, 16], fraction(1, 16), 'snare', i === 0)),
+    frappe([1, 4], NOIRE, 'snare'),
+  ],
+})
+
+/** Le 6/8 amputé d'une croche : l'écart tombe dans le second groupe. */
+export const sixHuitAmpute = pattern({
+  meter: meter(6, 8),
+  style: 'gigue',
+  onsets: [0, 1, 2, 3, 5].map((i) => frappe([i, 8], CROCHE, 'hihat', i === 0 || i === 3)),
+})
+
+/**
+ * Le triolet de noires : trois notes dans la durée de deux temps.
+ *
+ * Le cas qui fait tomber tout le monde, parce qu'aucune de ses notes ne
+ * coïncide avec un appui sauf la première — et parce qu'à l'écrit, la figure
+ * traverse une frontière de temps sans avoir le droit d'être coupée.
+ */
+export const trioletDeNoires = pattern({
+  meter: meter(4, 4),
+  style: 'blues-shuffle',
+  onsets: [
+    frappe([0, 1], fraction(1, 6), 'snare', true),
+    frappe([1, 6], fraction(1, 6), 'snare'),
+    frappe([1, 3], fraction(1, 6), 'snare'),
+    frappe([1, 2], NOIRE, 'snare'),
+    frappe([3, 4], NOIRE, 'snare'),
+  ],
+})
+
+/** Le shuffle avec sa caisse claire : le blues tel qu'il s'entend. */
+export const shuffleComplet = pattern({
+  meter: meter(4, 4),
+  style: 'blues-shuffle',
+  onsets: [
+    ...[0, 1, 2, 3].flatMap((t) => [
+      frappe([t * 3, 12], fraction(1, 6), 'hihat', t === 0),
+      frappe([t * 3 + 2, 12], TIERS, 'hihat'),
+    ]),
+    frappe([0, 1], NOIRE, 'kick', true),
+    frappe([1, 4], NOIRE, 'snare'),
+    frappe([1, 2], NOIRE, 'kick'),
+    frappe([3, 4], NOIRE, 'snare'),
+  ],
+})

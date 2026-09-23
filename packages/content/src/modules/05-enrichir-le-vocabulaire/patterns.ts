@@ -121,19 +121,6 @@ export const crochesEgales = pattern({
   onsets: [0, 1, 2, 3, 4, 5, 6, 7].map((i) => frappe([i, 8], CROCHE, 'snare', i === 0)),
 })
 
-/** Le motif pointé amputé d'une double : pour le repérage. */
-export const pointeeAmputee = pattern({
-  meter: meter(4, 4),
-  style: 'ska',
-  onsets: [
-    frappe([0, 1], CROCHE_POINTEE, 'snare', true),
-    frappe([3, 16], DOUBLE, 'snare'),
-    frappe([1, 4], CROCHE_POINTEE, 'snare'),
-    frappe([1, 2], NOIRE, 'snare'),
-    frappe([3, 4], NOIRE, 'snare'),
-  ],
-})
-
 /**
  * Un son qui déborde la barre de mesure.
  *

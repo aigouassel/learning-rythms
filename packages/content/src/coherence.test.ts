@@ -118,8 +118,21 @@ describe('le registre des exercices', () => {
 describe('le diagnostic du module 0', () => {
   const diagnostic = EXERCISES_BY_MODULE[0] ?? []
 
-  it('existe et compte quatre épreuves', () => {
-    expect(diagnostic).toHaveLength(4)
+  it('pose ses trois questions : tenir, compter, lire', () => {
+    // Le compte exact n'est pas le sujet — il a changé une fois et changera
+    // encore. Ce qui ne doit pas changer, c'est qu'aucune des trois questions
+    // ne disparaisse : le diagnostic existe pour lever une zone d'ombre
+    // précise, et une seule des trois y répond.
+    const genres = new Set(diagnostic.map((e) => e.kind))
+    expect(genres.has('frappe'), 'rien ne sonde la tenue').toBe(true)
+    expect(genres.has('discrimination'), 'rien ne sonde le comptage').toBe(true)
+    expect(genres.has('qcm'), 'rien ne sonde la lecture').toBe(true)
+  })
+
+  it('reste plus court qu’une page de module', () => {
+    // Un diagnostic n'entraîne rien : il mesure. Se mesurer quinze fois avant
+    // d'avoir rien appris décourage sans rien apprendre.
+    expect(diagnostic.length).toBeLessThanOrEqual(10)
   })
 
   it('n’emploie aucun mot de théorie dans ses consignes', () => {

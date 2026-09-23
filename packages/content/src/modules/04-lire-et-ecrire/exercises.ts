@@ -10,7 +10,6 @@ import {
   dicteeTroisQuarts,
   quatreQuarts,
   quatreQuartsDecale,
-  stompAmpute,
   stompStompClap,
   troisQuarts,
 } from './patterns'
@@ -156,17 +155,6 @@ export const EXERCISES: readonly Exercise[] = [
     ecrit: bienGroupe,
     joue: bienGroupeAmpute,
     bpm: 60,
-    parTemps: NOIRE,
-  },
-  {
-    kind: 'reperage',
-    id: '04-le-stomp-troue',
-    module: 4,
-    consigne:
-      'Une figure que tout le monde connaît par cœur — ce qui est précisément le risque : on la lit de mémoire au lieu de la lire.',
-    ecrit: stompStompClap,
-    joue: stompAmpute,
-    bpm: 84,
     parTemps: NOIRE,
   },
   {

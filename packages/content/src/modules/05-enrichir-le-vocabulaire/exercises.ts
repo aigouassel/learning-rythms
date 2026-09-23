@@ -8,7 +8,6 @@ import {
   leveeCourte,
   parDessusLaBarre,
   pointee,
-  pointeeAmputee,
   sansLevee,
   skank,
   skankAmpute,
@@ -101,17 +100,6 @@ export const EXERCISES: readonly Exercise[] = [
   },
   {
     kind: 'qcm',
-    id: '05-reconnaitre-la-syncope',
-    module: 5,
-    consigne:
-      'Trois notations, un seul enregistrement. Regarde d’abord ce qui tombe sur le deuxième appui de chaque mesure écrite.',
-    joue: syncope,
-    bpm: 76,
-    options: [surLesAppuis, syncope, contretemps],
-    bonne: 1,
-  },
-  {
-    kind: 'qcm',
     id: '05-reconnaitre-la-liaison',
     module: 5,
     consigne:
@@ -187,17 +175,6 @@ export const EXERCISES: readonly Exercise[] = [
     ecrit: skank,
     joue: skankAmpute,
     bpm: 76,
-    parTemps: NOIRE,
-  },
-  {
-    kind: 'reperage',
-    id: '05-le-pointe-troue',
-    module: 5,
-    consigne:
-      'Le boitement rend le repérage plus dur : l’oreille s’accroche au balancement et cesse de compter. Suis les signes.',
-    ecrit: pointee,
-    joue: pointeeAmputee,
-    bpm: 72,
     parTemps: NOIRE,
   },
   {

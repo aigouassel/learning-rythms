@@ -94,13 +94,6 @@ export const quatreQuartsDecale = enRock([
   frappe([5, 8], fraction(3, 8)),
 ])
 
-/** Le stomp amputé de sa dernière frappe claire. */
-export const stompAmpute = enRock([
-  frappe([0, 1], NOIRE, 'kick', true),
-  frappe([1, 4], NOIRE, 'kick'),
-  frappe([1, 2], NOIRE, 'snare'),
-])
-
 /** Le groupe dense auquel il manque une double. */
 export const bienGroupeAmpute = enRock([
   frappe([0, 1], CROCHE, 'hihat', true),
