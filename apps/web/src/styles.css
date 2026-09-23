@@ -267,3 +267,289 @@ code {
   line-height: 1.6;
   margin: 0 0 1rem;
 }
+
+/* ── Répondre à un exercice ──────────────────────────────────────────── */
+
+.repondre {
+  margin-top: 0.75rem;
+}
+
+.repondre > button,
+.repondre .commandes button {
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--trait);
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.repondre > button:hover:not(:disabled) {
+  border-color: var(--encre);
+}
+
+.repondre > button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.ecouter {
+  margin-bottom: 1rem;
+}
+
+.aide {
+  max-width: 40rem;
+  font-size: 0.85rem;
+  color: var(--doux);
+  line-height: 1.5;
+  margin: 0.5rem 0 1rem;
+}
+
+.aide.gros {
+  font-size: 1rem;
+  color: var(--encre);
+}
+
+.options {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem;
+  border: 1px solid var(--trait);
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.option:hover {
+  border-color: var(--encre);
+}
+
+.option.actif {
+  border-color: var(--appui);
+}
+
+.option.juste {
+  border-color: #2f7a4f;
+  background: #f4faf6;
+}
+
+.option.faux {
+  border-color: var(--appui);
+  background: #fdf5f3;
+}
+
+.option .etiquette {
+  display: block;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--doux);
+  padding: 0.25rem 0.5rem 0;
+}
+
+.verdict {
+  max-width: 40rem;
+  line-height: 1.55;
+  padding: 0.6rem 0.9rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+
+.verdict.juste {
+  background: #f4faf6;
+  border-left: 3px solid #2f7a4f;
+}
+
+.verdict.faux {
+  background: #fdf5f3;
+  border-left: 3px solid var(--appui);
+}
+
+/* ── La grille de saisie ─────────────────────────────────────────────── */
+
+.grille {
+  display: flex;
+  gap: 2px;
+  margin: 0.75rem 0;
+  flex-wrap: wrap;
+}
+
+.grille .case {
+  width: 2.1rem;
+  height: 2.1rem;
+  border: 1px solid var(--trait);
+  border-radius: 3px;
+  background: #fff;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* Les débuts de temps portent une marque plus forte : la grille doit rendre
+   la pulsation visible, comme la notation qu'elle sert à produire. */
+.grille .case.temps {
+  border-left: 3px solid var(--doux);
+}
+
+.grille .case:hover:not(:disabled) {
+  background: #efebe3;
+}
+
+.grille .case.frappee {
+  background: var(--appui);
+  border-color: var(--appui);
+}
+
+.grille .case.figee {
+  background: var(--encre);
+  border-color: var(--encre);
+  cursor: default;
+}
+
+/* ── Appariement ─────────────────────────────────────────────────────── */
+
+.appariement .sons {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.appariement .son {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.4rem 0.6rem;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.appariement .son.juste {
+  border-color: #2f7a4f;
+  background: #f4faf6;
+}
+
+.appariement .son.faux {
+  border-color: var(--appui);
+  background: #fdf5f3;
+}
+
+.appariement .son > button,
+.appariement .choix button {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.25rem 0.7rem;
+  border: 1px solid var(--trait);
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.appariement .choix {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.appariement .choix button.actif {
+  border-color: var(--appui);
+  color: var(--appui);
+}
+
+.appariement .notations {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.appariement .notations li {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.appariement .numero {
+  font-size: 0.85rem;
+  color: var(--doux);
+  width: 1.5rem;
+}
+
+/* ── Le verdict détaillé d'une frappe ────────────────────────────────── */
+
+.grandeurs {
+  display: flex;
+  gap: 2rem;
+  margin: 1rem 0;
+}
+
+.grandeurs dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--doux);
+}
+
+.grandeurs dd {
+  margin: 0.15rem 0 0;
+  font-size: 1.35rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.constats {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  max-width: 40rem;
+}
+
+.constats li {
+  padding: 0.5rem 0.9rem;
+  border-left: 3px solid var(--trait);
+  margin-bottom: 0.4rem;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.constats li.important {
+  border-left-color: var(--appui);
+}
+
+.constats li.notable {
+  border-left-color: #c58a2e;
+}
+
+.choix-texte {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.choix-texte button {
+  font: inherit;
+  font-size: 0.95rem;
+  padding: 0.5rem 1.1rem;
+  border: 1px solid var(--trait);
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.choix-texte button.juste {
+  border-color: #2f7a4f;
+  background: #f4faf6;
+}
+
+.choix-texte button.faux {
+  border-color: var(--appui);
+  background: #fdf5f3;
+}

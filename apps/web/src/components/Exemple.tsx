@@ -1,10 +1,7 @@
 import { fraction, measureCount, type Pattern } from '@rythmes/core'
-import { transport, tempo as tempoOf, type Transport } from '@rythmes/engine'
-import { engrave, syllabize } from '@rythmes/notation'
-import { useEffect, useMemo, useRef, useState } from 'react'
-import { useAudio } from '../audio/useAudio'
-import { webAudioClock } from '../audio/webAudioClock'
-import { StaffView } from '../notation/StaffView'
+import { useState } from 'react'
+import { useLecture } from '../audio/useLecture'
+import { Portee } from './Portee'
 
 export type ExempleProps = {
   readonly pattern: Pattern
@@ -13,7 +10,6 @@ export type ExempleProps = {
   readonly parTemps?: [number, number]
   readonly tempoInitial?: number
   readonly pitched?: boolean
-  /** Les syllabes rythmiques — module 3 seulement. */
   readonly syllabes?: boolean
 }
 
@@ -36,60 +32,12 @@ export function Exemple({
   pitched,
   syllabes,
 }: ExempleProps) {
-  const { ensure, loading } = useAudio()
   const [bpm, setBpm] = useState(tempoInitial)
-  const [joue, setJoue] = useState(false)
-  const [position, setPosition] = useState<number | null>(null)
-
-  const transportRef = useRef<Transport | null>(null)
-  const frameRef = useRef<number | null>(null)
-
-  const voix = useMemo(() => engrave(pattern), [pattern])
-  const syllabesParVoix = useMemo(
-    () => (syllabes ? voix.map((v) => syllabize(v).map((s) => s.syllable)) : null),
-    [voix, syllabes],
-  )
-
-  const arreter = () => {
-    transportRef.current?.stop()
-    transportRef.current = null
-    if (frameRef.current !== null) cancelAnimationFrame(frameRef.current)
-    frameRef.current = null
-    setJoue(false)
-    setPosition(null)
-  }
-
-  // Arrêter en quittant, et au moindre changement de motif ou de tempo :
-  // reprendre en vol demanderait de replanifier ce qui est déjà daté.
-  useEffect(() => arreter, [])
-  useEffect(() => {
-    if (transportRef.current) arreter()
-  }, [pattern, bpm])
-
-  const basculer = async () => {
-    if (joue) return arreter()
-
-    const { ctx, output } = await ensure()
-    const t = transport({
-      clock: webAudioClock(ctx),
-      output,
-      pattern,
-      tempo: tempoOf(bpm, fraction(parTemps[0], parTemps[1])),
-    })
-    t.start()
-    transportRef.current = t
-    setJoue(true)
-
-    // L'écran suit le son : cette boucle *lit* l'horloge audio, elle ne la
-    // pilote jamais. L'inverse ferait dépendre le rythme du taux de
-    // rafraîchissement, donc de la charge de la machine.
-    const suivre = () => {
-      const p = t.positionAt(ctx.currentTime)
-      setPosition(p ? p.at : null)
-      frameRef.current = requestAnimationFrame(suivre)
-    }
-    suivre()
-  }
+  const lecture = useLecture({
+    pattern,
+    bpm,
+    parTemps: fraction(parTemps[0], parTemps[1]),
+  })
 
   return (
     <figure className="exemple">
@@ -98,20 +46,16 @@ export function Exemple({
         <span className="style">{pattern.style}</span>
       </figcaption>
 
-      {voix.map((v, i) => (
-        <StaffView
-          key={v.voice}
-          voice={v}
-          meter={pattern.meter}
-          pitched={pitched}
-          position={position}
-          {...(syllabesParVoix ? { syllables: syllabesParVoix[i] } : {})}
-        />
-      ))}
+      <Portee
+        pattern={pattern}
+        position={lecture.position}
+        pitched={pitched}
+        syllabes={syllabes}
+      />
 
       <div className="commandes">
-        <button type="button" onClick={basculer} disabled={loading}>
-          {loading ? 'chargement…' : joue ? '⏸ pause' : '▶ écouter'}
+        <button type="button" onClick={lecture.basculer} disabled={lecture.chargement}>
+          {lecture.chargement ? 'chargement…' : lecture.joue ? '⏸ pause' : '▶ écouter'}
         </button>
 
         <label>
