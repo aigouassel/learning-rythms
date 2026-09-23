@@ -553,3 +553,149 @@ code {
   border-color: var(--appui);
   background: #fdf5f3;
 }
+
+/* ── La carte du cours ───────────────────────────────────────────────── */
+
+.carte ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.module {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--trait);
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.module:hover {
+  border-color: var(--encre);
+}
+
+.module .numero {
+  font-size: 1.6rem;
+  color: var(--doux);
+  font-variant-numeric: tabular-nums;
+  min-width: 1.5rem;
+}
+
+.module .corps {
+  display: block;
+}
+
+.module .titre {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.module .resume {
+  display: block;
+  color: var(--doux);
+  line-height: 1.5;
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+  max-width: 44rem;
+}
+
+.module .meta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--doux);
+}
+
+.module .etat.pret {
+  color: #2f7a4f;
+}
+
+.module .etat.partiel {
+  color: #c58a2e;
+}
+
+.retour {
+  font: inherit;
+  font-size: 0.85rem;
+  border: none;
+  background: none;
+  padding: 0;
+  margin-bottom: 1rem;
+  color: var(--doux);
+  cursor: pointer;
+}
+
+.retour:hover {
+  color: var(--encre);
+}
+
+/* ── Le module 0 ─────────────────────────────────────────────────────── */
+
+.etapes {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--trait);
+  margin-bottom: 2rem;
+}
+
+.etapes button {
+  font: inherit;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+  color: var(--doux);
+  margin-bottom: -1px;
+}
+
+.etapes button.actif {
+  color: var(--encre);
+  border-bottom-color: var(--appui);
+}
+
+.etapes button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.calibration {
+  max-width: 44rem;
+}
+
+.calibration h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.25rem;
+}
+
+.calibration p {
+  line-height: 1.6;
+}
+
+.calibration button,
+.prise-de-reperes > button {
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--trait);
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.calibration .resultat {
+  margin-top: 1.5rem;
+}
