@@ -46,9 +46,9 @@ function Etat({ module }: { readonly module: Module }) {
   const cours = LECONS[module.number] !== undefined
   const exercices = exercisesOf(module.number).length
 
-  if (module.number === 0) return <span className="etat pret">calibration et diagnostic</span>
+  if (module.number === 0) return <span className="etat pret">calibration</span>
   if (cours && exercices > 0) {
-    return <span className="etat pret">cours et {exercices} exercices</span>
+    return <span className="etat pret">cours · {exercices} exercices</span>
   }
   if (exercices > 0) return <span className="etat partiel">{exercices} exercices</span>
   if (cours) return <span className="etat partiel">cours seul</span>

@@ -33,7 +33,7 @@ export function App() {
   const module = numero === null ? null : moduleByNumber(numero)
 
   return (
-    <main>
+    <main className={module ? '' : 'carte-page'}>
       {module ? (
         <>
           <header>
