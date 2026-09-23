@@ -27,9 +27,7 @@ export function Carte({ onOuvrir }: { onOuvrir(n: number): void }) {
                 <span className="meta">
                   <Etat module={m} />
                   {m.requires.length > 0 && (
-                    <span className="prerequis">
-                      après {m.requires.map((r) => `le ${r}`).join(' et ')}
-                    </span>
+                    <span className="prerequis">après {m.requires.join(' · ')}</span>
                   )}
                   {m.styles.length > 0 && <span className="styles">{m.styles.join(' · ')}</span>}
                 </span>

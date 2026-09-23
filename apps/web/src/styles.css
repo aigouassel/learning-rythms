@@ -14,10 +14,14 @@ body {
   color: var(--encre);
 }
 
+/* La page occupe l'écran. La prose, elle, garde sa propre largeur de lecture
+   (voir `.lecon`) : élargir le cadre ne rend pas les lignes moins lisibles, ça
+   laisse seulement respirer ce qui gagne à être large — la carte, les portées
+   longues, les grilles de saisie. */
 main {
-  max-width: 62rem;
+  max-width: 100rem;
   margin: 0 auto;
-  padding: 2.5rem 1.5rem 6rem;
+  padding: 1.5rem 1.25rem 4rem;
 }
 
 header h1 {
@@ -575,16 +579,35 @@ code {
   padding: 0;
   margin: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr));
-  gap: 0.4rem;
+  gap: 0.45rem;
+}
+
+/* Le cours se lit de haut en bas, pas de gauche à droite : les modules 0 à 4
+   occupent la première colonne, 5 à 8 la seconde. Une numérotation qui
+   serpenterait d'une colonne à l'autre obligerait l'œil à faire des allers et
+   retours pour suivre une progression qui, elle, est linéaire.
+
+   `grid-auto-flow: column` avec cinq rangées explicites produit exactement
+   cette répartition ; en dessous, la grille retombe sur une seule colonne et
+   l'ordre du document suffit. */
+@media (min-width: 54rem) {
+  .carte ol {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(5, auto);
+    grid-auto-flow: column;
+    column-gap: 3rem;
+    /* Chaque carte se dimensionne sur son contenu. Les étirer pour qu'elles
+       remplissent leur rangée creuserait un vide sous les plus courtes, sans
+       rien ajouter à la lecture. */
+    align-items: start;
+  }
 }
 
 .module {
   display: flex;
   align-items: baseline;
-  gap: 0.75rem;
+  gap: 0.9rem;
   width: 100%;
-  height: 100%;
   text-align: left;
   font: inherit;
   padding: 0.6rem 0.85rem;
@@ -598,11 +621,19 @@ code {
   border-color: var(--encre);
 }
 
+/* Le numéro porte la progression : c'est par lui qu'on se repère dans le
+   cours, donc il se lit avant le titre. */
 .module .numero {
-  font-size: 1.1rem;
-  color: var(--doux);
+  font-size: 2.1rem;
+  line-height: 1;
+  color: var(--trait);
   font-variant-numeric: tabular-nums;
-  min-width: 1rem;
+  min-width: 1.5rem;
+  text-align: right;
+}
+
+.module:hover .numero {
+  color: var(--doux);
 }
 
 .module .corps {
