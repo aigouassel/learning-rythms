@@ -569,71 +569,52 @@ code {
   background: #fdf5f3;
 }
 
-/* ── La carte du cours ───────────────────────────────────────────────── */
+/* ── Le sommaire du cours ────────────────────────────────────────────── */
 
-/* Neuf modules doivent tenir sous les yeux d'un coup : deux colonnes dès que
-   la largeur le permet, et des cartes assez serrées pour qu'on les compare
-   plutôt que de les faire défiler. */
-.carte ol {
+/* Une table des matières : une ligne par module, lue de haut en bas. Pas de
+   cartes ni de colonnes — le cours a un ordre, et la page le donne à voir
+   sans que l'œil ait à le reconstituer. */
+.sommaire ol {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: grid;
-  gap: 0.45rem;
+  border-top: 1px solid var(--trait);
 }
 
-/* Le cours se lit de haut en bas, pas de gauche à droite : les modules 0 à 4
-   occupent la première colonne, 5 à 8 la seconde. Une numérotation qui
-   serpenterait d'une colonne à l'autre obligerait l'œil à faire des allers et
-   retours pour suivre une progression qui, elle, est linéaire.
-
-   `grid-auto-flow: column` avec cinq rangées explicites produit exactement
-   cette répartition ; en dessous, la grille retombe sur une seule colonne et
-   l'ordre du document suffit. */
-@media (min-width: 54rem) {
-  .carte ol {
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: repeat(5, auto);
-    grid-auto-flow: column;
-    column-gap: 3rem;
-    /* Chaque carte se dimensionne sur son contenu. Les étirer pour qu'elles
-       remplissent leur rangée creuserait un vide sous les plus courtes, sans
-       rien ajouter à la lecture. */
-    align-items: start;
-  }
+.sommaire li + li .module {
+  border-top: 1px solid var(--trait);
 }
 
 .module {
-  display: flex;
+  display: grid;
+  grid-template-columns: 2.5rem 1fr auto;
   align-items: baseline;
-  gap: 0.9rem;
+  gap: 0 1.25rem;
   width: 100%;
   text-align: left;
   font: inherit;
-  padding: 0.6rem 0.85rem;
-  border: 1px solid var(--trait);
-  border-radius: 5px;
-  background: #fff;
+  padding: 0.7rem 0.6rem;
+  border: none;
+  background: none;
   cursor: pointer;
 }
 
 .module:hover {
-  border-color: var(--encre);
+  background: #fff;
 }
 
 /* Le numéro porte la progression : c'est par lui qu'on se repère dans le
    cours, donc il se lit avant le titre. */
 .module .numero {
-  font-size: 2.1rem;
+  font-size: 1.9rem;
   line-height: 1;
   color: var(--trait);
   font-variant-numeric: tabular-nums;
-  min-width: 1.5rem;
   text-align: right;
 }
 
 .module:hover .numero {
-  color: var(--doux);
+  color: var(--appui);
 }
 
 .module .corps {
@@ -644,32 +625,35 @@ code {
 .module .titre {
   display: block;
   font-weight: 600;
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 
+/* Le résumé tient sur une ligne : dans un sommaire, il situe, il n'explique
+   pas. Ce qui ne rentre pas se lit dans le module.
+
+   `max-width: none` annule la largeur de lecture que `.resume` porte dans
+   l'en-tête : ici la ligne doit aller jusqu'aux métadonnées, pas s'arrêter à
+   44 rem. */
 .module .resume {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  display: block;
+  max-width: none;
   overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
   color: var(--doux);
   line-height: 1.4;
   font-size: 0.85rem;
-  margin: 0.15rem 0 0.3rem;
+  margin-top: 0.1rem;
 }
 
 .module .meta {
   display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  font-size: 0.68rem;
+  gap: 1rem;
+  white-space: nowrap;
+  font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: var(--doux);
-}
-
-.module .etat {
-  white-space: nowrap;
 }
 
 .module .etat.pret {
@@ -678,6 +662,19 @@ code {
 
 .module .etat.partiel {
   color: #c58a2e;
+}
+
+/* Sur une fenêtre étroite, les métadonnées passent sous le titre plutôt que
+   de comprimer celui-ci. */
+@media (max-width: 42rem) {
+  .module {
+    grid-template-columns: 2rem 1fr;
+  }
+
+  .module .meta {
+    grid-column: 2;
+    margin-top: 0.3rem;
+  }
 }
 
 .retour {
