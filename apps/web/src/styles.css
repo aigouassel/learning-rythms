@@ -699,3 +699,26 @@ code {
 .calibration .resultat {
   margin-top: 1.5rem;
 }
+
+/* ── Composition ─────────────────────────────────────────────────────── */
+
+.contraintes {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1rem;
+  max-width: 40rem;
+}
+
+.contraintes li {
+  padding: 0.2rem 0;
+  font-size: 0.95rem;
+  color: var(--doux);
+}
+
+.contraintes li.tenue {
+  color: #2f7a4f;
+}
+
+.contraintes li.manquee {
+  color: var(--encre);
+}

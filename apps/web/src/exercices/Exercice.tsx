@@ -1,10 +1,12 @@
 import type { Exercise } from '@rythmes/content'
 import { Appariement } from './Appariement'
 import { Completion } from './Completion'
+import { Composition } from './Composition'
 import { Dictee } from './Dictee'
 import { Discrimination } from './Discrimination'
 import { ExerciceDechiffrage, ExerciceFrappe } from './Frappe'
 import { Qcm } from './Qcm'
+import { Reperage } from './Reperage'
 
 export const GENRES: Record<Exercise['kind'], string> = {
   discrimination: 'Discrimination',
@@ -14,6 +16,8 @@ export const GENRES: Record<Exercise['kind'], string> = {
   dictee: 'Dictée',
   dechiffrage: 'Déchiffrage',
   frappe: 'Frappe mesurée',
+  reperage: 'Repérage d’erreur',
+  composition: 'Composition guidée',
 }
 
 /**
@@ -39,5 +43,9 @@ export function Exercice({ exercice }: { readonly exercice: Exercise }) {
       return <ExerciceDechiffrage exercice={exercice} />
     case 'frappe':
       return <ExerciceFrappe exercice={exercice} />
+    case 'reperage':
+      return <Reperage exercice={exercice} />
+    case 'composition':
+      return <Composition exercice={exercice} />
   }
 }

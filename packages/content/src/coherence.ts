@@ -1,6 +1,7 @@
+import { isWellFormed, measureLength, toNumber, type Pattern } from '@rythmes/core'
 import { LEXIQUE } from './lexique'
 import { MODULES } from './modules'
-import type { Exercise } from './types'
+import type { Contrainte, Exercise } from './types'
 
 /**
  * Les vérifications de cohérence du cours.
@@ -155,6 +156,22 @@ export function exerciseProblems(e: Exercise): readonly string[] {
       break
     case 'frappe':
       if (e.cycles < 1) p.push(`${e.id} : il faut au moins un passage`)
+      if (e.voix && !e.grille.onsets.some((o) => o.voice === e.voix)) {
+        p.push(`${e.id} : la voix ${e.voix} ne joue rien dans ce motif`)
+      }
+      break
+    case 'reperage':
+      if (differences(e.ecrit, e.joue) !== 1) {
+        p.push(`${e.id} : l’écart doit porter sur une attaque et une seule`)
+      }
+      break
+    case 'composition':
+      if (e.contraintes.length === 0) p.push(`${e.id} : composer sans contrainte n’est pas un exercice`)
+      for (const c of e.contraintes) {
+        if ((c.regle === 'au-moins' || c.regle === 'au-plus') && c.n === undefined) {
+          p.push(`${e.id} : « ${c.libelle} » ne dit pas combien`)
+        }
+      }
       break
     default:
       break
@@ -165,4 +182,43 @@ export function exerciseProblems(e: Exercise): readonly string[] {
   }
 
   return p
+}
+
+/** Combien d'attaques séparent deux motifs — pour un repérage, il en faut une. */
+function differences(a: Pattern, b: Pattern): number {
+  const cle = (o: { at: { num: number; den: number } }) => `${o.at.num}/${o.at.den}`
+  const gauche = new Set(a.onsets.map(cle))
+  const droite = new Set(b.onsets.map(cle))
+  const manquantes = [...gauche].filter((k) => !droite.has(k)).length
+  const ajoutees = [...droite].filter((k) => !gauche.has(k)).length
+  return Math.max(manquantes, ajoutees)
+}
+
+/** Les contraintes qu'une composition ne respecte pas. */
+export function contraintesViolees(
+  exercice: Extract<Exercise, { kind: 'composition' }>,
+  propose: Pattern,
+): readonly Contrainte[] {
+  const horsDuTemps = (o: Pattern['onsets'][number]) => {
+    const t = toNumber(o.at) / toNumber(measureLength(propose.meter))
+    const parMesure = propose.meter.beats / (propose.meter.unit / 4)
+    return Math.abs(t * parMesure - Math.round(t * parMesure)) > 1e-9
+  }
+
+  return exercice.contraintes.filter((c) => {
+    switch (c.regle) {
+      case 'mesures-pleines':
+        return !isWellFormed(propose)
+      case 'au-moins':
+        return propose.onsets.length < (c.n ?? 0)
+      case 'au-plus':
+        return propose.onsets.length > (c.n ?? Infinity)
+      case 'une-hors-du-temps':
+        return !propose.onsets.some(horsDuTemps)
+      case 'commence-sur-le-temps':
+        return propose.onsets.length === 0 || toNumber(propose.onsets[0]!.at) !== 0
+      case 'finit-avant-la-fin':
+        return propose.onsets.length === 0
+    }
+  })
 }

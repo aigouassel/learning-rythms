@@ -1,4 +1,4 @@
-import type { Fraction, Pattern, Style } from '@rythmes/core'
+import type { Fraction, Meter, Pattern, Style, Voice } from '@rythmes/core'
 
 /**
  * Un module du cours.
@@ -102,6 +102,64 @@ export type Exercise =
       readonly cycles: number
       /** Le clic s'arrête et tu continues : le test du rythme intérieur. */
       readonly clicSArrete?: boolean
+      /**
+       * La voix à frapper, quand le motif en compte plusieurs.
+       *
+       * En polyrythmie, on joue une voix pendant que l'autre sonne : sans
+       * cette précision, la correction attendrait les attaques des deux.
+       */
+      readonly voix?: Voice
     })
+  /**
+   * Lecture active : la partition dit une chose, l'enregistrement en dit une
+   * autre. Où ?
+   *
+   * C'est l'exercice le plus efficace pour apprendre à lire, parce qu'il
+   * oblige à suivre le texte au lieu de le survoler — on ne peut pas repérer
+   * un écart sans avoir lu chaque signe.
+   */
+  | (Commun & {
+      readonly kind: 'reperage'
+      /** Ce qui est écrit. */
+      readonly ecrit: Pattern
+      /** Ce qui sonne — il en diffère par une attaque et une seule. */
+      readonly joue: Pattern
+      readonly bpm: number
+      readonly parTemps: Fraction
+    })
+  /**
+   * Écrire soi-même, sous contraintes.
+   *
+   * Une composition ne se note pas : elle se vérifie sur ce qu'on a demandé,
+   * puis elle se joue, et c'est l'oreille qui juge le reste. C'est le seul
+   * exercice du cours dont la réponse n'est pas prévue d'avance — et c'est
+   * l'objectif vers lequel tout le reste conduit.
+   */
+  | (Commun & {
+      readonly kind: 'composition'
+      readonly meter: Meter
+      readonly length: Fraction
+      readonly contraintes: readonly Contrainte[]
+      readonly voix?: Voice
+    })
+
+/**
+ * Ce qu'une composition doit respecter.
+ *
+ * Déclaratif, pour rester une donnée : le libellé est ce qu'on affiche, la
+ * règle est ce qu'on vérifie, et les deux vivent au même endroit — impossible
+ * d'afficher une consigne que le contrôle ne teste pas.
+ */
+export type Contrainte = {
+  readonly libelle: string
+  readonly regle:
+    | 'mesures-pleines'
+    | 'au-moins'
+    | 'au-plus'
+    | 'une-hors-du-temps'
+    | 'commence-sur-le-temps'
+    | 'finit-avant-la-fin'
+  readonly n?: number
+}
 
 export type ExerciseKind = Exercise['kind']
