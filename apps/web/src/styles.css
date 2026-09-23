@@ -187,6 +187,41 @@ header h1 {
   margin-bottom: 1.25rem;
 }
 
+/* Le titre et l'accès au contrôle se partagent la ligne.
+
+   `baseline` et non `center` : les deux textes s'alignent sur leur pied, comme
+   deux mots d'une même phrase, alors qu'un centrage sur la hauteur ferait
+   flotter le bouton au milieu d'un titre deux fois plus haut que lui.
+
+   Le retour à la ligne est autorisé pour la fenêtre étroite, où le bouton
+   passe sous le titre au lieu de le comprimer. */
+.titre-et-controle {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+}
+
+/* Le seul bouton plein de l'application, et c'est délibéré : tout le reste se
+   navigue, ici on s'engage dans quelque chose qui se termine. Il n'a pas à
+   rivaliser avec le sommaire pour autant — d'où sa petite taille. */
+.vers-examen {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.9rem;
+  border: 1px solid var(--appui);
+  border-radius: 4px;
+  background: var(--appui);
+  color: var(--papier);
+  cursor: pointer;
+}
+
+.vers-examen:hover {
+  background: var(--encre);
+  border-color: var(--encre);
+}
+
 .carte-page .resume {
   margin-bottom: 0;
   font-size: 0.9rem;
@@ -1074,4 +1109,145 @@ code {
 
 .contraintes li.manquee {
   color: var(--encre);
+}
+
+/* ── Le contrôle ─────────────────────────────────────────────────────── */
+
+/* La page du contrôle emprunte la colonne de lecture du cours, sans sa grille
+   à cinq colonnes : il n'y a ici ni fil des sections ni exemple qui déborde,
+   donc rien à loger dans les marges. Une largeur et un centrage suffisent. */
+.examen-page {
+  box-sizing: border-box;
+  max-width: calc(var(--lecture) + 2 * var(--gouttiere));
+  padding-inline: var(--gouttiere);
+}
+
+/* La barre de la page module s'étendait d'un bord à l'autre de sa grille ;
+   ici elle n'a que la colonne de lecture à couvrir, et les marges négatives
+   lui rendent les gouttières comme là-bas. */
+.examen-page .barre {
+  margin-bottom: 1rem;
+}
+
+/* La graine tient le bord droit, à la place qu'occupent les flèches dans un
+   module. Elle ne se clique pas : elle nomme le tirage, pour qu'on sache que
+   l'adresse porte quelque chose de rejouable. */
+.examen-page .barre .graine {
+  margin-left: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.05em;
+  color: var(--doux);
+}
+
+/* ── L'avancement ────────────────────────────────────────────────────── */
+
+/* Un trait, pas une jauge encadrée : l'information est un rapport, et un
+   cadre autour ne lui ajoute rien qu'un contour de plus dans une page qui en
+   a déjà beaucoup. */
+.avancement {
+  height: 3px;
+  background: var(--trait);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 2.5rem;
+}
+
+.avancement .parcouru {
+  display: block;
+  block-size: 100%;
+  background: var(--appui);
+  /* La progression se voit avancer : d'une question à l'autre le trait glisse
+     au lieu de sauter, ce qui est la seule chose qui rappelle qu'on est dans
+     une série et non sur une page isolée. */
+  transition: inline-size 0.25s ease-out;
+}
+
+/* ── La question ─────────────────────────────────────────────────────── */
+
+/* Le genre, en haut, dans la couleur des appuis — comme dans l'onglet
+   Exercices, parce que c'est la même information et qu'elle n'a pas à
+   s'apprendre deux fois. Ce qui manque ici, et qui manque exprès, c'est le
+   numéro de module. */
+.question h2 {
+  margin: 0 0 0.35rem;
+}
+
+.question .genre {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--appui);
+}
+
+.question .consigne {
+  line-height: 1.6;
+  margin: 0 0 1.25rem;
+  font-size: 1.05rem;
+}
+
+/* Le passage à la suite est séparé de la réponse par un trait : sans lui, le
+   bouton « Suivant » se lit comme une commande de l'exercice — au milieu de
+   ceux qui en ont un, « vérifier » ou « écouter », la confusion est immédiate. */
+.passer {
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--trait);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+.suivant {
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.45rem 1.1rem;
+  border: 1px solid var(--appui);
+  border-radius: 4px;
+  background: var(--appui);
+  color: var(--papier);
+  cursor: pointer;
+}
+
+.suivant:hover {
+  background: var(--encre);
+  border-color: var(--encre);
+}
+
+/* L'avertissement passe après le bouton dans la lecture, et avant lui dans le
+   flux : c'est la mise en garde qu'on lit en cherchant le bouton, pas celle
+   qu'on découvre après avoir cliqué. */
+.passer .aide {
+  order: -1;
+  margin: 0;
+}
+
+/* ── La fin du contrôle ──────────────────────────────────────────────── */
+
+.fin-examen {
+  padding-top: 1rem;
+}
+
+.fin-examen h2 {
+  margin: 0 0 0.75rem;
+  font-size: 1.5rem;
+}
+
+.fin-examen p {
+  line-height: 1.6;
+  margin: 0 0 1rem;
+}
+
+.fin-examen .rappel-graine {
+  color: var(--doux);
+  font-size: 0.9rem;
+}
+
+.fin-examen .apres {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
 }

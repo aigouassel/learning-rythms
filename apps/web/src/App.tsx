@@ -1,6 +1,12 @@
-import { MODULES, moduleByNumber, type Module as ModuleDuCours } from '@rythmes/content'
+import {
+  graineAleatoire,
+  MODULES,
+  moduleByNumber,
+  type Module as ModuleDuCours,
+} from '@rythmes/content'
 import { useEffect, useState } from 'react'
 import { Carte } from './Carte'
+import { Examen } from './examen/Examen'
 import { Module } from './modules/Module'
 
 /**
@@ -9,23 +15,35 @@ import { Module } from './modules/Module'
  * Deux lignes de plus qu'un `useState`, et elles achètent le bouton Retour du
  * navigateur, le rechargement qui retombe au bon endroit, et un lien qu'on
  * peut mettre en favori sur un module précis. Pour une application d'une seule
- * page à neuf écrans, un routeur serait disproportionné.
+ * page à dix écrans, un routeur serait disproportionné.
  */
-function moduleDuFragment(): number | null {
-  return lu().numero
-}
+type Route =
+  | { readonly page: 'sommaire' }
+  | { readonly page: 'module'; readonly numero: number; readonly section: string | null }
+  /** `graine` est nulle le temps d'un rendu : voir la réécriture dans `App`. */
+  | { readonly page: 'examen'; readonly graine: string | null }
 
 /**
- * `#module-3` ouvre le module, `#module-3/le-faux-ami` ouvre sa section.
+ * `#module-3` ouvre le module, `#module-3/le-faux-ami` ouvre sa section,
+ * `#examen/7a3f` ouvre ce tirage-là du contrôle.
  *
  * La section est dans le même fragment, après une barre, et non dans une
  * ancre nue : `#le-faux-ami` remplacerait `#module-3` et le routeur, ne
  * reconnaissant plus rien, retomberait au sommaire. Le prix à payer est que
  * le navigateur ne fait plus défiler tout seul — c'est à nous de le faire.
+ *
+ * La graine du contrôle suit la même forme, et pour la même raison : elle fait
+ * partie de l'adresse, donc le lien se met en favori, se partage et se
+ * recharge en redonnant exactement les mêmes vingt questions.
  */
-function lu(): { readonly numero: number | null; readonly section: string | null } {
-  const m = /^#module-(\d+)(?:\/(.+))?$/.exec(window.location.hash)
-  return m ? { numero: Number(m[1]), section: m[2] ?? null } : { numero: null, section: null }
+function lu(): Route {
+  const module = /^#module-(\d+)(?:\/(.+))?$/.exec(window.location.hash)
+  if (module) return { page: 'module', numero: Number(module[1]), section: module[2] ?? null }
+
+  const examen = /^#examen(?:\/([0-9a-z]+))?$/.exec(window.location.hash)
+  if (examen) return { page: 'examen', graine: examen[1] ?? null }
+
+  return { page: 'sommaire' }
 }
 
 /**
@@ -45,13 +63,14 @@ function voisins(numero: number) {
 }
 
 export function App() {
-  const [numero, setNumero] = useState<number | null>(moduleDuFragment)
+  const [route, setRoute] = useState<Route>(lu)
 
   useEffect(() => {
     const surChangement = () => {
-      setNumero(moduleDuFragment())
-      const { section } = lu()
-      if (section === null) return
+      const suivante = lu()
+      setRoute(suivante)
+      if (suivante.page !== 'module' || suivante.section === null) return
+      const { section } = suivante
       // Un cadre d'attente : au premier affichage d'un module, la leçon n'est
       // pas encore dans le DOM quand le fragment est lu.
       requestAnimationFrame(() => {
@@ -63,21 +82,65 @@ export function App() {
     return () => window.removeEventListener('hashchange', surChangement)
   }, [])
 
+  /**
+   * `#examen` sans graine s'en voit attribuer une, et l'adresse est réécrite.
+   *
+   * `replaceState` plutôt qu'une affectation au hash : la forme sans graine
+   * n'est qu'une porte d'entrée, et la laisser dans l'historique ferait qu'un
+   * retour arrière depuis le contrôle retomberait dessus — pour repartir
+   * aussitôt sur un tirage encore différent. On la remplace donc au lieu de
+   * l'empiler, et le bouton Retour ramène bien au sommaire.
+   */
+  useEffect(() => {
+    if (route.page !== 'examen' || route.graine !== null) return
+    const graine = graineAleatoire()
+    window.history.replaceState(null, '', `#examen/${graine}`)
+    setRoute({ page: 'examen', graine })
+  }, [route])
+
   const ouvrir = (n: number | null) => {
     window.location.hash = n === null ? '' : `module-${n}`
-    setNumero(n)
+    setRoute(n === null ? { page: 'sommaire' } : { page: 'module', numero: n, section: null })
     // Sans ça, on arrive au module suivant à la hauteur où on a quitté le
     // précédent — c'est-à-dire tout en bas, sur ses exercices.
     window.scrollTo({ top: 0 })
   }
 
-  const module = numero === null ? null : moduleByNumber(numero)
+  const ouvrirExamen = (graine = graineAleatoire()) => {
+    window.location.hash = `examen/${graine}`
+    setRoute({ page: 'examen', graine })
+    window.scrollTo({ top: 0 })
+  }
+
+  if (route.page === 'examen') {
+    // Rien à afficher le temps que la graine soit attribuée — un rendu, jamais
+    // deux, et un écran vide vaut mieux qu'un contrôle tiré puis remplacé.
+    if (route.graine === null) return null
+    return (
+      <Examen
+        // La clé remonte le contrôle de zéro quand on change de tirage : sans
+        // elle, « un autre tirage » renouvellerait les questions en laissant
+        // l'avancement à vingt sur vingt.
+        key={route.graine}
+        graine={route.graine}
+        onRejouer={() => ouvrirExamen()}
+        onSortir={() => ouvrir(null)}
+      />
+    )
+  }
+
+  const module = route.page === 'module' ? moduleByNumber(route.numero) : null
 
   if (!module) {
     return (
       <main className="carte-page">
         <header>
-          <h1>Rythmes</h1>
+          <div className="titre-et-controle">
+            <h1>Rythmes</h1>
+            <button type="button" className="vers-examen" onClick={() => ouvrirExamen()}>
+              Passer le contrôle <span aria-hidden="true">→</span>
+            </button>
+          </div>
           <p className="resume">
             Un cours de rythme en neuf étapes. Il part de ce que l’oreille sait
             déjà pour construire ce qui manque : les mots, puis la notation,
