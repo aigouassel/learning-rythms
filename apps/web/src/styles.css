@@ -928,13 +928,23 @@ code {
 
 /* ── Le passage au module suivant ────────────────────────────────────── */
 
-/* En pied de page, parce que c'est là qu'on arrive quand on a fini. Les deux
-   cases existent toujours — même vide, celle de gauche tient le suivant à
-   droite, où l'œil le cherche. */
+/* Les deux cases existent toujours — même vide, celle de gauche tient le
+   suivant à droite, où l'œil le cherche. */
 .suite {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+}
+
+/* En haut, le bloc annonce ; en bas, il conclut. Seul le trait change de
+   côté : c'est lui qui dit de quel contenu le bloc se sépare. */
+.suite.haut {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--trait);
+}
+
+.suite.bas {
   margin-top: 4rem;
   padding-top: 1.5rem;
   border-top: 1px solid var(--trait);

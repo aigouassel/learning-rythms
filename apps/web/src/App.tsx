@@ -106,6 +106,8 @@ export function App() {
         </span>
       </nav>
 
+      <Passage place="haut" precedent={precedent} suivant={suivant} onOuvrir={ouvrir} />
+
       <header>
         <p className="fil">Module {module.number}</p>
         <h1>{module.title}</h1>
@@ -114,11 +116,37 @@ export function App() {
 
       <Module module={module} />
 
-      <nav className="suite" aria-label="Module suivant">
-        <Voisin sens="avant" module={precedent} onOuvrir={ouvrir} />
-        <Voisin sens="apres" module={suivant} onOuvrir={ouvrir} />
-      </nav>
+      <Passage place="bas" precedent={precedent} suivant={suivant} onOuvrir={ouvrir} />
     </main>
+  )
+}
+
+/**
+ * Le passage d'un module à l'autre, en haut et en bas de la page.
+ *
+ * Deux fois le même bloc, et non deux dispositifs différents : on n'aborde
+ * pas un module autrement qu'on le quitte, et une navigation qui change de
+ * forme selon l'endroit demande à être réapprise à chaque fois.
+ */
+function Passage({
+  place,
+  precedent,
+  suivant,
+  onOuvrir,
+}: {
+  readonly place: 'haut' | 'bas'
+  readonly precedent: ModuleDuCours | null
+  readonly suivant: ModuleDuCours | null
+  readonly onOuvrir: (n: number) => void
+}) {
+  return (
+    <nav
+      className={`suite ${place}`}
+      aria-label={place === 'haut' ? 'Modules voisins' : 'Module suivant'}
+    >
+      <Voisin sens="avant" module={precedent} onOuvrir={onOuvrir} />
+      <Voisin sens="apres" module={suivant} onOuvrir={onOuvrir} />
+    </nav>
   )
 }
 
