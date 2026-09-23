@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   cycles,
+  exerciseProblems,
   danglingRequires,
   danglingSeeAlso,
   forwardReferences,
@@ -111,5 +112,31 @@ describe('le registre des exercices', () => {
   it('n’a aucun identifiant en double, tous modules confondus', () => {
     const ids = Object.values(EXERCISES_BY_MODULE).flatMap((es) => es.map((e) => e.id))
     expect(new Set(ids).size).toBe(ids.length)
+  })
+})
+
+describe('le diagnostic du module 0', () => {
+  const diagnostic = EXERCISES_BY_MODULE[0] ?? []
+
+  it('existe et compte quatre épreuves', () => {
+    expect(diagnostic).toHaveLength(4)
+  })
+
+  it('n’emploie aucun mot de théorie dans ses consignes', () => {
+    // À ce stade, nommer serait déjà enseigner. Le diagnostic demande de
+    // compter et de comparer, jamais de qualifier — ce que le contrôle des
+    // références en avant vérifie mot à mot, puisque tout le lexique vient
+    // après le module 0.
+    expect(diagnostic.flatMap((e) => forwardReferences(e.consigne, 0))).toEqual([])
+  })
+
+  it('sonde la tenue du tempo en faisant taire le clic', () => {
+    const tenue = diagnostic.find((e) => e.kind === 'frappe')
+    expect(tenue).toBeDefined()
+    expect(tenue!.kind === 'frappe' && tenue!.clicSArrete).toBe(true)
+  })
+
+  it('est valide', () => {
+    expect(diagnostic.flatMap(exerciseProblems)).toEqual([])
   })
 })

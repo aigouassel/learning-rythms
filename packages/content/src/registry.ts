@@ -1,3 +1,4 @@
+import { DIAGNOSTIC as module0 } from './modules/00-prise-de-reperes/diagnostic'
 import { EXERCISES as module3 } from './modules/03-les-durees/exercises'
 import type { Exercise } from './types'
 
@@ -10,6 +11,7 @@ import type { Exercise } from './types'
  * navigateur, ce qui est tout l'intérêt de les avoir typés.
  */
 export const EXERCISES_BY_MODULE: Readonly<Record<number, readonly Exercise[]>> = {
+  0: module0,
   3: module3,
 }
 

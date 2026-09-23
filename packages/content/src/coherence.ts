@@ -104,6 +104,12 @@ export const danglingSeeAlso = (): readonly string[] =>
  * bien déclarer que le module 5 ne dépend que du module 4 et y écrire
  * « triolet » par inadvertance — le compilateur, lui, ne se laisse pas
  * convaincre par les intentions.
+ *
+ * Il compare des **mots, pas des sens** : « on mesure ta dérive » déclenchera
+ * le terme *mesure* du module 2. C'est un faux positif assumé — distinguer le
+ * verbe du nom demanderait une analyse grammaticale, pour un gain nul :
+ * reformuler lève l'alerte, et la reformulation est presque toujours plus
+ * claire que la phrase qui l'avait provoquée.
  */
 export function forwardReferences(texte: string, module: number): readonly string[] {
   const normalise = (s: string) =>
