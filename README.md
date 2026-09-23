@@ -20,6 +20,16 @@ du cours dans [`docs/lexique.md`](docs/lexique.md).
 VexFlow et smplr restent confinés dans `apps/web` : les paquets logiques ne les
 connaissent pas, et la bibliothèque de rendu reste remplaçable.
 
+## Où en est le projet
+
+Les neuf modules sont écrits — leçon, motifs et exercices — et les sept genres
+d'exercices ont leur interface. La calibration de latence et le diagnostic du
+module 0 fonctionnent, la progression tient dans le navigateur.
+
+Reste ouvert, par choix : le système d'acquisition (« module acquis »),
+l'échauffement par répétition espacée, et le nombre définitif d'exercices par
+module. Voir `docs/cadrage.md` §9.
+
 ## Commandes
 
 ```bash

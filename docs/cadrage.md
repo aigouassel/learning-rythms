@@ -473,6 +473,11 @@ force au contraire les cinq packages à exister pour de vrai.
 
 *Rien à ce jour.*
 
+### Écrit à ce jour
+
+Les neuf modules, leurs exercices et les interfaces de réponse. Ce qui reste
+ouvert est listé ci-dessous.
+
 ### Backlog assumé
 
 - **Système d'acquisition** — que veut dire « module acquis » ? Écarté de la v1 :
@@ -497,3 +502,7 @@ force au contraire les cinq packages à exister pour de vrai.
 | 2026-09-23 | Types d'exercices choisis par module selon la compétence installée |
 | 2026-09-23 | Syllabes Kodály : tremplin du module 3, retirées ensuite |
 | 2026-09-23 | Un lexique transversal, vérifié au build contre les références en avant |
+| 2026-09-23 | Ajout du repérage d'erreur et de la composition guidée au domaine |
+| 2026-09-23 | Les mots trop courants — temps, mesure, accent, silence — échappent au contrôle des références en avant |
+| 2026-09-23 | La quantification rend des candidats, jamais une réponse |
+| 2026-09-23 | Les neuf modules sont rédigés
