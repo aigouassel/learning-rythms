@@ -26,17 +26,12 @@ export function Portee({ pattern, position, pitched, syllabes }: PorteeProps) {
   )
 
   return (
-    <>
-      {voix.map((v, i) => (
-        <StaffView
-          key={v.voice}
-          voice={v}
-          meter={pattern.meter}
-          pitched={pitched}
-          position={position ?? null}
-          {...(syllabesParVoix ? { syllables: syllabesParVoix[i] } : {})}
-        />
-      ))}
-    </>
+    <StaffView
+      voices={voix}
+      meter={pattern.meter}
+      pitched={pitched}
+      position={position ?? null}
+      {...(syllabesParVoix ? { syllables: syllabesParVoix } : {})}
+    />
   )
 }
