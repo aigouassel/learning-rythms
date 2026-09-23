@@ -1,0 +1,72 @@
+# Construire le cours et le publier sur GitHub Pages.
+#
+# La source de Pages est le workflow lui-même, pas une branche `gh-pages` :
+# rien de construit n'entre dans l'historique, et `dist/` reste ignoré comme
+# il doit l'être. `configure-pages` active le site au premier passage.
+name: Déployer sur GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # De quoi relancer une publication sans commit vide.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Une publication à la fois. `cancel-in-progress: false` parce qu'un déploiement
+# interrompu en cours d'écriture laisserait le site dans un état intermédiaire —
+# ce qui n'est pas le cas d'une construction, elle, annulable sans dommage.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  construire:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Corepack avant `setup-node`, et non après : c'est lui qui fait
+      # répondre `yarn` avec la version déclarée dans `packageManager`. Dans
+      # l'autre ordre, la mise en cache interroge le Yarn 1 préinstallé sur le
+      # runner et cherche le cache au mauvais endroit.
+      - name: Activer corepack
+        run: corepack enable
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: yarn
+
+      - name: Installer
+        run: yarn install --immutable
+
+      # Le déploiement ne publie que ce qui compile et ce qui passe. Un cours
+      # faux est pire qu'un cours en retard.
+      - name: Vérifier les types
+        run: yarn typecheck
+
+      - name: Tester
+        run: yarn test
+
+      - uses: actions/configure-pages@v5
+
+      - name: Construire
+        run: yarn build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: apps/web/dist
+
+  deployer:
+    needs: construire
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deploiement.outputs.page_url }}
+    steps:
+      - id: deploiement
+        uses: actions/deploy-pages@v4
