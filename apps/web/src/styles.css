@@ -1,0 +1,135 @@
+:root {
+  --encre: #1c1a17;
+  --papier: #faf8f4;
+  --trait: #d8d2c6;
+  --appui: #b4462a;
+  --doux: #6f6960;
+  font-family: ui-serif, Georgia, 'Times New Roman', serif;
+  color-scheme: light;
+}
+
+body {
+  margin: 0;
+  background: var(--papier);
+  color: var(--encre);
+}
+
+main {
+  max-width: 62rem;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 6rem;
+}
+
+header h1 {
+  font-size: 2rem;
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.01em;
+}
+
+header p {
+  color: var(--doux);
+  margin: 0 0 2.5rem;
+  max-width: 44rem;
+  line-height: 1.6;
+}
+
+code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+  background: #efebe3;
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+}
+
+.exemple {
+  margin: 0 0 2rem;
+  padding: 1.25rem 1.25rem 1rem;
+  border: 1px solid var(--trait);
+  border-radius: 6px;
+  background: #fff;
+}
+
+.exemple figcaption {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.exemple .style {
+  font-size: 0.75rem;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--doux);
+}
+
+.portee {
+  position: relative;
+  overflow-x: auto;
+}
+
+/* Le signe qui sonne. La couleur est la même que celle des appuis : c'est la
+   même idée — montrer où l'on est dans le temps. */
+.portee .sonne path,
+.portee .sonne rect,
+.portee .sonne text {
+  fill: var(--appui);
+  stroke: var(--appui);
+}
+
+.syllabes span {
+  position: absolute;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: var(--doux);
+  white-space: nowrap;
+}
+
+.commandes {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.commandes button {
+  font: inherit;
+  font-size: 0.9rem;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--trait);
+  border-radius: 4px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.commandes button:hover:not(:disabled) {
+  border-color: var(--encre);
+}
+
+.commandes button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.commandes label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--doux);
+}
+
+.commandes output {
+  font-variant-numeric: tabular-nums;
+  min-width: 4.5rem;
+}
+
+.duree {
+  margin: 0.75rem 0 0;
+  font-size: 0.8rem;
+  color: var(--doux);
+}

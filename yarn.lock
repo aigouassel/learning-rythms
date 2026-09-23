@@ -687,6 +687,8 @@ __metadata:
     "@vitejs/plugin-react": "npm:^5.1.0"
     react: "npm:^19.2.0"
     react-dom: "npm:^19.2.0"
+    smplr: "npm:^1.0.0"
+    vexflow: "npm:^5.0.0"
     vite: "npm:^7.1.14"
   languageName: unknown
   linkType: soft
@@ -1509,6 +1511,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"smplr@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "smplr@npm:1.0.0"
+  checksum: 10c0/a50fa5095a307dfde687b86b0f3011dfdac5208660fe6b2dfcd93c6ec931c7275813aa8d27c66e64f4ed25a4bf1a3f86abdbd3d79ffdb25b9dd89e26230e43ee
+  languageName: node
+  linkType: hard
+
 "source-map-js@npm:^1.2.1":
   version: 1.2.1
   resolution: "source-map-js@npm:1.2.1"
@@ -1635,6 +1644,13 @@ __metadata:
   bin:
     update-browserslist-db: cli.js
   checksum: 10c0/07bab166c18f47ba51f3b755e42f109ef5069d0d7c7224887decbd523d5ccd404f63661ebd5a740099972ed47f41f0e28c04df8be31d76716a346f948ce2aa61
+  languageName: node
+  linkType: hard
+
+"vexflow@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "vexflow@npm:5.0.0"
+  checksum: 10c0/8737a4414bf90f960d4ef91d24ec43c9fabbac6cc95df67c593af9c51da8311bc907c562c7c4836ed0b1c8060b19838649b4540886b60a9de8b36d1d15aad8c1
   languageName: node
   linkType: hard
 

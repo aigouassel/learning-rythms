@@ -16,7 +16,9 @@
     "@rythmes/notation": "workspace:^",
     "@rythmes/scoring": "workspace:^",
     "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+    "react-dom": "^19.2.0",
+    "smplr": "^1.0.0",
+    "vexflow": "^5.0.0"
   },
   "devDependencies": {
     "@types/react": "^19.2.2",
