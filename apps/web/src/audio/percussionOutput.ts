@@ -27,14 +27,18 @@ const CANDIDATS: Record<Voice, readonly string[]> = {
 }
 
 /**
- * Laquelle des variantes d'un groupe prendre.
+ * On joue le **groupe**, jamais une variante précise.
  *
- * Celle du milieu : les extrêmes d'un kit sont souvent caricaturaux — une
- * grosse caisse sans tenue d'un côté, interminable de l'autre — et ce cours a
- * besoin d'un son neutre, qu'on puisse écouter cent fois sans fatigue.
+ * J'avais d'abord choisi la variante du milieu, en me disant que les extrêmes
+ * d'un kit sont caricaturaux. Mauvaise idée : sur le TR-808, `snare/sd2525`
+ * est déclarée par l'instrument mais ne produit aucun son, et toute la caisse
+ * claire du cours était muette — alors que `snare/sd0000` et le groupe `snare`
+ * fonctionnent.
+ *
+ * Désigner le groupe laisse l'instrument choisir lui-même sa variante par
+ * défaut. C'est plus simple, et surtout ça ne parie sur rien : une liste de
+ * variantes n'est pas une promesse que chacune sonne.
  */
-const variante = (echantillons: readonly string[]): string | undefined =>
-  echantillons[Math.floor(echantillons.length / 2)]
 
 export type AudioOutput = Output & {
   /** Résolue quand les échantillons sont chargés : jouer avant serait muet. */
@@ -68,10 +72,7 @@ export function audioOutput(
 
       // D'abord par groupe, ce qui est la façon dont un kit s'organise ; à
       // défaut par nom complet, au cas où un kit n'aurait pas de familles.
-      const groupe = candidats.find((c) => groupes.has(c))
-      const trouve = groupe
-        ? variante(drums.getSampleNamesForGroup(groupe))
-        : candidats.find((c) => index.has(c))
+      const trouve = candidats.find((c) => groupes.has(c)) ?? candidats.find((c) => index.has(c))
 
       if (trouve) resolues.set(voice, trouve)
       else manquantes.push(voice)
