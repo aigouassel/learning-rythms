@@ -9,6 +9,7 @@ import {
 } from './coherence'
 import { LEXIQUE } from './lexique'
 import { MODULES } from './modules'
+import { EXERCISES_BY_MODULE } from './registry'
 
 describe('le graphe du cours', () => {
   it('ne boucle pas', () => {
@@ -89,5 +90,26 @@ describe('les références en avant', () => {
 
   it('autorisent un terme à partir de son propre module', () => {
     expect(forwardReferences('La syncope déplace l’appui.', 5)).toEqual([])
+  })
+})
+
+describe('le registre des exercices', () => {
+  it('range chaque exercice sous son propre module', () => {
+    for (const [numero, exercices] of Object.entries(EXERCISES_BY_MODULE)) {
+      for (const e of exercices) {
+        expect(e.module, `${e.id} est rangé sous ${numero}`).toBe(Number(numero))
+      }
+    }
+  })
+
+  it('ne référence que des modules qui existent', () => {
+    for (const numero of Object.keys(EXERCISES_BY_MODULE)) {
+      expect(MODULES.some((m) => m.number === Number(numero))).toBe(true)
+    }
+  })
+
+  it('n’a aucun identifiant en double, tous modules confondus', () => {
+    const ids = Object.values(EXERCISES_BY_MODULE).flatMap((es) => es.map((e) => e.id))
+    expect(new Set(ids).size).toBe(ids.length)
   })
 })

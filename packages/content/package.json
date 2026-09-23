@@ -4,7 +4,8 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./modules/*": "./src/modules/*"
   },
   "scripts": {
     "typecheck": "tsc --build"
@@ -12,5 +13,8 @@
   "dependencies": {
     "@rythmes/core": "workspace:^",
     "@rythmes/notation": "workspace:^"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.2"
   }
 }

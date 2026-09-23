@@ -1,0 +1,155 @@
+import {
+  avecSilences,
+  deuxBlanches,
+  deuxFoisPlusVite,
+  escalier,
+  quatreFoisPlusVite,
+  quatreNoires,
+  rockElementaire,
+  surLesTemps,
+  uneRonde,
+} from './patterns'
+
+# Les durées
+
+Tu sais déjà sentir la pulsation et reconnaître le cycle de la mesure. Ce module
+ajoute une chose, une seule : **combien de temps dure chaque son**.
+
+Et il la construit dans l’ordre qui t’arrange — d’abord en rapports, ensuite
+seulement en noms. Savoir qu’une note dure *deux fois moins* que la précédente
+est une information musicale ; savoir qu’elle s’appelle « croche » n’est qu’une
+étiquette posée dessus.
+
+## D’abord, écoute
+
+Voici un charleston qui frappe chaque temps. Rien de nouveau : c’est la
+pulsation du module précédent, avec un timbre.
+
+<Exemple titre="Une frappe par temps" pattern={surLesTemps} tempoInitial={84} />
+
+Maintenant le même charleston, deux fois plus rapide. Le tempo n’a pas bougé —
+vérifie-le en écoutant les deux à la suite, la pulsation est identique.
+
+<Exemple titre="Deux fois plus vite" pattern={deuxFoisPlusVite} tempoInitial={84} />
+
+Et encore deux fois plus rapide.
+
+<Exemple titre="Quatre fois plus vite" pattern={quatreFoisPlusVite} tempoInitial={84} />
+
+C’est **tout le module**. Le reste n’est que du vocabulaire posé sur ce que tu
+viens d’entendre.
+
+## Ce qui vient d’être divisé
+
+Chaque fois, on a coupé la durée en deux. Pas en trois, pas « un peu plus
+vite » : exactement en deux, et c’est pour cela que le résultat reste en place
+avec la pulsation.
+
+Lis ce tableau de droite à gauche autant que de gauche à droite :
+
+| Ce qu’on entend | Combien par temps |
+| --- | --- |
+| une frappe par temps | 1 |
+| deux fois plus vite | 2 |
+| quatre fois plus vite | 4 |
+
+Une durée n’existe donc **pas en secondes**. Elle existe en rapport : la moitié
+de, le quart de. On parle de **durée relative**, et le mot *relative* est
+l’essentiel — relative à quoi ? À la pulsation, et à rien d’autre.
+
+C’est ce qui permet au même motif de rester lui-même quand on change de tempo :
+tu peux déplacer le curseur des exemples ci-dessus sans que rien de ce que tu
+entends ne change de nature.
+
+## Les noms
+
+Maintenant seulement, les étiquettes. Elles se lisent comme une échelle, chaque
+barreau valant la moitié du précédent.
+
+| Figure | Vaut | Quand la noire vaut le temps |
+| --- | --- | --- |
+| ronde | 1 | quatre temps |
+| blanche | 1/2 | deux temps |
+| noire | 1/4 | un temps |
+| croche | 1/8 | un demi-temps |
+| double croche | 1/16 | un quart de temps |
+
+Remarque que le nom ne dit pas la durée : une noire ne dure pas « un temps » en
+soi, elle le dure **dans une mesure où l’on a décidé qu’elle le durait**. Les
+deux chiffres au début de la portée sont là pour ça, et le module suivant
+s’occupera d’eux.
+
+Dans l’autre sens, les valeurs longues :
+
+<Exemple titre="Deux blanches" pattern={deuxBlanches} tempoInitial={84} />
+
+<Exemple titre="Une ronde" pattern={uneRonde} tempoInitial={84} />
+
+## L’escalier, en une mesure
+
+Voici les trois vitesses réunies : un temps par vitesse, puis retour au départ.
+
+<Exemple titre="L’escalier" pattern={escalier} tempoInitial={72} syllabes />
+
+Les petites syllabes sous la portée se disent à voix haute : ce sont des
+**syllabes rythmiques**, empruntées à la méthode Kodály. Elles ne sont pas de la
+notation, mais des poignées pour attraper le rythme avant de savoir le lire —
+*ta* pour une frappe par temps, *ti* quand il en tombe deux, *ti ka* quand il en
+tombe quatre.
+
+Elles n’apparaîtront que dans ce module et disparaîtront ensuite. C’est voulu :
+leur travail sera fait, et les garder plus longtemps t’éviterait de lire.
+
+## Le silence dure
+
+Un silence n’est pas un trou dans la musique, c’est **une durée que l’on ne joue
+pas**. Il occupe la place exactement comme une note, il se compte comme elle, et
+il s’écrit avec un signe qui lui est propre.
+
+Compare. D’abord quatre frappes :
+
+<Exemple titre="Quatre frappes" pattern={quatreNoires} tempoInitial={84} />
+
+Puis les mêmes quatre temps, dont deux ne sonnent pas :
+
+<Exemple titre="Deux frappes, deux silences" pattern={avecSilences} tempoInitial={84} />
+
+La mesure dure la même chose. Rien n’a été retiré : deux durées ont simplement
+cessé d’être jouées.
+
+Le français leur donne des noms qui ne rappellent pas ceux des notes — le
+silence qui vaut une noire s’appelle un *soupir*, et non une « noire muette ».
+C’est déroutant, et c’est ainsi : pause, demi-pause, soupir, demi-soupir, quart
+de soupir, dans le même ordre que ronde, blanche, noire, croche, double croche.
+
+## Comment ça s’écrit
+
+Trois éléments, pas davantage :
+
+- la **tête** de note, pleine ou creuse — creuse pour les valeurs longues ;
+- la **hampe**, le trait vertical, présente dès la blanche ;
+- la **ligature**, la barre qui relie les croches et les doubles entre elles.
+
+La ligature n’est pas une décoration. Regarde à nouveau l’escalier : les deux
+croches sont reliées entre elles, les quatre doubles entre elles, et les groupes
+ne débordent jamais l’un sur l’autre. C’est ce qui te permet de voir les temps
+au lieu de les compter. Le module suivant en fera une règle ; pour l’instant,
+contente-toi de remarquer que ça se voit.
+
+## Trois vitesses à la fois
+
+Une batterie rock élémentaire fait entendre les trois vitesses simultanément :
+la grosse caisse lente, la caisse claire sur les appuis, le charleston deux fois
+plus rapide.
+
+<Exemple titre="Batterie rock élémentaire" pattern={rockElementaire} tempoInitial={92} />
+
+C’est le même escalier, mais empilé au lieu d’être déroulé. Écoute une voix à la
+fois, puis les trois ensemble.
+
+## Ce qu’il faut retenir
+
+1. Une durée est un **rapport**, jamais un nombre de secondes.
+2. Les figures se divisent par deux, et leurs noms suivent cette échelle.
+3. Un **silence** est une durée, pas un manque.
+4. La ligature groupe ce qui tient dans un même temps.
