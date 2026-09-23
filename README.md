@@ -29,6 +29,11 @@ d'exercices ont leur interface. La calibration de latence et le diagnostic du
 module 0 fonctionnent, la progression tient dans le navigateur. Le cours compte
 124 exercices : une quinzaine par module, neuf pour l'unité 0.
 
+Un **contrôle transversal** s'ouvre depuis le sommaire : vingt questions tirées
+dans les huit modules, difficultés mêlées, une à la fois et sans retour arrière.
+Le tirage ne dépend que d'une graine portée par l'adresse — `#examen/7a3f`
+redonne le même contrôle. Voir `docs/cadrage.md` §6.5.
+
 Reste ouvert, par choix : le système d'acquisition (« module acquis ») et
 l'échauffement par répétition espacée. Voir `docs/cadrage.md` §9.
 

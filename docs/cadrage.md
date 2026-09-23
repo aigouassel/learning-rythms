@@ -349,6 +349,53 @@ Voie retenue par défaut : **frappe → quantification → 2-3 interprétations
 proposées → choix**. L'oreille reste la porte d'entrée, mais valider impose de
 départager des notations. L'ambiguïté technique devient le levier pédagogique.
 
+### 6.5 Le contrôle transversal
+
+Les exercices d'un module interrogent ce qu'on vient de lire, dans l'ordre où on
+l'a lu. C'est ce qu'il faut pour installer une notion, et c'est insuffisant pour
+savoir si elle est acquise : on y répond avec le contexte du module en tête.
+
+Le **contrôle** pose la question que le module ne peut pas poser —
+*reconnaîtrais-tu ça sans savoir d'où ça vient ?* Vingt questions prises dans les
+huit modules, accessibles depuis le sommaire et de nulle part ailleurs.
+
+**Trois mécanismes, et chacun répond à un défaut précis du tirage naïf.**
+
+| Mécanisme | Le défaut qu'il corrige |
+|---|---|
+| Quota par strate de difficulté | un tirage uniforme sort vingt discriminations des premiers modules — le vivier en est plein |
+| Tourniquet par genre dans chaque strate | la strate haute rendrait quatre dictées d'affilée |
+| Enchaînement à score de pénalité | des questions bien choisies mal ordonnées se lisent encore comme un module |
+
+La **difficulté est dérivée**, jamais déclarée : `module + poids du genre`, les
+poids reprenant l'échelle du §6.1. Aucun champ n'est ajouté aux exercices, et le
+jugement se corrige en un endroit au lieu de cent vingt-quatre. Le prix assumé :
+deux exercices de même module et de même genre sont réputés égaux.
+
+L'**ordre** est construit par un glouton qui pénalise le voisinage — 4 pour une
+strate répétée, 2 pour un module, 1 pour un genre — et non par des
+interdictions : empiler trois interdictions sur vingt éléments garantit un cas
+sans solution en fin de séquence. Les ex æquo se départagent par l'effectif
+restant, d'abord de la strate puis du module ; sans ce second critère, la
+contrainte de module échoue sur une graine sur dix.
+
+**Le tirage est une fonction pure d'une graine**, portée par l'adresse
+(`#examen/7a3f`). Le contrôle se remet en favori, se partage et se recharge à
+l'identique — et surtout il se teste, ce qu'un `Math.random` dispersé dans les
+composants ne permettrait pas.
+
+**Deux partis pris d'interface.** Une question à la fois et pas de retour
+arrière : c'est la seule chose qui distingue vraiment un contrôle d'une page
+d'exercices, le reste du travail étant fait en amont, invisible. Et **aucun
+numéro de module affiché** — l'étiquette trahirait le mélange, et savoir qu'on
+est au module 6 réduit « binaire ou ternaire ? » à une formalité.
+
+**Le contrôle ne note pas.** Chaque question se corrige sur place, comme partout
+ailleurs. Une note globale demanderait de convertir une frappe à ±38 ms en points,
+ce que le §7.2 écarte explicitement ; et l'unité 0 reste hors du vivier, parce
+qu'un contrôle interroge ce que le cours a installé et qu'un diagnostic
+n'installe rien.
+
 ---
 
 ## 7. Le modèle de feedback
@@ -489,8 +536,8 @@ force au contraire les cinq packages à exister pour de vrai.
 
 ### Écrit à ce jour
 
-Les neuf modules, leurs exercices et les interfaces de réponse. Ce qui reste
-ouvert est listé ci-dessous.
+Les neuf modules, leurs exercices et les interfaces de réponse, plus le contrôle
+transversal (§6.5). Ce qui reste ouvert est listé ci-dessous.
 
 ### Backlog assumé
 
@@ -518,6 +565,10 @@ ouvert est listé ci-dessous.
 | 2026-09-23 | Ajout du repérage d'erreur et de la composition guidée au domaine |
 | 2026-09-23 | Les mots trop courants — temps, mesure, accent, silence — échappent au contrôle des références en avant |
 | 2026-09-23 | La quantification rend des candidats, jamais une réponse |
+| 2026-09-23 | Un contrôle transversal de 20 questions, accessible du seul sommaire |
+| 2026-09-23 | Sa difficulté est dérivée de `module + genre`, et non déclarée par exercice |
+| 2026-09-23 | Son tirage est une fonction pure d'une graine portée par l'adresse |
+| 2026-09-23 | Il ne note pas : le refus de la note unique (§7.2) vaut aussi pour lui |
 | 2026-09-23 | Les neuf modules sont rédigés
 | 2026-09-23 | Page de cours : colonne de lecture centrée, exemples en débordement, navigation en barre collante et passage au module suivant |
 | 2026-09-23 | Fil des sections dans la marge, avec ancres `#module-N/section` |
