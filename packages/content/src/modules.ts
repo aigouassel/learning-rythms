@@ -92,7 +92,7 @@ export const MODULES: readonly Module[] = [
       'Le temps divisé en trois. La marche en 6/8 est un terrain de fanfare ; le 3/4 lui ressemble et n’a rien à voir.',
     requires: [4],
     styles: ['blues-shuffle', 'marche', 'gigue'],
-    introduces: [],
+    introduces: ['subdivision', 'binaire', 'ternaire', 'triolet', 'mesure-composee', 'shuffle'],
   },
   {
     number: 7,
@@ -102,7 +102,14 @@ export const MODULES: readonly Module[] = [
       'Deux contre trois, la clave, les groupements inégaux des Balkans. Ici le 3-contre-2 est structurel, pas un exercice.',
     requires: [5, 6],
     styles: ['clave', 'afrobeat', 'balkan'],
-    introduces: [],
+    introduces: [
+      'polyrythmie',
+      'polymetrie',
+      'hemiole',
+      'clave',
+      'metrique-asymetrique',
+      'groupement',
+    ],
   },
   {
     number: 8,
@@ -112,7 +119,7 @@ export const MODULES: readonly Module[] = [
       'Motif, variation, augmentation, ostinato. Le module qui sert le but : composer, en recyclant les cellules déposées par tout le cours.',
     requires: [7],
     styles: ['hip-hop'],
-    introduces: [],
+    introduces: ['augmentation', 'diminution', 'ostinato', 'groove', 'carrure'],
   },
 ]
 

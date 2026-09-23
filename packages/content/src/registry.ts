@@ -1,4 +1,6 @@
 import { DIAGNOSTIC as module0 } from './modules/00-prise-de-reperes/diagnostic'
+import { EXERCISES as module1 } from './modules/01-sentir-la-pulsation/exercises'
+import { EXERCISES as module2 } from './modules/02-temps-forts-et-faibles/exercises'
 import { EXERCISES as module3 } from './modules/03-les-durees/exercises'
 import type { Exercise } from './types'
 
@@ -12,6 +14,8 @@ import type { Exercise } from './types'
  */
 export const EXERCISES_BY_MODULE: Readonly<Record<number, readonly Exercise[]>> = {
   0: module0,
+  1: module1,
+  2: module2,
   3: module3,
 }
 

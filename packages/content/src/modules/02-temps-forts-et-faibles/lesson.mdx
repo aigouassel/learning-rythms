@@ -1,0 +1,71 @@
+import { marche, pop, sansAppui, valse } from './patterns'
+
+# Temps forts et temps faibles
+
+La pulsation seule ne suffit pas à faire de la musique. Écoute ce battement
+parfaitement régulier, sans rien qui le structure :
+
+<Exemple titre="Sans appui" pattern={sansAppui} tempoInitial={100} />
+
+Il n’y a rien à quoi s’accrocher. Impossible de dire où l’on en est, ni de
+commencer à deux au même endroit. Il manque une chose, et c’est le sujet de ce
+module.
+
+## Le cycle
+
+Écoute maintenant la même vitesse, mais avec un battement plus appuyé que les
+autres.
+
+<Exemple titre="Une marche" pattern={marche} tempoInitial={104} />
+
+Tu as entendu *UN* deux, *UN* deux. L’appui revient, et sa régularité crée un
+cycle : c’est la **mesure**.
+
+Chaque battement à l’intérieur du cycle s’appelle un **temps**. Celui qui porte
+l’appui est le **temps fort** ; les autres sont **faibles** — un mot malheureux,
+parce qu’ils ne sont pas moins importants, seulement moins appuyés. Ils
+conduisent vers l’appui suivant.
+
+## Deux, trois, quatre
+
+Trois cycles suffisent à couvrir l’essentiel de ce que tu entends tous les jours.
+
+<Exemple titre="Marche — deux temps" pattern={marche} tempoInitial={104} />
+
+<Exemple titre="Valse — trois temps" pattern={valse} tempoInitial={160} />
+
+<Exemple titre="Pop — quatre temps" pattern={pop} tempoInitial={96} />
+
+Écoute-les à la suite sans compter. La marche pousse en avant, la valse tourne,
+la pop s’installe. Ce n’est pas une impression vague : **le nombre de temps
+change la façon dont le corps se prépare au suivant**, et c’est cela qu’on
+reconnaît avant de savoir le nommer.
+
+## Ce qui crée l’appui
+
+Rien de mystérieux : un son plus fort, un timbre plus grave, ou simplement une
+note qui tombe là quand les autres se taisent. C’est un **accent** — un
+renforcement ponctuel.
+
+Il peut coïncider avec le temps fort, et c’est le cas le plus courant. Il peut
+aussi le contredire volontairement, et c’est là que la musique devient
+intéressante — mais c’est l’affaire d’un module plus tard.
+
+Dans l’exemple pop ci-dessus, écoute la caisse claire : elle ne tombe pas sur le
+premier temps mais sur le deuxième et le quatrième. Le cycle reste à quatre, et
+pourtant quelque chose d’autre se superpose.
+
+## Ce que ça devient à l’écrit
+
+Le cycle se voit sur la partition : une **barre de mesure**, trait vertical,
+sépare deux cycles. Tout ce qui se trouve entre deux barres est une mesure, et
+ce qui suit immédiatement une barre est le temps fort.
+
+Tu l’as déjà vu sur tous les exemples de ce module, au début de chaque ligne.
+
+## Ce qu’il faut retenir
+
+1. La pulsation s’organise en **cycles** : c’est la mesure.
+2. Le premier temps de chaque cycle porte l’appui — le **temps fort**.
+3. Marche à deux, valse à trois, pop à quatre : le cycle s’entend sans compter.
+4. Un **accent** crée l’appui, et peut aussi le contredire.

@@ -46,6 +46,7 @@ export const LEXIQUE: readonly Term[] = [
     definition:
       'un groupe régulier de temps, délimité à l’écrit par des barres de mesure',
     introduitAu: 2,
+    courant: true,
     voirAussi: ['temps', 'temps-fort'],
   },
   {
@@ -54,6 +55,7 @@ export const LEXIQUE: readonly Term[] = [
     sensation: 'chaque battement à l’intérieur du cycle',
     definition: 'une pulsation considérée par sa place dans la mesure',
     introduitAu: 2,
+    courant: true,
     voirAussi: ['pulsation', 'mesure'],
   },
   {
@@ -79,6 +81,7 @@ export const LEXIQUE: readonly Term[] = [
     definition:
       'un renforcement ponctuel, qui peut coïncider avec le temps fort ou le contredire',
     introduitAu: 2,
+    courant: true,
   },
   {
     slug: 'barre-de-mesure',
@@ -145,6 +148,7 @@ export const LEXIQUE: readonly Term[] = [
     definition:
       'une durée sans son — elle occupe le temps exactement comme une note',
     introduitAu: 3,
+    courant: true,
     voirAussi: ['soupir'],
   },
   {
@@ -256,6 +260,158 @@ export const LEXIQUE: readonly Term[] = [
     introduitAu: 5,
     voirAussi: ['temps-fort'],
     style: 'marche',
+  },
+// ── Module 6 — Mesures composées et ternaire ────────────────────────────
+  {
+    slug: 'subdivision',
+    nom: 'Subdivision',
+    sensation: 'ce qu’on entend à l’intérieur d’un temps',
+    definition: 'la division du temps en parties égales',
+    introduitAu: 6,
+    voirAussi: ['binaire', 'ternaire'],
+  },
+  {
+    slug: 'binaire',
+    nom: 'Binaire',
+    sensation: 'un-deux, un-deux dans chaque temps',
+    definition: 'temps divisé en deux — et non « mesure à deux temps »',
+    introduitAu: 6,
+    voirAussi: ['ternaire', 'subdivision'],
+  },
+  {
+    slug: 'ternaire',
+    nom: 'Ternaire',
+    sensation: 'un-deux-trois dans chaque temps, un balancement',
+    definition: 'temps divisé en trois',
+    introduitAu: 6,
+    voirAussi: ['binaire', 'triolet'],
+    style: 'blues-shuffle',
+  },
+  {
+    slug: 'triolet',
+    nom: 'Triolet',
+    sensation: 'trois notes là où on en attendait deux',
+    definition:
+      'trois notes occupant la durée de deux de même valeur, dans un contexte binaire',
+    introduitAu: 6,
+    voirAussi: ['ternaire'],
+  },
+  {
+    slug: 'mesure-composee',
+    nom: 'Mesure composée',
+    sensation: 'le balancement du 6/8 : deux appuis, trois notes chacun',
+    definition:
+      'mesure dont le temps se divise en trois ; le chiffre du bas y nomme la subdivision, pas le temps',
+    introduitAu: 6,
+    voirAussi: ['ternaire', 'chiffrage'],
+    style: 'gigue',
+  },
+  {
+    slug: 'shuffle',
+    nom: 'Shuffle',
+    aussiAppele: ['swing'],
+    sensation: 'le balancement long-court du blues',
+    definition: 'une subdivision inégale, proche du ternaire, rarement notée telle quelle',
+    introduitAu: 6,
+    style: 'blues-shuffle',
+  },
+
+  // ── Module 7 — Polyrythmie et métriques asymétriques ────────────────────
+  {
+    slug: 'polyrythmie',
+    nom: 'Polyrythmie',
+    sensation: 'deux vitesses qui coexistent sans se contredire',
+    definition:
+      'superposition de deux divisions différentes du même temps — typiquement trois contre deux',
+    introduitAu: 7,
+    voirAussi: ['polymetrie', 'subdivision'],
+    style: 'afrobeat',
+  },
+  {
+    slug: 'polymetrie',
+    nom: 'Polymétrie',
+    sensation: 'deux cycles de longueurs différentes',
+    definition: 'superposition de deux mesures différentes',
+    introduitAu: 7,
+    voirAussi: ['polyrythmie'],
+  },
+  {
+    slug: 'hemiole',
+    nom: 'Hémiole',
+    sensation: 'le mètre qui bascule un instant',
+    definition:
+      'trois groupes binaires réentendus comme deux groupes ternaires, ou l’inverse',
+    introduitAu: 7,
+    voirAussi: ['polyrythmie'],
+  },
+  {
+    slug: 'clave',
+    nom: 'Clave',
+    sensation: 'le motif qui gouverne tout le morceau',
+    definition:
+      'une figure de cinq attaques étalée sur deux mesures, matrice rythmique de la musique afro-cubaine',
+    introduitAu: 7,
+    style: 'clave',
+  },
+  {
+    slug: 'metrique-asymetrique',
+    nom: 'Métrique asymétrique',
+    sensation: 'des temps de longueurs inégales',
+    definition: 'mesure dont les temps ne sont pas tous égaux — 7/8 se groupe en 2+2+3',
+    introduitAu: 7,
+    voirAussi: ['groupement'],
+    style: 'balkan',
+  },
+  {
+    slug: 'groupement',
+    nom: 'Groupement',
+    sensation: 'l’endroit où l’on sent les appuis',
+    definition:
+      'la façon dont les subdivisions se répartissent en appuis — 2+3 et 3+2 ne sonnent pas pareil',
+    introduitAu: 7,
+    voirAussi: ['metrique-asymetrique'],
+  },
+
+  // ── Module 8 — Le rythme comme matériau ─────────────────────────────────
+  {
+    slug: 'augmentation',
+    nom: 'Augmentation',
+    sensation: 'le même motif, au ralenti',
+    definition: 'toutes les durées multipliées par un même facteur',
+    introduitAu: 8,
+    voirAussi: ['diminution'],
+  },
+  {
+    slug: 'diminution',
+    nom: 'Diminution',
+    sensation: 'le même motif, accéléré',
+    definition: 'toutes les durées divisées par un même facteur',
+    introduitAu: 8,
+    voirAussi: ['augmentation'],
+  },
+  {
+    slug: 'ostinato',
+    nom: 'Ostinato',
+    sensation: 'ça ne s’arrête jamais et ça porte tout',
+    definition: 'une figure répétée obstinément, servant de fondation',
+    introduitAu: 8,
+    style: 'hip-hop',
+  },
+  {
+    slug: 'groove',
+    nom: 'Groove',
+    sensation: 'l’envie de bouger — ou son absence',
+    definition:
+      'la qualité d’un rythme qui naît du placement et de l’accentuation, pas de la justesse métronomique',
+    introduitAu: 8,
+    style: 'funk',
+  },
+  {
+    slug: 'carrure',
+    nom: 'Carrure',
+    sensation: 'les phrases qui tombent juste',
+    definition: 'l’organisation en groupes réguliers de mesures, le plus souvent par quatre ou huit',
+    introduitAu: 8,
   },
 ]
 

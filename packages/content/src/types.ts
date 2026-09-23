@@ -37,6 +37,19 @@ export type Term = {
   readonly sensation: string
   readonly definition: string
   readonly introduitAu: number
+  /**
+   * Le mot existe aussi en français ordinaire.
+   *
+   * « Temps », « mesure », « accent », « silence » sont des termes du cours et
+   * des mots de tous les jours. Les surveiller comme les autres rendrait toute
+   * prose impossible avant le module qui les définit — on ne peut pas écrire
+   * une leçon de rythme sans jamais dire « en même temps ».
+   *
+   * Le contrôle des références en avant les ignore donc. C'est une faiblesse
+   * assumée : elle porte sur les mots les plus courants, ceux dont l'emploi
+   * fautif serait de toute façon le plus visible à la relecture.
+   */
+  readonly courant?: boolean
   /** Les voisins, et surtout ceux avec lesquels on le confond. */
   readonly voirAussi?: readonly string[]
   readonly style?: Style

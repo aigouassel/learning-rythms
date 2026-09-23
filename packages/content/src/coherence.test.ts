@@ -140,3 +140,16 @@ describe('le diagnostic du module 0', () => {
     expect(diagnostic.flatMap(exerciseProblems)).toEqual([])
   })
 })
+
+describe('les mots trop courants', () => {
+  it('sont ignorés par le contrôle des références en avant', () => {
+    // On ne peut pas écrire une leçon de rythme sans jamais dire « en même
+    // temps ». Surveiller ces mots-là rendrait toute prose impossible avant le
+    // module qui les définit.
+    expect(forwardReferences('Écoute en même temps la mesure et l’accent.', 1)).toEqual([])
+  })
+
+  it('n’affaiblissent pas le contrôle sur le vocabulaire propre', () => {
+    expect(forwardReferences('Une hémiole, un ostinato.', 1)).toHaveLength(2)
+  })
+})

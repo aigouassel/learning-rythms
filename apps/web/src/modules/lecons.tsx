@@ -1,3 +1,5 @@
+import Lecon01 from '@rythmes/content/modules/01-sentir-la-pulsation/lesson.mdx'
+import Lecon02 from '@rythmes/content/modules/02-temps-forts-et-faibles/lesson.mdx'
 import Lecon03 from '@rythmes/content/modules/03-les-durees/lesson.mdx'
 import type { ComponentType } from 'react'
 
@@ -13,5 +15,7 @@ import type { ComponentType } from 'react'
  * l'application le dit plutôt que d'afficher une page vide.
  */
 export const LECONS: Readonly<Record<number, ComponentType>> = {
+  1: Lecon01,
+  2: Lecon02,
   3: Lecon03,
 }

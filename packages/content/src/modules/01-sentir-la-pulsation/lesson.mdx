@@ -1,0 +1,63 @@
+import { house, marche, nue } from './patterns'
+
+# Sentir la pulsation
+
+Tu sais déjà faire ce que ce module décrit. Dix ans de fanfare, ce sont dix ans
+passés à tomber juste avec trente autres personnes — et ça ne s’obtient pas sans
+sentir le battement. Ce module ne t’apprend donc rien à faire : il **nomme** ce
+que tu fais.
+
+C’est le programme de tout le cours, et il commence ici.
+
+## Le battement sous la musique
+
+Écoute. Une grosse caisse frappe régulièrement, et une petite cymbale remplit
+l’intervalle.
+
+<Exemple titre="House" pattern={house} tempoInitial={120} />
+
+Tu n’as pas eu à chercher où taper du pied. Ce que tu as trouvé sans y penser
+s’appelle la **pulsation** : le battement régulier qui court sous la musique,
+qu’un instrument le joue ou non.
+
+Ce dernier point mérite qu’on s’y arrête, parce qu’il est contre-intuitif : la
+pulsation n’est pas une chose qu’on entend, c’est une chose qu’on **attend**.
+Elle continue dans les silences. Elle continue même quand plus personne ne joue
+dessus — c’est exactement ce qui te permet de reprendre ensemble après un point
+d’orgue.
+
+Le voici sans rien autour :
+
+<Exemple titre="Le battement nu" pattern={nue} tempoInitial={88} />
+
+## Sa vitesse
+
+Déplace le curseur de l’exemple ci-dessus. Le battement reste le même battement,
+mais il va plus ou moins vite. Cette vitesse porte un nom : le **tempo**, qu’on
+compte en battements par minute.
+
+Deux choses tiennent dans cette phrase, et il vaut mieux les séparer tout de
+suite :
+
+- la **pulsation** est une structure — il y a un battement, régulier ;
+- le **tempo** est une quantité — ce battement va à telle vitesse.
+
+On peut changer l’une sans l’autre. Un morceau ralenti reste le même morceau.
+
+## Ce que faisait le chef
+
+En fanfare, quelqu’un dessinait cette pulsation en l’air. Ce geste porte un nom :
+la **battue**. Il ne sert pas à indiquer la vitesse — vous la connaissiez déjà —
+mais à ce que trente personnes partagent *le même* battement, au lieu d’en avoir
+trente légèrement différents.
+
+<Exemple titre="Une marche" pattern={marche} tempoInitial={104} />
+
+C’est la fonction profonde de la pulsation, et elle est sociale avant d’être
+technique : **c’est ce qui permet de jouer ensemble**.
+
+## Ce qu’il faut retenir
+
+1. La **pulsation** est le battement régulier sous la musique — joué ou non.
+2. Le **tempo** est sa vitesse, en battements par minute.
+3. La pulsation se poursuit dans les silences : c’est une attente, pas un son.

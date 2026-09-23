@@ -122,6 +122,7 @@ export function forwardReferences(texte: string, module: number): readonly strin
   const corps = normalise(texte)
 
   return LEXIQUE.filter((t) => t.introduitAu > module)
+    .filter((t) => !t.courant)
     .filter((t) =>
       [t.nom, ...(t.aussiAppele ?? [])].some((mot) =>
         new RegExp(`\\b${normalise(mot).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`, 'u').test(corps),
