@@ -10,6 +10,7 @@
     "typecheck": "tsc --build"
   },
   "dependencies": {
+    "@mdx-js/react": "^3.1.1",
     "@rythmes/content": "workspace:^",
     "@rythmes/core": "workspace:^",
     "@rythmes/engine": "workspace:^",
@@ -21,9 +22,12 @@
     "vexflow": "^5.0.0"
   },
   "devDependencies": {
+    "@mdx-js/rollup": "^3.1.1",
+    "@types/mdx": "^2.0.14",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.1",
     "@vitejs/plugin-react": "^5.1.0",
+    "remark-gfm": "^4.0.1",
     "vite": "^7.1.14"
   }
 }

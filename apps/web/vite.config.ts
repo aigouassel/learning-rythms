@@ -1,3 +1,5 @@
+import mdx from '@mdx-js/rollup'
+import remarkGfm from 'remark-gfm'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -11,7 +13,18 @@ import react from '@vitejs/plugin-react'
  */
 export default defineConfig(({ command }) => ({
   base: command === 'build' ? '/learning-rythms/' : '/',
-  plugins: [react()],
+  plugins: [
+    // MDX passe avant React : il produit du JSX, que le plugin React compile
+    // ensuite. L'ordre inverse laisserait des fichiers .mdx non transformés.
+    {
+      enforce: 'pre',
+      // remark-gfm ajoute les tableaux, que le Markdown de base ignore. Les
+      // leçons s'en servent beaucoup : une échelle de durées se lit en deux
+      // colonnes, pas en phrases.
+      ...mdx({ providerImportSource: '@mdx-js/react', remarkPlugins: [remarkGfm] }),
+    },
+    react(),
+  ],
   optimizeDeps: {
     // Les paquets internes exposent leur source TypeScript : Vite doit la
     // compiler comme du code du projet, pas la pré-empaqueter comme une

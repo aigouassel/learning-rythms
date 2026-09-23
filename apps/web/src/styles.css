@@ -133,3 +133,137 @@ code {
   font-size: 0.8rem;
   color: var(--doux);
 }
+
+/* ── L'en-tête du module ─────────────────────────────────────────────── */
+
+.fil {
+  margin: 0;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--doux);
+}
+
+.resume {
+  max-width: 44rem;
+  line-height: 1.6;
+  color: var(--doux);
+  margin: 0 0 1.5rem;
+}
+
+.onglets {
+  display: flex;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--trait);
+  margin-bottom: 2rem;
+}
+
+.onglets button {
+  font: inherit;
+  font-size: 0.95rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-bottom: 2px solid transparent;
+  background: none;
+  cursor: pointer;
+  color: var(--doux);
+  margin-bottom: -1px;
+}
+
+.onglets button.actif {
+  color: var(--encre);
+  border-bottom-color: var(--appui);
+}
+
+.onglets .compte {
+  font-size: 0.75rem;
+  background: #efebe3;
+  border-radius: 10px;
+  padding: 0.05em 0.45em;
+  margin-left: 0.3rem;
+}
+
+/* ── La prose de la leçon ────────────────────────────────────────────── */
+
+.lecon {
+  max-width: 44rem;
+  line-height: 1.7;
+}
+
+.lecon h1 {
+  /* Le titre du module est déjà dans l'en-tête. */
+  display: none;
+}
+
+.lecon h2 {
+  margin: 2.5rem 0 0.75rem;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.lecon table {
+  border-collapse: collapse;
+  margin: 1.25rem 0;
+  font-size: 0.95rem;
+}
+
+.lecon th,
+.lecon td {
+  border-bottom: 1px solid var(--trait);
+  padding: 0.4rem 1.25rem 0.4rem 0;
+  text-align: left;
+}
+
+.lecon th {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--doux);
+  font-weight: 500;
+}
+
+.lecon .exemple {
+  max-width: none;
+  width: min(100%, 62rem);
+}
+
+.lecon ol,
+.lecon ul {
+  padding-left: 1.25rem;
+}
+
+.lecon li {
+  margin-bottom: 0.4rem;
+}
+
+/* ── Les exercices ───────────────────────────────────────────────────── */
+
+.avertissement {
+  max-width: 44rem;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--trait);
+  color: var(--doux);
+  font-size: 0.9rem;
+  margin: 0 0 2rem;
+}
+
+.exercice {
+  margin-bottom: 3rem;
+}
+
+.exercice h3 {
+  margin: 0 0 0.35rem;
+}
+
+.exercice .genre {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--appui);
+}
+
+.exercice > p {
+  max-width: 44rem;
+  line-height: 1.6;
+  margin: 0 0 1rem;
+}

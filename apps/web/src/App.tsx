@@ -1,30 +1,58 @@
+import { MDXProvider } from '@mdx-js/react'
+import { exercisesOf, moduleByNumber } from '@rythmes/content'
+import Lecon from '@rythmes/content/modules/03-les-durees/lesson.mdx'
+import { useState } from 'react'
 import { Exemple } from './components/Exemple'
-import { clave, divisions, pulsation, skank, triolet, troisContreDeux } from './demo'
+import { Exercices } from './components/Exercices'
+
+const MODULE = moduleByNumber(3)!
+const EXERCISES = exercisesOf(3)
 
 /**
- * Une page d'essai, pas encore le cours.
+ * Le module 3, dans ses deux onglets.
  *
- * Elle existe pour vérifier de bout en bout ce que les paquets produisent : la
- * gravure, le son, et le surlignage qui les relie. Les modules viendront
- * remplacer cette page.
+ * Le cours installe : sensation, puis mot, puis symbole. Les exercices
+ * retournent le mouvement — ils partent du symbole pour remonter vers le son.
+ * C'est ce demi-tour qui construit la lecture, et c'est pour ça que les deux
+ * sont séparés au lieu d'être entrelacés.
  */
 export function App() {
+  const [onglet, setOnglet] = useState<'cours' | 'exercices'>('cours')
+
   return (
     <main>
       <header>
-        <h1>Rythmes</h1>
-        <p>
-          Essai des paquets : chaque exemple est gravé par <code>notation</code>, joué par{' '}
-          <code>engine</code>, et le signe s’allume au moment où il sonne.
-        </p>
+        <p className="fil">Module {MODULE.number}</p>
+        <h1>{MODULE.title}</h1>
+        <p className="resume">{MODULE.summary}</p>
+
+        <nav className="onglets">
+          <button
+            type="button"
+            className={onglet === 'cours' ? 'actif' : ''}
+            onClick={() => setOnglet('cours')}
+          >
+            Cours
+          </button>
+          <button
+            type="button"
+            className={onglet === 'exercices' ? 'actif' : ''}
+            onClick={() => setOnglet('exercices')}
+          >
+            Exercices <span className="compte">{EXERCISES.length}</span>
+          </button>
+        </nav>
       </header>
 
-      <Exemple titre="La pulsation nue" pattern={pulsation} tempoInitial={110} />
-      <Exemple titre="Diviser le temps" pattern={divisions} syllabes tempoInitial={72} />
-      <Exemple titre="Le skank du reggae" pattern={skank} tempoInitial={80} />
-      <Exemple titre="Un triolet de croches" pattern={triolet} tempoInitial={80} />
-      <Exemple titre="Trois contre deux" pattern={troisContreDeux} tempoInitial={60} />
-      <Exemple titre="La clave son 3-2" pattern={clave} tempoInitial={100} />
+      {onglet === 'cours' ? (
+        <article className="lecon">
+          <MDXProvider components={{ Exemple }}>
+            <Lecon />
+          </MDXProvider>
+        </article>
+      ) : (
+        <Exercices exercises={EXERCISES} />
+      )}
     </main>
   )
 }
