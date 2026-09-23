@@ -15,7 +15,11 @@ type Discrimination = Extract<Exercise, { kind: 'discrimination' }>
  */
 export function Discrimination({ exercice }: { readonly exercice: Discrimination }) {
   const [choisi, setChoisi] = useState<number | null>(null)
-  const lecture = useLecture({ pattern: exercice.joue, bpm: 84, parTemps: fraction(1, 4) })
+  const lecture = useLecture({
+    pattern: exercice.joue,
+    bpm: exercice.bpm ?? 84,
+    parTemps: exercice.parTemps ?? fraction(1, 4),
+  })
   const juste = choisi === exercice.bonne
 
   return (

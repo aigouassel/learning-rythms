@@ -22,13 +22,13 @@ export function Completion({ exercice }: { readonly exercice: Completion }) {
 
   const lectureAttendu = useLecture({
     pattern: exercice.attendu,
-    bpm: 76,
-    parTemps: fraction(1, 4),
+    bpm: exercice.bpm ?? 76,
+    parTemps: exercice.parTemps ?? fraction(1, 4),
   })
   const lectureReponse = useLecture({
     pattern: reponse,
-    bpm: 76,
-    parTemps: fraction(1, 4),
+    bpm: exercice.bpm ?? 76,
+    parTemps: exercice.parTemps ?? fraction(1, 4),
   })
 
   const diff = compareRhythms(exercice.attendu, reponse)

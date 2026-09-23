@@ -1,5 +1,5 @@
 import type { Exercise } from '@rythmes/content'
-import { fraction, type Pattern } from '@rythmes/core'
+import { fraction, type Fraction, type Pattern } from '@rythmes/core'
 import { useMemo, useState } from 'react'
 import { useLecture } from '../audio/useLecture'
 import { Portee } from '../components/Portee'
@@ -31,6 +31,8 @@ export function Appariement({ exercice }: { readonly exercice: Appariement }) {
             key={place}
             lettre={LETTRES[place]!}
             pattern={exercice.motifs[vrai]!}
+            bpm={exercice.bpm ?? 80}
+            parTemps={exercice.parTemps ?? fraction(1, 4)}
             choisi={liens[place]}
             options={exercice.motifs.length}
             onChoisir={(n) => {
@@ -71,6 +73,8 @@ const LETTRES = ['A', 'B', 'C', 'D', 'E']
 function Son({
   lettre,
   pattern,
+  bpm,
+  parTemps,
   choisi,
   options,
   onChoisir,
@@ -78,12 +82,14 @@ function Son({
 }: {
   readonly lettre: string
   readonly pattern: Pattern
+  readonly bpm: number
+  readonly parTemps: Fraction
   readonly choisi: number | undefined
   readonly options: number
   onChoisir(n: number): void
   readonly verdict: 'juste' | 'faux' | null
 }) {
-  const lecture = useLecture({ pattern, bpm: 80, parTemps: fraction(1, 4) })
+  const lecture = useLecture({ pattern, bpm, parTemps })
 
   return (
     <div className={`son ${verdict ?? ''}`}>

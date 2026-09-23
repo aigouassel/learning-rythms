@@ -178,7 +178,7 @@ export function exerciseProblems(e: Exercise): readonly string[] {
       break
   }
 
-  if ('bpm' in e && (e.bpm < 30 || e.bpm > 200)) {
+  if (e.bpm !== undefined && (e.bpm < 30 || e.bpm > 200)) {
     p.push(`${e.id} : un tempo de ${e.bpm} sort des limites raisonnables`)
   }
 

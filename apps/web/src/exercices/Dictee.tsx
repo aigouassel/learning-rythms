@@ -11,6 +11,7 @@ import { calibration } from '../progression'
 
 type Dictee = Extract<Exercise, { kind: 'dictee' }>
 
+/** Une dictée se joue lentement : on écrit, on ne danse pas. */
 const BPM = 72
 const PAR_TEMPS = fraction(1, 4)
 
@@ -36,7 +37,7 @@ function Palette({ exercice }: { readonly exercice: Dictee }) {
     motifVide(exercice.attendu.meter, exercice.attendu.length, exercice.attendu.style),
   )
   const [verifie, setVerifie] = useState(false)
-  const lecture = useLecture({ pattern: exercice.attendu, bpm: BPM, parTemps: PAR_TEMPS })
+  const lecture = useLecture({ pattern: exercice.attendu, bpm: exercice.bpm ?? BPM, parTemps: exercice.parTemps ?? PAR_TEMPS })
   const diff = compareRhythms(exercice.attendu, reponse)
 
   return (
@@ -70,7 +71,7 @@ function FrappePuisChoix({ exercice }: { readonly exercice: Dictee }) {
   const [phase, setPhase] = useState<'ecoute' | 'frappe' | 'choix' | 'verdict'>('ecoute')
   const [choisi, setChoisi] = useState<QuantizeCandidate | null>(null)
 
-  const lecture = useLecture({ pattern: exercice.attendu, bpm: BPM, parTemps: PAR_TEMPS })
+  const lecture = useLecture({ pattern: exercice.attendu, bpm: exercice.bpm ?? BPM, parTemps: exercice.parTemps ?? PAR_TEMPS })
   const { taps, ecouter, vider } = useTaps()
   const [origine, setOrigine] = useState<number | null>(null)
 

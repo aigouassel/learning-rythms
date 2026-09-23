@@ -59,6 +59,20 @@ type Commun = {
   readonly id: string
   readonly module: number
   readonly consigne: string
+  /**
+   * À quelle vitesse l'exercice se fait entendre.
+   *
+   * Optionnel ici, et redéclaré obligatoire par les genres qui ne peuvent pas
+   * s'en passer — déchiffrage, frappe, repérage — où le tempo fait partie de
+   * la consigne. Ailleurs il corrige une écoute : une gigue en 6/8 et une
+   * house n'ont pas la même allure, et les jouer toutes deux à la vitesse par
+   * défaut suffit à rendre l'une méconnaissable.
+   *
+   * `parTemps` dit *de quelle figure* ce nombre compte les passages : en
+   * mesure composée, c'est la noire pointée et non la noire.
+   */
+  readonly bpm?: number
+  readonly parTemps?: Fraction
 }
 
 /**

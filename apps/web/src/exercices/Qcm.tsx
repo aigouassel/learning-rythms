@@ -21,8 +21,8 @@ export function Qcm({ exercice }: { readonly exercice: Qcm }) {
   const [choisi, setChoisi] = useState<number | null>(null)
   const lecture = useLecture({
     pattern: exercice.joue,
-    bpm: 80,
-    parTemps: fraction(1, 4),
+    bpm: exercice.bpm ?? 80,
+    parTemps: exercice.parTemps ?? fraction(1, 4),
   })
 
   const juste = choisi === exercice.bonne
