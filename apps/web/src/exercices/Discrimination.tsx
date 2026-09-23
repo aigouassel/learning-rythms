@@ -51,7 +51,10 @@ export function Discrimination({ exercice }: { readonly exercice: Discrimination
 
       {choisi !== null && (
         <p className={juste ? 'verdict juste' : 'verdict faux'}>
-          {juste ? 'Oui.' : 'Non — réécoute, et compte les subdivisions d’un seul temps.'}
+          {/* Le verdict reste général : il s'affiche au module 1 comme au
+              module 7, et nommer une subdivision devant quelqu'un qui n'a pas
+              encore le mot serait exactement ce que le cours évite. */}
+          {juste ? 'Oui.' : 'Non — réécoute avant de retenter, sans regarder les réponses.'}
         </p>
       )}
     </div>
