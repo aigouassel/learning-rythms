@@ -3,22 +3,38 @@ import type { Output, PlannedEvent } from '@rythmes/engine'
 import { DrumMachine, Soundfont } from 'smplr'
 
 /**
- * Les noms d'échantillons à chercher pour chaque voix, par ordre de préférence.
+ * Les **groupes** d'échantillons à chercher pour chaque voix, par préférence.
  *
- * Les boîtes à rythmes de smplr ne nomment pas leurs sons de la même façon —
- * `kick` ici, `bassdrum` là. Plutôt que de parier sur un nom, on demande à
- * l'instrument ce qu'il contient et on prend le premier qui réponde. Une voix
- * sans correspondance reste muette plutôt que de sonner faux.
+ * Une boîte à rythmes range ses sons par famille, et chaque famille contient
+ * des variantes : le kit TR-808 propose vingt-cinq grosses caisses, de
+ * `kick/bd0000` à `kick/bd7575`, qui diffèrent par la tenue et la couleur. Le
+ * nom qu'on cherche est donc celui du **groupe** — `kick` —, jamais celui d'un
+ * échantillon.
+ *
+ * C'est l'erreur que j'avais commise : chercher `kick` parmi les noms complets
+ * ne donnait rien, et toutes les voix restaient silencieuses. Les kits ne
+ * nomment pas leurs familles de la même façon non plus, d'où cette liste de
+ * candidats — mais on interroge l'instrument au lieu de parier.
  */
 const CANDIDATS: Record<Voice, readonly string[]> = {
   kick: ['kick', 'bassdrum', 'bass-drum', 'bd'],
   snare: ['snare', 'snaredrum', 'sd'],
   hihat: ['hihat-close', 'hihat-closed', 'closed-hihat', 'hihat', 'hh'],
-  clave: ['clave', 'claves', 'rim', 'rimshot', 'stick'],
+  clave: ['clave', 'claves', 'stick', 'rimshot', 'rim'],
   cowbell: ['cowbell', 'bell', 'cow-bell'],
-  rimshot: ['rim', 'rimshot', 'stick', 'clave'],
+  rimshot: ['rimshot', 'rim', 'stick', 'clave'],
   melody: [],
 }
+
+/**
+ * Laquelle des variantes d'un groupe prendre.
+ *
+ * Celle du milieu : les extrêmes d'un kit sont souvent caricaturaux — une
+ * grosse caisse sans tenue d'un côté, interminable de l'autre — et ce cours a
+ * besoin d'un son neutre, qu'on puisse écouter cent fois sans fatigue.
+ */
+const variante = (echantillons: readonly string[]): string | undefined =>
+  echantillons[Math.floor(echantillons.length / 2)]
 
 export type AudioOutput = Output & {
   /** Résolue quand les échantillons sont chargés : jouer avant serait muet. */
@@ -44,12 +60,32 @@ export function audioOutput(
   const manquantes: Voice[] = []
 
   const ready = Promise.all([drums.ready, melodic.ready]).then(() => {
-    const disponibles = new Set(drums.getSampleNames())
+    const groupes = new Set(drums.getGroupNames())
+    const index = new Set(drums.getSampleNames())
+
     for (const [voice, candidats] of Object.entries(CANDIDATS) as [Voice, string[]][]) {
       if (voice === 'melody') continue
-      const trouve = candidats.find((c) => disponibles.has(c))
+
+      // D'abord par groupe, ce qui est la façon dont un kit s'organise ; à
+      // défaut par nom complet, au cas où un kit n'aurait pas de familles.
+      const groupe = candidats.find((c) => groupes.has(c))
+      const trouve = groupe
+        ? variante(drums.getSampleNamesForGroup(groupe))
+        : candidats.find((c) => index.has(c))
+
       if (trouve) resolues.set(voice, trouve)
       else manquantes.push(voice)
+    }
+
+    // Une voix sans correspondance reste muette — ce qui vaut mieux que de
+    // sonner faux, mais devient invisible si on n'en dit rien. Le silence est
+    // un échec plus difficile à diagnostiquer qu'une erreur.
+    if (manquantes.length > 0) {
+      console.warn(
+        `[rythmes] Voix sans échantillon : ${manquantes.join(', ')}.\n` +
+          `Le kit « ${options.kit ?? 'TR-808'} » propose les groupes : ` +
+          drums.getGroupNames().join(', '),
+      )
     }
   })
 
