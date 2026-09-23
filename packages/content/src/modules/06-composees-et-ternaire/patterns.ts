@@ -54,7 +54,7 @@ export const enTroisQuarts = pattern({
   ),
 })
 
-/** Une marche en 6/8, terrain de fanfare. */
+/** Une marche en 6/8 : le ternaire à son plus évident. */
 export const marcheEnSixHuit = pattern({
   meter: meter(6, 8),
   style: 'marche',

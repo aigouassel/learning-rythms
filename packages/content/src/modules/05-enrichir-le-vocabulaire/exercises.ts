@@ -182,7 +182,7 @@ export const EXERCISES: readonly Exercise[] = [
     id: '05-dictee-syncope',
     module: 5,
     consigne:
-      'Écoute et écris. Écris d’abord les attaques dont tu es sûre, puis déduis la durée de celle qui déborde sur l’appui suivant.',
+      'Écoute et écris. Commence par les attaques dont tu ne doutes pas, puis déduis la durée de celle qui déborde sur l’appui suivant.',
     attendu: syncopeLongue,
     saisie: 'palette',
     bpm: 66,

@@ -9,12 +9,12 @@
 
 ## 1. Objectif
 
-Un cours de rythme musical, construit pour Audrey, servi par une application web
-qui fait ce qu'un support écrit ne peut pas faire : **sonner, mesurer, corriger**.
+Un cours de rythme musical servi par une application web qui fait ce qu'un
+support écrit ne peut pas faire : **sonner, mesurer, corriger**.
 
 L'objectif n'est pas d'apprendre le rythme à quelqu'un qui l'ignore. Il est de
-**poser des mots et une notation sur une compétence déjà réelle** — dix ans de
-saxophone en fanfare, joués d'oreille, avec une lecture restée laborieuse.
+**poser des mots et une notation sur une compétence déjà réelle** — celle d'une
+pratique jouée d'oreille, où la lecture est restée laborieuse.
 
 Le cours construit donc un pont, dans les deux sens :
 
@@ -28,24 +28,24 @@ Le troisième sens est la destination : **composer et arranger**.
 
 ---
 
-## 2. Ce que le profil de l'apprenante impose
+## 2. Les contraintes de conception
 
-Ces contraintes ne sont pas des préférences d'interface, elles découlent du
-profil musical (voir `~/projects/scales/docs/my.musical-profile.md`).
+Ces contraintes ne sont pas des préférences d'interface : ce sont des partis
+pris pédagogiques, et chacun a une conséquence technique.
 
-| Constat | Conséquence sur le cours |
+| Parti pris | Conséquence sur le cours |
 |---|---|
-| Oreille relative forte, audiation | l'écoute précède toujours la théorie |
-| Déchiffrage laborieux | le symbole écrit arrive **en dernier**, collé au son |
-| Clé de sol uniquement | **jamais de clé de fa**, jamais deux portées |
-| Aucun geste pianistique | aucune consigne ne suppose de savoir jouer du piano |
-| Saxophone en mi♭ | hauteurs nommées **en son réel** (référence piano) |
-| Vise la composition | le cours se termine sur la production, pas sur la découverte |
+| L'oreille d'abord | l'écoute précède toujours la théorie |
+| La lecture est le point faible | le symbole écrit arrive **en dernier**, collé au son |
+| Une seule portée, en clé de sol | **jamais de clé de fa**, jamais deux portées |
+| Aucun instrument requis | aucune consigne ne suppose de savoir jouer du piano |
+| Pas de transposition | hauteurs nommées **en son réel** (référence piano) |
+| La composition est la destination | le cours se termine sur la production, pas sur la découverte |
 
 Une remarque qui vaut pour tout le projet : **le rythme est le seul domaine
-musical où la transposition du saxophone ne gêne pas.** Une noire est une noire
-sur tous les instruments. C'est le terrain idéal pour reconstruire un rapport à
-la notation sans la couche de décalage qui a saboté le nommage des hauteurs.
+musical où la transposition d'un instrument ne gêne pas.** Une noire est une
+noire sur tous les instruments. C'est le terrain idéal pour construire un rapport
+à la notation sans la couche de décalage qui brouille le nommage des hauteurs.
 
 ---
 
@@ -126,7 +126,7 @@ possible à tout moment — c'est une initiative personnelle, pas une fonctionna
 **Unité 0** est à part : ni théorie ni note. Elle calibre la latence
 (16 frappes sur un clic, offset médian stocké, rejouable depuis les réglages)
 puis mesure un point de départ sur quatre mini-épreuves — la lecture rythmique
-étant une zone d'ombre déclarée du profil.
+étant la zone d'ombre que le cours doit lever avant de choisir par où commencer.
 
 **Les règles d'écriture lisible** (ligature, regroupement) vivent dans le module 4,
 parce qu'elles sont nécessaires dès la première dictée. Le module 8 y revient,
@@ -158,7 +158,7 @@ concept, pas seulement l'illustrer.
 | 3 | batterie rock : charley en noires → croches → doubles | la proportion devient audible |
 | 4 | riffs percussifs célèbres, motifs de fanfare | une cellule déjà connue, enfin écrite |
 | 5 | reggae (skank), funk, ska, jazz | le reggae est le contretemps à l'état pur |
-| 6 | blues shuffle, marche en 6/8, gigue, ballade 12/8 | la marche en 6/8 est un terrain de compétence |
+| 6 | blues shuffle, marche en 6/8, gigue, ballade 12/8 | la marche en 6/8 rend le ternaire évident |
 | 7 | clave cubaine, afrobeat, Balkans 7/8 & 9/8 | le 3-contre-2 y est structurel |
 | 8 | boucle hip-hop, ostinato (Boléro), phasing (Reich) | la variation d'une cellule *est* la composition |
 
@@ -332,8 +332,8 @@ Deux règles se dégagent, et elles valent mieux qu'un quota de genres :
 2. **Le repérage d'erreur est surreprésenté au module 4**, et délibérément.
    C'est le seul exercice qu'on ne peut pas réussir à l'oreille : reconnaître,
    écrire, même lire à voix haute se contournent par l'audiation. Pour un
-   profil dont l'oreille dépasse largement la lecture, c'est l'exercice qui
-   travaille vraiment le point faible.
+   apprentissage dont l'oreille dépasse largement la lecture, c'est l'exercice
+   qui travaille vraiment le point faible.
 
 ### 6.4 La dictée : modalité d'entrée
 

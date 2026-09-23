@@ -79,7 +79,7 @@ export type Onset = {
    * cours refuse de faire : ici la hauteur traverse le système sans être
    * interprétée, de la donnée vers VexFlow et smplr.
    *
-   * Toujours en **son réel**, jamais en notation saxophone.
+   * Toujours en **son réel**, jamais en notation d'instrument transpositeur.
    */
   readonly pitch?: string
 }

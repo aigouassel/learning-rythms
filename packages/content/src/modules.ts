@@ -89,7 +89,7 @@ export const MODULES: readonly Module[] = [
     slug: 'composees-et-ternaire',
     title: 'Mesures composées et ternaire',
     summary:
-      'Le temps divisé en trois. La marche en 6/8 est un terrain de fanfare ; le 3/4 lui ressemble et n’a rien à voir.',
+      'Le temps divisé en trois. La marche en 6/8 en est le terrain le plus franc ; le 3/4 lui ressemble et n’a rien à voir.',
     requires: [4],
     styles: ['blues-shuffle', 'marche', 'gigue'],
     introduces: ['subdivision', 'binaire', 'ternaire', 'triolet', 'mesure-composee', 'shuffle'],

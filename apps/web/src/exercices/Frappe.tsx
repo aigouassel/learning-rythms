@@ -34,7 +34,7 @@ export function FrappeMesuree({
   readonly parTemps: Fraction
   readonly cycles: number
   readonly avecSon: boolean
-  /** Après quoi le son se retire et tu continues seule. Tous, par défaut. */
+  /** Après quoi le son se retire et la frappe continue sans lui. Tous, par défaut. */
   readonly cyclesSonores?: number
   /** La voix à frapper, si le motif en compte plusieurs. */
   readonly voix?: Voice
@@ -113,7 +113,7 @@ export function FrappeMesuree({
       {phase === 'en-cours' && (
         <p className="aide gros">
           Barre d’espace, en place. {taps.length} frappe{taps.length > 1 ? 's' : ''}.
-          {sonores < cycles && !lecture.joue && ' — à toi seule, maintenant.'}
+          {sonores < cycles && !lecture.joue && ' — à toi de tenir, maintenant.'}
         </p>
       )}
 

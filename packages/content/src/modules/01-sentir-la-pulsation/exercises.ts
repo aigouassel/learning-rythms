@@ -77,10 +77,10 @@ export const EXERCISES: readonly Exercise[] = [
   },
   {
     kind: 'frappe',
-    id: '01-tenir-seule',
+    id: '01-tenir-sans-clic',
     module: 1,
     consigne:
-      'Le battement s’arrête à mi-parcours et tu continues seule. C’est l’épreuve la plus honnête du rythme intérieur : dix ans de fanfare devraient s’y entendre.',
+      'Le battement s’arrête à mi-parcours et tu continues sans lui. C’est l’épreuve la plus honnête du rythme intérieur : ce qui s’y entend est la pulsation que tu portes, pas celle qu’on te donne.',
     grille: nue,
     bpm: 88,
     parTemps: NOIRE,
@@ -89,7 +89,7 @@ export const EXERCISES: readonly Exercise[] = [
   },
   {
     kind: 'frappe',
-    id: '01-tenir-seule-lentement',
+    id: '01-tenir-sans-clic-lentement',
     module: 1,
     consigne:
       'La même épreuve, très lente. La dérive qu’on ne remarque pas à vitesse normale devient ici impossible à cacher : chaque écart a le temps de se voir.',
@@ -101,7 +101,7 @@ export const EXERCISES: readonly Exercise[] = [
   },
   {
     kind: 'frappe',
-    id: '01-tenir-seule-vite',
+    id: '01-tenir-sans-clic-vite',
     module: 1,
     consigne:
       'Et vite. L’erreur change de nature : on ne dérive plus, on se crispe — et se crisper fait accélérer.',

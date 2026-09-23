@@ -19,9 +19,9 @@ const NOIRE = fraction(1, 4)
  * Les épreuves du diagnostic.
  *
  * Elles ne notent rien et ne ferment aucune porte : elles disent par où
- * commencer. Le profil de l'apprenante déclare une zone d'ombre — sa lecture
- * rythmique est-elle plus solide que sa lecture des hauteurs ? — et un cours
- * sérieux la lève au lieu de la supposer.
+ * commencer. Une zone d'ombre reste ouverte tant qu'on ne l'a pas mesurée — la
+ * lecture rythmique tient-elle, ou se contourne-t-elle à l'oreille ? — et un
+ * cours sérieux la lève au lieu de la supposer.
  *
  * Cette page reste volontairement plus courte que celles des modules. Un
  * diagnostic n'entraîne rien : il mesure, et se mesurer quinze fois de suite
@@ -39,7 +39,7 @@ export const DIAGNOSTIC: readonly Exercise[] = [
     id: '00-tenir',
     module: 0,
     consigne:
-      'Frappe avec le clic, puis continue seule quand il s’arrête. On regarde ensuite si tu accélères, si tu ralentis, ou si tu tiens.',
+      'Frappe avec le clic, puis continue sans lui quand il s’arrête. On regarde ensuite si tu accélères, si tu ralentis, ou si tu tiens.',
     grille: clic,
     bpm: 84,
     parTemps: NOIRE,
