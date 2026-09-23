@@ -79,6 +79,12 @@ synchronisées** dans les exemples jouables :
 La co-occurrence est le mécanisme d'apprentissage. On n'apprend pas à lire en
 lisant davantage, mais en associant.
 
+**Les syllabes sont un tremplin, pas une couche permanente.** Elles servent au
+module 3, où la notation est introduite, puis disparaissent. Leur rôle est de
+faire traverser le passage du son au symbole ; les maintenir ensuite en ferait
+une béquille qui dispenserait de lire. Elles restent consultables dans le
+lexique (§4.4) pour qui veut y revenir.
+
 ### 3.3 Passer par le rapport avant le nom
 
 Les figures sont présentées comme des **proportions** (moitié de, tiers de) avant
@@ -164,6 +170,46 @@ Note de cohérence à assumer dans le texte : le swing du jazz est *ternaire par
 nature*. Le module 5 s'y appuie avant que le module 6 ne le nomme. C'est une
 bonne amorce à condition d'être explicitée, pas laissée en angle mort.
 
+### 4.4 Le lexique, colonne transversale
+
+Le vocabulaire théorique est la lacune centrale du profil. Le cours ne peut donc
+pas se contenter de définir un terme au passage : il lui faut un **lexique de
+premier rang**, consultable à tout moment et relié aux modules dans les deux sens.
+
+Inventaire éditorial : `docs/lexique.md`. Il devient à terme des données typées
+dans `content`, rendues comme une page de l'application.
+
+Chaque entrée porte :
+
+| Champ | Rôle |
+|---|---|
+| `nom` | le terme savant |
+| `aussiAppele` | les synonymes d'usage — *anacrouse* / *levée* |
+| `sensation` | **ce que ça fait avant d'avoir un nom** — le champ distinctif |
+| `definition` | une phrase, pas un paragraphe |
+| `introduitAu` | le module qui l'installe |
+| `voirAussi` | les termes voisins, et surtout ceux avec lesquels on le confond |
+| `exemple` | un pattern jouable |
+| `style` | où on l'entend pour de vrai |
+
+Le champ `sensation` applique le principe §3.1 jusque dans le lexique : une
+entrée qui commencerait par la définition formelle trahirait l'ordre
+*entendre → nommer*.
+
+Le lexique comporte aussi une section **faux amis** — les couples qu'on
+confond : syncope/contretemps, 6/8 contre 3/4, temps/pulsation, tempo/rythme.
+Pour un vocabulaire jamais consolidé, distinguer vaut mieux que définir.
+
+**Le croisement est vérifié au build.** Deux tests du package `content` :
+
+1. tout terme cité dans une leçon existe dans le lexique ;
+2. **aucune leçon n'emploie un terme dont le module d'introduction vient
+   après elle.**
+
+Le second test est le gardien réel de l'incrémentalité. Le graphe de prérequis
+(§4.2) déclare une intention ; la vérification des références en avant constate
+ce que le texte fait vraiment.
+
 ---
 
 ## 5. Les exemples jouables
@@ -181,6 +227,9 @@ bonne amorce à condition d'être explicitée, pas laissée en angle mort.
 
 L'écran **suit** le son : le surlignage se met à jour dans une
 `requestAnimationFrame` qui *lit* l'horloge audio, sans jamais la piloter.
+
+La ligne de syllabes n'est présente **qu'au module 3** (§3.2). Ailleurs, le
+composant affiche la notation et le son seuls.
 
 ### 5.2 Deux modes
 
@@ -420,9 +469,7 @@ force au contraire les cinq packages à exister pour de vrai.
 
 ### Non tranché
 
-- **Syllabes Kodály** : couche permanente du composant `<Exemple>` sur tout le
-  cours, ou tremplin du module 3 retiré ensuite ?
-  *Proposition : permanente mais masquable, affichée par défaut jusqu'au module 4.*
+*Rien à ce jour.*
 
 ### Backlog assumé
 
@@ -446,3 +493,5 @@ force au contraire les cinq packages à exister pour de vrai.
 | 2026-09-23 | Hauteurs décoratives, exemples rythmiques purs conservés |
 | 2026-09-23 | Laboratoire de transformations : outil de rédaction, pas d'écran |
 | 2026-09-23 | Types d'exercices choisis par module selon la compétence installée |
+| 2026-09-23 | Syllabes Kodály : tremplin du module 3, retirées ensuite |
+| 2026-09-23 | Un lexique transversal, vérifié au build contre les références en avant |
