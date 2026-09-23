@@ -507,3 +507,4 @@ ouvert est listé ci-dessous.
 | 2026-09-23 | La quantification rend des candidats, jamais une réponse |
 | 2026-09-23 | Les neuf modules sont rédigés
 | 2026-09-23 | Page de cours : colonne de lecture centrée, exemples en débordement, navigation en barre collante et passage au module suivant |
+| 2026-09-23 | Fil des sections dans la marge, avec ancres `#module-N/section` |

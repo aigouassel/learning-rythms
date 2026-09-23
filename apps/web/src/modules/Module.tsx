@@ -1,8 +1,9 @@
 import { exercisesOf, type Module as ModuleDuCours } from '@rythmes/content'
 import { MDXProvider } from '@mdx-js/react'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Exemple } from '../components/Exemple'
 import { Exercices } from '../components/Exercices'
+import { FilDesSections } from './FilDesSections'
 import { LECONS } from './lecons'
 import { PriseDeReperes } from './PriseDeReperes'
 
@@ -16,6 +17,7 @@ import { PriseDeReperes } from './PriseDeReperes'
  */
 export function Module({ module }: { readonly module: ModuleDuCours }) {
   const [onglet, setOnglet] = useState<'cours' | 'exercices'>('cours')
+  const lecon = useRef<HTMLElement>(null)
   const Lecon = LECONS[module.number]
   const exercices = exercisesOf(module.number)
 
@@ -43,7 +45,8 @@ export function Module({ module }: { readonly module: ModuleDuCours }) {
 
       {onglet === 'cours' ? (
         Lecon ? (
-          <article className="lecon">
+          <article className="lecon" ref={lecon}>
+            <FilDesSections lecon={lecon} module={module.number} />
             <MDXProvider components={{ Exemple }}>
               <Lecon />
             </MDXProvider>

@@ -1,4 +1,5 @@
 import mdx from '@mdx-js/rollup'
+import rehypeSlug from 'rehype-slug'
 import remarkGfm from 'remark-gfm'
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
@@ -21,7 +22,16 @@ export default defineConfig(({ command }) => ({
       // remark-gfm ajoute les tableaux, que le Markdown de base ignore. Les
       // leçons s'en servent beaucoup : une échelle de durées se lit en deux
       // colonnes, pas en phrases.
-      ...mdx({ providerImportSource: '@mdx-js/react', remarkPlugins: [remarkGfm] }),
+      //
+      // rehype-slug donne un `id` à chaque titre, dérivé de son texte. Le fil
+      // des sections pourrait s'en fabriquer lui-même, mais alors les ancres
+      // n'existeraient qu'une fois la page affichée : un lien vers
+      // `#le-faux-ami` ne retomberait nulle part au chargement.
+      ...mdx({
+        providerImportSource: '@mdx-js/react',
+        remarkPlugins: [remarkGfm],
+        rehypePlugins: [rehypeSlug],
+      }),
     },
     react(),
   ],

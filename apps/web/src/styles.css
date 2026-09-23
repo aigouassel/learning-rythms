@@ -29,11 +29,31 @@ body {
   --lecture: 46rem;
   --large: 66rem;
   --gouttiere: 1.5rem;
+  --fil: 13rem;
   --colonnes:
+    [fil-debut] minmax(0, var(--fil))
     [large-debut] minmax(0, 1fr)
     [lecture-debut] min(var(--lecture), 100%)
     [lecture-fin] minmax(0, 1fr)
-    [large-fin];
+    [large-fin] minmax(0, var(--fil))
+    [fil-fin];
+}
+
+/* La colonne du fil a sa jumelle vide à droite, et c'est tout son intérêt :
+   sans elle, loger le sommaire à gauche décalerait la prose vers la droite.
+   Le texte reste au milieu de la fenêtre ; le fil occupe une marge qui existe
+   des deux côtés.
+
+   En dessous de cette largeur, il ne resterait plus assez de place pour la
+   colonne de lecture : les deux marges tombent à zéro et le fil disparaît. */
+@media (max-width: 75rem) {
+  :root {
+    --fil: 0rem;
+  }
+
+  .fil-sections {
+    display: none;
+  }
 }
 
 main {
@@ -62,7 +82,7 @@ main {
 
 .module-page {
   box-sizing: border-box;
-  max-width: calc(var(--large) + 2 * var(--gouttiere));
+  max-width: calc(var(--large) + 2 * var(--fil) + 2 * var(--gouttiere));
   padding-inline: var(--gouttiere);
 }
 
@@ -75,14 +95,84 @@ main {
 
 /* Ce qui a le droit d'être large : la navigation, qui encadre la page, et les
    exemples, dont les portées deviennent illisibles une fois comprimées. */
-.module-page > .barre,
 .module-page > .suite,
 .module-page > .onglets,
-.module-page > .prise-de-reperes,
 .module-page > .prise-de-reperes > .etapes,
-.module-page > .lecon,
 .module-page > .lecon > .exemple {
   grid-column: large-debut / large-fin;
+}
+
+/* La barre encadre la page entière, fil compris : c'est le bandeau du haut,
+   pas un élément du texte. La leçon aussi, pour pouvoir loger le fil dans sa
+   marge — elle-même n'écrit rien dans ces colonnes. */
+.module-page > .barre,
+.module-page > .lecon,
+.module-page > .prise-de-reperes {
+  grid-column: fil-debut / fil-fin;
+}
+
+/* ── Le fil des sections ─────────────────────────────────────────────── */
+
+/* Le fil est hors du flux de la grille, et c'est délibéré.
+
+   Le loger dans la colonne `fil` demanderait de lui faire traverser toutes
+   les rangées. `grid-row: 1 / -1` n'y suffit pas : `-1` désigne la dernière
+   ligne de la grille *explicite*, et celle-ci n'en a aucune — les rangées
+   d'une leçon naissent de son contenu. Un `span` généreux créerait les
+   rangées manquantes, vides mais séparées par le `row-gap` de la leçon.
+
+   En position absolue, la question ne se pose plus. Mais `grid-column` reste
+   indispensable : un élément absolu dont la position de grille est définie
+   prend *sa zone de grille* pour bloc conteneur. Sans cette ligne, il
+   héritait de la colonne de lecture — la règle générale des enfants de la
+   leçon — et venait se poser sur le texte. */
+/* Le sélecteur est long à dessein : `.module-page > .lecon > *` place tous
+   les enfants dans la colonne de lecture, et une classe seule ne pèse pas
+   assez pour la contredire. */
+.module-page > .lecon > .fil-sections {
+  grid-column: fil-debut / large-debut;
+  position: absolute;
+  inset: 0 1.5rem 0 0;
+}
+
+/* C'est la liste qui colle, pas le fil : le fil sert de rail sur toute la
+   hauteur de la leçon, et la liste y glisse en restant sous la barre. */
+.fil-sections ol {
+  position: sticky;
+  top: 4.5rem;
+}
+
+.fil-sections ol {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.lecon {
+  position: relative;
+}
+
+.fil-sections a {
+  display: block;
+  font-size: 0.8rem;
+  line-height: 1.35;
+  color: var(--doux);
+  text-decoration: none;
+  padding-left: 0.75rem;
+  border-left: 2px solid var(--trait);
+}
+
+.fil-sections a:hover {
+  color: var(--encre);
+}
+
+/* La section où l'on se trouve. Le trait reprend la couleur des appuis :
+   dans cette application, c'est toujours la même idée — montrer où l'on est. */
+.fil-sections a.actif {
+  color: var(--encre);
+  border-left-color: var(--appui);
 }
 
 header h1 {
@@ -282,6 +372,8 @@ code {
 .lecon h2 {
   /* 1.5 rem d'écart + 1 rem de gouttière = les 2.5 rem d'avant. */
   margin-block: 1.5rem 0;
+  /* Un titre qu'on rejoint par le fil s'arrête sous la barre, pas derrière. */
+  scroll-margin-top: 4.5rem;
   font-size: 1.25rem;
   letter-spacing: -0.01em;
 }

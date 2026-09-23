@@ -12,8 +12,20 @@ import { Module } from './modules/Module'
  * page à neuf écrans, un routeur serait disproportionné.
  */
 function moduleDuFragment(): number | null {
-  const m = /^#module-(\d+)$/.exec(window.location.hash)
-  return m ? Number(m[1]) : null
+  return lu().numero
+}
+
+/**
+ * `#module-3` ouvre le module, `#module-3/le-faux-ami` ouvre sa section.
+ *
+ * La section est dans le même fragment, après une barre, et non dans une
+ * ancre nue : `#le-faux-ami` remplacerait `#module-3` et le routeur, ne
+ * reconnaissant plus rien, retomberait au sommaire. Le prix à payer est que
+ * le navigateur ne fait plus défiler tout seul — c'est à nous de le faire.
+ */
+function lu(): { readonly numero: number | null; readonly section: string | null } {
+  const m = /^#module-(\d+)(?:\/(.+))?$/.exec(window.location.hash)
+  return m ? { numero: Number(m[1]), section: m[2] ?? null } : { numero: null, section: null }
 }
 
 /**
@@ -36,8 +48,18 @@ export function App() {
   const [numero, setNumero] = useState<number | null>(moduleDuFragment)
 
   useEffect(() => {
-    const surChangement = () => setNumero(moduleDuFragment())
+    const surChangement = () => {
+      setNumero(moduleDuFragment())
+      const { section } = lu()
+      if (section === null) return
+      // Un cadre d'attente : au premier affichage d'un module, la leçon n'est
+      // pas encore dans le DOM quand le fragment est lu.
+      requestAnimationFrame(() => {
+        document.getElementById(section)?.scrollIntoView({ behavior: 'smooth' })
+      })
+    }
     window.addEventListener('hashchange', surChangement)
+    surChangement()
     return () => window.removeEventListener('hashchange', surChangement)
   }, [])
 
