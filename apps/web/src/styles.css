@@ -247,12 +247,49 @@ code {
   border-radius: 3px;
 }
 
+/* Deux colonnes : la portée, et les commandes rangées à sa droite.
+
+   Les commandes étaient sous la portée, sur toute la largeur. Or un exemple a
+   le droit d'être large — la portée en réclame — et cette rangée pleine largeur
+   éloignait d'autant le bouton d'écoute du signe qu'il fait sonner. Rangées en
+   colonne à droite, elles tiennent dans le coin du bloc et la portée garde
+   tout ce qui reste.
+
+   Les zones sont nommées plutôt que laissées au placement automatique : à
+   quatre enfants, l'ordre du DOM suffirait, mais il suffirait *par accident* —
+   ajouter un élément le déferait sans prévenir. */
 .exemple {
   margin: 0 0 2rem;
   padding: 1.25rem 1.25rem 1rem;
   border: 1px solid var(--trait);
   border-radius: 6px;
   background: #fff;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 12rem;
+  grid-template-areas:
+    'titre  titre'
+    'portee commandes'
+    'duree  duree';
+  column-gap: 1.5rem;
+  /* En haut : les commandes accompagnent la portée, elles ne flottent pas au
+     milieu d'un bloc dont la hauteur dépend du motif affiché. */
+  align-items: start;
+}
+
+.exemple > figcaption {
+  grid-area: titre;
+}
+
+.exemple > .portee {
+  grid-area: portee;
+}
+
+.exemple > .commandes {
+  grid-area: commandes;
+}
+
+.exemple > .duree {
+  grid-area: duree;
 }
 
 .exemple figcaption {
@@ -332,6 +369,65 @@ code {
 .commandes output {
   font-variant-numeric: tabular-nums;
   min-width: 4.5rem;
+}
+
+/* En colonne, et seulement dans un exemple : les commandes d'un exercice
+   (`.repondre .commandes`) restent la rangée qu'elles sont. */
+.exemple > .commandes {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+  margin-top: 0;
+}
+
+/* Le réglage de tempo tient sur deux lignes dans une colonne de 12 rem : le
+   libellé et la valeur se partagent la première, le curseur prend la seconde.
+   `order` suffit à le faire passer sous l'`output` sans toucher au composant —
+   l'ordre du DOM reste celui de la lecture à voix haute. */
+.exemple > .commandes label {
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.35rem 0.5rem;
+}
+
+.exemple > .commandes input[type='range'] {
+  order: 1;
+  flex: 1 0 100%;
+  min-width: 0;
+  margin: 0;
+}
+
+.exemple > .commandes output {
+  min-width: 0;
+}
+
+/* Sous cette largeur, la colonne de droite prendrait la moitié du bloc et la
+   portée deviendrait illisible : les commandes repassent dessous, en rangée. */
+@media (max-width: 42rem) {
+  .exemple {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      'titre'
+      'portee'
+      'commandes'
+      'duree';
+  }
+
+  .exemple > .commandes {
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .exemple > .commandes label {
+    flex-wrap: nowrap;
+  }
+
+  .exemple > .commandes input[type='range'] {
+    order: 0;
+    flex: 0 1 auto;
+  }
 }
 
 .duree {
