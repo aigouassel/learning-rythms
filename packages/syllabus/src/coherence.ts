@@ -1,5 +1,5 @@
 import { isWellFormed, measureLength, toNumber, type Pattern } from '@rythmes/core'
-import type { Contrainte, Exercise, Module, Term } from './types'
+import { MAX_VOIX_FRAPPEES, type Contrainte, type Exercise, type Module, type Term } from './types'
 
 /**
  * Les vérifications de cohérence du cours.
@@ -137,9 +137,10 @@ export function exerciseProblems(e: Exercise): readonly string[] {
       break
     case 'frappe':
       if (e.cycles < 1) p.push(`${e.id} : il faut au moins un passage`)
-      if (e.voix && !e.grille.onsets.some((o) => o.voice === e.voix)) {
-        p.push(`${e.id} : la voix ${e.voix} ne joue rien dans ce motif`)
-      }
+      p.push(...problemesDeVoix(e.id, e.grille, e.voix))
+      break
+    case 'dechiffrage':
+      p.push(...problemesDeVoix(e.id, e.aLire, e.voix))
       break
     case 'reperage':
       if (differences(e.ecrit, e.joue) !== 1) {
@@ -160,6 +161,55 @@ export function exerciseProblems(e: Exercise): readonly string[] {
 
   if (e.bpm !== undefined && (e.bpm < 30 || e.bpm > 200)) {
     p.push(`${e.id} : un tempo de ${e.bpm} sort des limites raisonnables`)
+  }
+
+  return p
+}
+
+/**
+ * Ce qui rend un motif injouable, ou ambigu, pour qui doit le frapper.
+ *
+ * Un motif de batterie s'écrit sur plusieurs portées. Tant que l'exercice ne
+ * disait pas laquelle jouer, la correction attendait les attaques de toutes —
+ * y compris celles qui tombent au même instant, impossibles à frapper d'une
+ * seule touche et comptées manquées quoi qu'on fasse. Trois déchiffrages
+ * étaient dans ce cas, et rien ne l'avait signalé.
+ */
+function problemesDeVoix(
+  id: string,
+  motif: Pattern,
+  demandees: readonly string[] | undefined,
+): readonly string[] {
+  const p: string[] = []
+  const presentes = [...new Set(motif.onsets.map((o) => o.voice))]
+
+  if (!demandees || demandees.length === 0) {
+    if (presentes.length > 1) {
+      p.push(`${id} : ${presentes.length} voix écrites, et aucune désignée à frapper`)
+    }
+    return p
+  }
+
+  if (new Set(demandees).size !== demandees.length) {
+    p.push(`${id} : une voix est demandée deux fois`)
+  }
+  if (demandees.length > MAX_VOIX_FRAPPEES) {
+    p.push(`${id} : ${demandees.length} voix à frapper, au-delà des ${MAX_VOIX_FRAPPEES} doigts`)
+  }
+
+  for (const v of demandees) {
+    const siennes = motif.onsets.filter((o) => o.voice === v)
+    if (siennes.length === 0) {
+      p.push(`${id} : la voix ${v} ne joue rien dans ce motif`)
+      continue
+    }
+    // Deux attaques d'une même voix au même instant n'ont qu'un doigt pour
+    // elles. Entre voix distinctes, en revanche, la simultanéité est jouable —
+    // c'est même ce qu'on vient chercher à deux mains.
+    const instants = siennes.map((o) => `${o.at.num}/${o.at.den}`)
+    if (new Set(instants).size !== instants.length) {
+      p.push(`${id} : la voix ${v} porte deux attaques au même instant`)
+    }
   }
 
   return p

@@ -61,18 +61,47 @@ export function analyseTiming(
   taps: readonly Tap[],
   options: TimingOptions = {},
 ): TimingAnalysis {
+  return analyseParLigne([{ expected, taps }], options)
+}
+
+/**
+ * La même analyse, quand plusieurs lignes se jouent à la fois.
+ *
+ * Chaque ligne s'apparie **avec les siennes** : un motif de batterie fait
+ * tomber la grosse caisse et le charleston sur le même temps, et un
+ * appariement commun les mettrait en concurrence pour la même frappe — la
+ * seconde passerait pour une note en trop, la seconde attaque pour une note
+ * manquée. Deux mains, deux touches, deux appariements.
+ *
+ * Les grandeurs, elles, se calculent sur l'ensemble des erreurs : c'est une
+ * seule exécution, et la dérive qu'on cherche à voir est celle de la
+ * musicienne, pas celle d'un doigt.
+ */
+export function analyseParLigne(
+  lignes: readonly { readonly expected: readonly number[]; readonly taps: readonly Tap[] }[],
+  options: TimingOptions = {},
+): TimingAnalysis {
   const { calibrationMs = 0, penaltySeconds = 0.15 } = options
 
-  const apparie = align(expected, taps, {
-    keyOf: (e) => e,
-    keyOfActual: (t) => t.at,
-    penalty: penaltySeconds,
-  })
+  const apparies = lignes.map((ligne) =>
+    align(ligne.expected, ligne.taps, {
+      keyOf: (e) => e,
+      keyOfActual: (t) => t.at,
+      penalty: penaltySeconds,
+    }),
+  )
 
-  const points = apparie.pairs.map((p) => ({
-    t: p.expected,
-    erreur: (p.actual.at - p.expected) * 1000 - calibrationMs,
-  }))
+  const points = apparies
+    .flatMap((a) => a.pairs)
+    .map((p) => ({
+      t: p.expected,
+      erreur: (p.actual.at - p.expected) * 1000 - calibrationMs,
+    }))
+    // Les lignes ont été appariées séparément : remises ensemble, leurs points
+    // doivent retrouver l'ordre du temps, sans quoi la régression lirait une
+    // dérive dans le seul fait d'avoir changé de main.
+    .sort((a, b) => a.t - b.t)
+
   const erreurs = points.map((p) => p.erreur)
 
   const n = points.length
@@ -84,8 +113,8 @@ export function analyseTiming(
     driftMsPerSecond,
     dispersionMs,
     matched: n,
-    missed: apparie.missing.length,
-    extra: apparie.extra.length,
+    missed: apparies.reduce((s, a) => s + a.missing.length, 0),
+    extra: apparies.reduce((s, a) => s + a.extra.length, 0),
     errorsMs: erreurs,
   }
 }

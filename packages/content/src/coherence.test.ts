@@ -1,3 +1,4 @@
+import { fraction, meter, pattern, type Voice } from '@rythmes/core'
 import { describe, expect, it } from 'vitest'
 import {
   cycles,
@@ -175,5 +176,62 @@ describe('les mots trop courants', () => {
 
   it('n’affaiblissent pas le contrôle sur le vocabulaire propre', () => {
     expect(forwardReferences('Une hémiole, un ostinato.', 1)).toHaveLength(2)
+  })
+})
+
+
+describe('les lignes à frapper', () => {
+  const NOIRE = fraction(1, 4)
+
+  const batterie = (voix: readonly Voice[]) =>
+    pattern({
+      meter: meter(2, 4),
+      onsets: voix.flatMap((v) => [
+        { at: fraction(0, 1), duration: NOIRE, voice: v },
+        { at: fraction(1, 4), duration: NOIRE, voice: v },
+      ]),
+    })
+
+  const exercice = (grille: ReturnType<typeof batterie>, voix?: readonly Voice[]) =>
+    ({
+      kind: 'frappe',
+      id: 'essai',
+      module: 1,
+      consigne: 'Frappe.',
+      grille,
+      bpm: 90,
+      parTemps: NOIRE,
+      cycles: 2,
+      ...(voix ? { voix } : {}),
+    }) as const
+
+  it('sont exigées dès qu’une partition en montre plusieurs', () => {
+    // Le défaut qui a rendu trois déchiffrages injouables : sans ligne
+    // désignée, la correction attendait les attaques de toutes les voix, dont
+    // celles qui tombent au même instant.
+    expect(exerciseProblems(exercice(batterie(['kick', 'hihat'])))).toEqual([
+      'essai : 2 voix écrites, et aucune désignée à frapper',
+    ])
+  })
+
+  it('ne sont pas exigées quand il n’y a rien à choisir', () => {
+    expect(exerciseProblems(exercice(batterie(['kick'])))).toEqual([])
+  })
+
+  it('doivent jouer quelque chose', () => {
+    expect(exerciseProblems(exercice(batterie(['kick']), ['snare']))).toEqual([
+      'essai : la voix snare ne joue rien dans ce motif',
+    ])
+  })
+
+  it('acceptent deux lignes simultanées — c’est ce qu’on vient chercher à deux mains', () => {
+    expect(exerciseProblems(exercice(batterie(['kick', 'hihat']), ['kick', 'hihat']))).toEqual([])
+  })
+
+  it('ne dépassent pas le nombre de doigts', () => {
+    const cinq: readonly Voice[] = ['kick', 'snare', 'hihat', 'clave', 'cowbell']
+    expect(exerciseProblems(exercice(batterie(cinq), cinq))).toContain(
+      'essai : 5 voix à frapper, au-delà des 3 doigts',
+    )
   })
 })

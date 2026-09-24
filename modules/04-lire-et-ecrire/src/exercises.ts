@@ -92,6 +92,7 @@ export const EXERCISES: readonly Exercise[] = [
     aLire: stompStompClap,
     bpm: 84,
     parTemps: NOIRE,
+    voix: ['kick', 'snare'],
   },
   {
     kind: 'dechiffrage',

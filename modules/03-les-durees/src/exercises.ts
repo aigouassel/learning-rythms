@@ -192,5 +192,6 @@ export const EXERCISES: readonly Exercise[] = [
     aLire: rockElementaire,
     bpm: 84,
     parTemps: NOIRE,
+    voix: ['hihat'],
   },
 ]

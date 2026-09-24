@@ -91,6 +91,19 @@ export type ModuleDuCours = {
   readonly exercices: readonly Exercise[]
 }
 
+/**
+ * Combien de lignes un exercice peut demander de frapper.
+ *
+ * Trois, parce qu'on a deux index et un pouce. Ce n'est pas une limite
+ * d'interface déguisée en règle de contenu : au-delà, l'exercice cesserait de
+ * porter sur le rythme pour porter sur la coordination instrumentale, et un
+ * échec ne dirait plus si c'est la lecture ou les doigts qui ont manqué.
+ *
+ * Quelles touches, et dans quel ordre, ne regarde en revanche que
+ * l'application — voir `apps/web/src/exercices/touches.ts`.
+ */
+export const MAX_VOIX_FRAPPEES = 3
+
 type Commun = {
   readonly id: string
   readonly module: number
@@ -155,6 +168,7 @@ export type Exercise =
       readonly aLire: Pattern
       readonly bpm: number
       readonly parTemps: Fraction
+      readonly voix?: readonly Voice[]
     })
   /** Exécuter : taper en place, tenir, frapper des contretemps. */
   | (Commun & {
@@ -165,13 +179,7 @@ export type Exercise =
       readonly cycles: number
       /** Le clic s'arrête et tu continues : le test du rythme intérieur. */
       readonly clicSArrete?: boolean
-      /**
-       * La voix à frapper, quand le motif en compte plusieurs.
-       *
-       * En polyrythmie, on joue une voix pendant que l'autre sonne : sans
-       * cette précision, la correction attendrait les attaques des deux.
-       */
-      readonly voix?: Voice
+      readonly voix?: readonly Voice[]
     })
   /**
    * Lecture active : la partition dit une chose, l'enregistrement en dit une

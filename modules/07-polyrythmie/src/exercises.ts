@@ -43,7 +43,7 @@ export const EXERCISES: readonly Exercise[] = [
     bpm: 60,
     parTemps: NOIRE,
     cycles: 6,
-    voix: 'kick',
+    voix: ['kick'],
   },
   {
     kind: 'frappe',
@@ -55,7 +55,7 @@ export const EXERCISES: readonly Exercise[] = [
     bpm: 60,
     parTemps: NOIRE,
     cycles: 6,
-    voix: 'cowbell',
+    voix: ['cowbell'],
   },
   {
     kind: 'appariement',
@@ -122,7 +122,7 @@ export const EXERCISES: readonly Exercise[] = [
     bpm: 132,
     parTemps: CROCHE,
     cycles: 6,
-    voix: 'clave',
+    voix: ['clave'],
   },
   {
     kind: 'discrimination',
@@ -156,7 +156,7 @@ export const EXERCISES: readonly Exercise[] = [
     bpm: 132,
     parTemps: NOIRE,
     cycles: 6,
-    voix: 'clave',
+    voix: ['clave'],
   },
   {
     kind: 'dechiffrage',

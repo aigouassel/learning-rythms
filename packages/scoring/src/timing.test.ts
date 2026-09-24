@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { analyseTiming, calibrate } from './timing'
+import { analyseParLigne, analyseTiming, calibrate } from './timing'
 
 /** Une mesure de quatre noires à ♩ = 60 : les attaques tombent sur la seconde. */
 const GRILLE = [0, 1, 2, 3, 4, 5, 6, 7]
@@ -91,5 +91,45 @@ describe('calibrate', () => {
     // Quinze frappes à 30 ms, une seule à 400 : la moyenne dirait 53 ms.
     const erreurs = [30, 30, 30, 30, 30, 30, 30, 400]
     expect(calibrate(GRILLE, frappes(erreurs))).toBeCloseTo(30)
+  })
+})
+
+describe('plusieurs lignes à la fois', () => {
+  it('n’oppose pas deux voix qui tombent sur le même temps', () => {
+    // Grosse caisse et charleston sur les temps 0 et 1, frappés juste, à deux
+    // mains. Apparié en bloc, chaque temps n'aurait qu'une frappe pour deux
+    // attaques : une manquée et une en trop, à chaque fois.
+    const analyse = analyseParLigne([
+      { expected: [0, 1], taps: [{ at: 0 }, { at: 1 }] },
+      { expected: [0, 1], taps: [{ at: 0 }, { at: 1 }] },
+    ])
+
+    expect(analyse.matched).toBe(4)
+    expect(analyse.missed).toBe(0)
+    expect(analyse.extra).toBe(0)
+  })
+
+  it('lit la dérive sur l’exécution entière, pas main par main', () => {
+    // Une seule musicienne qui ralentit régulièrement : dix millisecondes de
+    // retard de plus à chaque seconde, quelle que soit la main.
+    const gauche = { expected: [0, 2, 4], taps: [{ at: 0 }, { at: 2.02 }, { at: 4.04 }] }
+    const droite = { expected: [1, 3, 5], taps: [{ at: 1.01 }, { at: 3.03 }, { at: 5.05 }] }
+
+    const analyse = analyseParLigne([gauche, droite])
+
+    expect(analyse.matched).toBe(6)
+    expect(analyse.driftMsPerSecond).toBeCloseTo(10, 1)
+    expect(analyse.dispersionMs).toBeCloseTo(0, 1)
+  })
+
+  it('compte les manques de chaque ligne', () => {
+    const analyse = analyseParLigne([
+      { expected: [0, 1, 2], taps: [{ at: 0 }] },
+      { expected: [0, 1], taps: [{ at: 0 }, { at: 1 }, { at: 5 }] },
+    ])
+
+    expect(analyse.matched).toBe(3)
+    expect(analyse.missed).toBe(2)
+    expect(analyse.extra).toBe(1)
   })
 })
