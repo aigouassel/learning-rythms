@@ -1,7 +1,11 @@
+import type { Voice } from '@rythmes/core'
 import { useCallback, useRef, useState } from 'react'
 import { clockBridge } from './webAudioClock'
 
-export type Tap = { readonly at: number }
+export type Tap = { readonly at: number; readonly voix: Voice }
+
+/** Une touche, et la ligne qu'elle tient. */
+export type Touche = { readonly code: string; readonly voix: Voice }
 
 /**
  * Capter les frappes, datées sur l'horloge de l'audio.
@@ -17,28 +21,34 @@ export type Tap = { readonly at: number }
  * l'heure au moment où React le traite : entre les deux, il peut s'être écoulé
  * une image entière, soit seize millisecondes — plus que ce qu'on cherche à
  * mesurer.
+ *
+ * Chaque frappe porte la ligne qu'elle joue. Un motif de batterie fait tomber
+ * la grosse caisse et le charleston sur le même temps : sans savoir de quelle
+ * main vient la frappe, la correction ne peut pas dire laquelle des deux
+ * attaques a été jouée.
  */
 export function useTaps(): {
   readonly taps: readonly Tap[]
-  readonly dernier: number | null
-  ecouter(ctx: BaseAudioContext): () => void
+  ecouter(ctx: BaseAudioContext, touches: readonly Touche[]): () => void
   vider(): void
 } {
   const [taps, setTaps] = useState<Tap[]>([])
-  const [dernier, setDernier] = useState<number | null>(null)
   const actif = useRef(false)
 
-  const ecouter = useCallback((ctx: BaseAudioContext) => {
+  const ecouter = useCallback((ctx: BaseAudioContext, touches: readonly Touche[]) => {
     const versAudio = clockBridge(ctx)
+    const parCode = new Map(touches.map((t) => [t.code, t.voix]))
     actif.current = true
 
     const surTouche = (e: KeyboardEvent) => {
       if (!actif.current || e.repeat) return
-      if (e.code !== 'Space' && e.key !== 'Enter') return
+      // Entrée reste un synonyme de la barre d'espace, là où celle-ci sert —
+      // c'est le geste que les consignes nomment depuis le module 0.
+      const code = e.code === 'Enter' && parCode.has('Space') ? 'Space' : e.code
+      const voix = parCode.get(code)
+      if (!voix) return
       e.preventDefault()
-      const at = versAudio(e.timeStamp)
-      setTaps((t) => [...t, { at }])
-      setDernier(performance.now())
+      setTaps((t) => [...t, { at: versAudio(e.timeStamp), voix }])
     }
 
     window.addEventListener('keydown', surTouche)
@@ -48,10 +58,7 @@ export function useTaps(): {
     }
   }, [])
 
-  const vider = useCallback(() => {
-    setTaps([])
-    setDernier(null)
-  }, [])
+  const vider = useCallback(() => setTaps([]), [])
 
-  return { taps, dernier, ecouter, vider }
+  return { taps, ecouter, vider }
 }

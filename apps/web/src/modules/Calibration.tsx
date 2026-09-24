@@ -9,6 +9,9 @@ const BPM = 84
 const NOIRE = fraction(1, 4)
 const CYCLES = 4
 
+/** On tape sur le clic, d'une seule main : la barre d'espace, comme partout. */
+const TOUCHES = [{ code: 'Space', voix: 'clave' as const }]
+
 const CLIC = pattern({
   meter: meter(4, 4),
   onsets: [0, 1, 2, 3].map((i) => ({
@@ -53,8 +56,8 @@ export function Calibration({ onFini }: { readonly onFini?: () => void }) {
     if (phase !== 'en-cours') return
     const audio = lecture.audio()
     if (!audio) return
-    return ecouter(audio.ctx)
-  }, [phase, lecture, ecouter])
+    return ecouter(audio.ctx, TOUCHES)
+  }, [phase, lecture.audio, ecouter])
 
   const resultat = useMemo(() => {
     if (phase !== 'finie' || attendu.length === 0) return null

@@ -1,12 +1,13 @@
 import type { Exercise } from '@rythmes/content'
-import { fraction, type Fraction, type Pattern, type Voice } from '@rythmes/core'
+import { fraction, measureCount, toNumber, type Fraction, type Pattern, type Voice } from '@rythmes/core'
 import { secondsFor, tempo as tempoOf } from '@rythmes/engine'
-import { analyseTiming, diagnose, type TimingAnalysis } from '@rythmes/scoring'
-import { useEffect, useRef, useState } from 'react'
+import { analyseParLigne, diagnose, type TimingAnalysis } from '@rythmes/scoring'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useLecture } from '../audio/useLecture'
 import { useTaps } from '../audio/useTaps'
 import { Portee } from '../components/Portee'
 import { calibration, calibrationFaite } from '../progression'
+import { NOM_DE_LA_VOIX, nomDeLaTouche, touchesPour } from './touches'
 
 type Frappe = Extract<Exercise, { kind: 'frappe' }>
 type Dechiffrage = Extract<Exercise, { kind: 'dechiffrage' }>
@@ -36,15 +37,16 @@ export function FrappeMesuree({
   readonly avecSon: boolean
   /** Après quoi le son se retire et la frappe continue sans lui. Tous, par défaut. */
   readonly cyclesSonores?: number
-  /** La voix à frapper, si le motif en compte plusieurs. */
-  readonly voix?: Voice
+  /** Les lignes à frapper, dans l'ordre des touches. */
+  readonly voix?: readonly Voice[]
 }) {
   const [phase, setPhase] = useState<'prete' | 'en-cours' | 'finie'>('prete')
   const [analyse, setAnalyse] = useState<TimingAnalysis | null>(null)
   const { taps, ecouter, vider } = useTaps()
-  const [attendu, setAttendu] = useState<readonly number[]>([])
   /** L'instant où le motif commence — après le décompte. */
   const [origine, setOrigine] = useState<number | null>(null)
+  /** Les attaques attendues, ligne par ligne. */
+  const [attendu, setAttendu] = useState<readonly { voix: Voice; temps: readonly number[] }[]>([])
   /**
    * Le décompte court encore.
    *
@@ -65,6 +67,25 @@ export function FrappeMesuree({
   // aussi incapable de dire quoi que ce soit à la correction.
   const sonores = cyclesSonores ?? cycles
 
+  /**
+   * Les lignes à jouer.
+   *
+   * Un motif à une seule voix n'a pas besoin de le déclarer : il n'y a pas
+   * d'ambiguïté à lever. Au-delà, l'exercice doit désigner ses lignes, et un
+   * contrôle de cohérence le vérifie — ce repli ne sert qu'à ne pas laisser
+   * l'écran vide si une donnée passait au travers.
+   */
+  const voixAFrapper = useMemo<readonly Voice[]>(() => {
+    if (voix && voix.length > 0) return voix
+    const presentes = [...new Set(pattern.onsets.map((o) => o.voice))]
+    return presentes.slice(0, 1)
+  }, [voix, pattern])
+
+  const touches = useMemo(
+    () => touchesPour(voixAFrapper).map((code, i) => ({ code, voix: voixAFrapper[i]! })),
+    [voixAFrapper],
+  )
+
   const lecture = useLecture({
     pattern,
     bpm,
@@ -78,8 +99,8 @@ export function FrappeMesuree({
     if (phase !== 'en-cours') return
     const audio = lecture.audio()
     if (!audio) return
-    return ecouter(audio.ctx)
-  }, [phase, lecture.audio, ecouter])
+    return ecouter(audio.ctx, touches)
+  }, [phase, lecture.audio, ecouter, touches])
 
   useEffect(
     () => () => {
@@ -96,7 +117,18 @@ export function FrappeMesuree({
     // pas encore. Les compter les ferait toutes passer pour des attaques en
     // trop, et le verdict porterait sur l'échauffement.
     const jouees = origine === null ? taps : taps.filter((t) => t.at >= origine - MARGE)
-    setAnalyse(analyseTiming(attendu, jouees, { calibrationMs: calibration() }))
+
+    // Ligne par ligne : deux voix qui tombent sur le même temps se
+    // disputeraient la même frappe si on les appariait ensemble.
+    setAnalyse(
+      analyseParLigne(
+        attendu.map((a) => ({
+          expected: a.temps,
+          taps: jouees.filter((t) => t.voix === a.voix),
+        })),
+        { calibrationMs: calibration() },
+      ),
+    )
   }, [phase, attendu, taps, origine])
 
   const commencer = async () => {
@@ -113,7 +145,10 @@ export function FrappeMesuree({
     const toutes = t.expectedTimes(cycles)
     const n = pattern.onsets.length
     setAttendu(
-      voix && n > 0 ? toutes.filter((_, i) => pattern.onsets[i % n]!.voice === voix) : toutes,
+      voixAFrapper.map((v) => ({
+        voix: v,
+        temps: toutes.filter((_, i) => pattern.onsets[i % n]!.voice === v),
+      })),
     )
     setOrigine(t.origin)
     setPrepare(true)
@@ -139,7 +174,13 @@ export function FrappeMesuree({
 
   return (
     <div className="repondre frappe">
-      <Portee pattern={pattern} position={lecture.position} />
+      <Consigne
+        touches={touches}
+        mesures={cycles * toNumber(measureCount(pattern))}
+        tenirSeule={sonores < cycles}
+      />
+
+      <Portee pattern={pattern} position={lecture.position} aFrapper={voixAFrapper} touches={touches} />
 
       {!calibrationFaite() && (
         <p className="aide">
@@ -158,13 +199,49 @@ export function FrappeMesuree({
 
       {phase === 'en-cours' && !decompte && (
         <p className="aide gros">
-          Barre d’espace, en place. {taps.length} frappe{taps.length > 1 ? 's' : ''}.
+          En place. {taps.length} frappe{taps.length > 1 ? 's' : ''}.
           {sonores < cycles && !lecture.joue && ' — à toi de tenir, maintenant.'}
         </p>
       )}
 
       {analyse && <Verdict analyse={analyse} />}
     </div>
+  )
+}
+
+/**
+ * Ce que l'exercice demande, avant qu'il ne commence.
+ *
+ * Trois choses qu'il fallait deviner : quelle ligne frapper quand la partition
+ * en montre trois, avec quelle touche, et combien de temps ça dure. La
+ * dernière compte autant que les autres — sans elle, on ne sait pas si
+ * l'exercice s'est arrêté ou si l'on a perdu le fil.
+ */
+function Consigne({
+  touches,
+  mesures,
+  tenirSeule,
+}: {
+  readonly touches: readonly { code: string; voix: Voice }[]
+  readonly mesures: number
+  readonly tenirSeule: boolean
+}) {
+  return (
+    <p className="consigne-frappe">
+      <span className="quoi">
+        À frapper :{' '}
+        {touches.map((t, i) => (
+          <span key={t.code}>
+            {i > 0 && (i === touches.length - 1 ? ' et ' : ', ')}
+            {NOM_DE_LA_VOIX[t.voix]} <kbd>{nomDeLaTouche(t.code)}</kbd>
+          </span>
+        ))}
+      </span>
+      <span className="combien">
+        {mesures} mesure{mesures > 1 ? 's' : ''}, après une mesure de décompte
+        {tenirSeule && ' — le clic s’arrête à la moitié'}
+      </span>
+    </p>
   )
 }
 
@@ -239,6 +316,7 @@ export function ExerciceDechiffrage({ exercice }: { readonly exercice: Dechiffra
       parTemps={exercice.parTemps ?? fraction(1, 4)}
       cycles={1}
       avecSon={false}
+      {...(exercice.voix ? { voix: exercice.voix } : {})}
     />
   )
 }

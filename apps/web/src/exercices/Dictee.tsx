@@ -75,14 +75,21 @@ function FrappePuisChoix({ exercice }: { readonly exercice: Dictee }) {
   const { taps, ecouter, vider } = useTaps()
   const [origine, setOrigine] = useState<number | null>(null)
 
+  // Une dictée se frappe d'une seule main : c'est le rythme qu'on restitue,
+  // pas une texture.
+  const touches = useMemo(
+    () => [{ code: 'Space', voix: exercice.attendu.onsets[0]?.voice ?? ('kick' as const) }],
+    [exercice.attendu],
+  )
+
   // Les frappes sont datées sur l'horloge audio ; il faut donc que le contexte
   // existe avant d'écouter le clavier.
   useEffect(() => {
     if (phase !== 'frappe') return
     const audio = lecture.audio()
     if (!audio) return
-    return ecouter(audio.ctx)
-  }, [phase, lecture, ecouter])
+    return ecouter(audio.ctx, touches)
+  }, [phase, lecture.audio, ecouter, touches])
 
   const candidats = useMemo(() => {
     if (origine === null || taps.length === 0) return []

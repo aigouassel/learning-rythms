@@ -597,6 +597,65 @@ code {
   margin-top: 0.75rem;
 }
 
+/* Ce que l'exercice demande, avant qu'il ne commence.
+
+   Trois informations qu'il fallait deviner : quelle ligne frapper quand la
+   partition en montre trois, avec quelle touche, et combien de temps ça dure.
+   Elles tiennent au-dessus de la portée plutôt que dans la consigne, parce
+   qu'elles s'y lisent en même temps que le dessin qu'elles désignent. */
+.consigne-frappe {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 1rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+}
+
+.consigne-frappe .quoi {
+  font-weight: 600;
+}
+
+.consigne-frappe .combien {
+  color: var(--doux);
+}
+
+kbd {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8em;
+  padding: 0.1em 0.4em;
+  border: 1px solid var(--trait);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: #fff;
+  white-space: nowrap;
+}
+
+/* La ligne qu'on ne joue pas reste écrite, mais s'efface.
+
+   En retrait plutôt qu'absente : voir le charleston aide à se situer dans la
+   mesure, et en déchiffrage la texture fait partie de ce qu'on lit. L'opacité
+   agit sur le groupe entier, notes et portée comprises — colorer chaque note
+   entrerait en conflit avec le surlignage de la lecture, qui les repeint. */
+.portee .en-retrait {
+  opacity: 0.32;
+}
+
+/* La touche de chaque ligne, dans la marge que le dessin lui réserve. */
+.touches-des-voix {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.touches-des-voix kbd {
+  position: absolute;
+  left: 2px;
+  /* `top` porte la hauteur de la ligne, donnée par VexFlow : l'étiquette se
+     centre dessus plutôt que de flotter au-dessus. */
+  transform: translateY(-50%);
+}
+
 .repondre > button,
 .repondre .commandes button {
   font: inherit;

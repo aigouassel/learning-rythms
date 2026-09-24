@@ -1,4 +1,4 @@
-import type { Pattern } from '@rythmes/core'
+import type { Pattern, Voice } from '@rythmes/core'
 import { engrave, syllabize } from '@rythmes/notation'
 import { useMemo } from 'react'
 import { StaffView } from '../notation/StaffView'
@@ -10,6 +10,10 @@ export type PorteeProps = {
   readonly pitched?: boolean
   /** Les syllabes rythmiques — module 3 seulement. */
   readonly syllabes?: boolean
+  /** Les lignes que l'on doit frapper : les autres s'effacent. */
+  readonly aFrapper?: readonly Voice[]
+  /** La touche de chaque ligne, écrite dans sa marge. */
+  readonly touches?: readonly { readonly code: string; readonly voix: Voice }[]
 }
 
 /**
@@ -18,7 +22,7 @@ export type PorteeProps = {
  * La gravure est mémorisée : elle ne dépend que de la musique, là où la
  * position change soixante fois par seconde.
  */
-export function Portee({ pattern, position, pitched, syllabes }: PorteeProps) {
+export function Portee({ pattern, position, pitched, syllabes, aFrapper, touches }: PorteeProps) {
   const voix = useMemo(() => engrave(pattern), [pattern])
   const syllabesParVoix = useMemo(
     () => (syllabes ? voix.map((v) => syllabize(v).map((s) => s.syllable)) : null),
@@ -32,6 +36,8 @@ export function Portee({ pattern, position, pitched, syllabes }: PorteeProps) {
       pitched={pitched}
       position={position ?? null}
       {...(syllabesParVoix ? { syllables: syllabesParVoix } : {})}
+      {...(aFrapper ? { aFrapper } : {})}
+      {...(touches ? { touches } : {})}
     />
   )
 }
