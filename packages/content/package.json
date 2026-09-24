@@ -4,15 +4,22 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts",
-    "./modules/*": "./src/modules/*"
+    ".": "./src/index.ts"
   },
   "scripts": {
     "typecheck": "tsc --build"
   },
   "dependencies": {
+    "@rythmes/00-prise-de-reperes": "workspace:^",
+    "@rythmes/01-sentir-la-pulsation": "workspace:^",
+    "@rythmes/02-temps-forts-et-faibles": "workspace:^",
+    "@rythmes/03-les-durees": "workspace:^",
+    "@rythmes/04-lire-et-ecrire": "workspace:^",
+    "@rythmes/05-enrichir-le-vocabulaire": "workspace:^",
+    "@rythmes/06-composees-et-ternaire": "workspace:^",
+    "@rythmes/07-polyrythmie": "workspace:^",
+    "@rythmes/08-le-rythme-comme-materiau": "workspace:^",
     "@rythmes/core": "workspace:^",
-    "@rythmes/notation": "workspace:^",
     "@rythmes/syllabus": "workspace:^"
   },
   "devDependencies": {

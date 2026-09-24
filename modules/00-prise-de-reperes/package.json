@@ -1,0 +1,16 @@
+{
+  "name": "@rythmes/00-prise-de-reperes",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@rythmes/core": "workspace:^",
+    "@rythmes/syllabus": "workspace:^"
+  }
+}

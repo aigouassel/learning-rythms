@@ -708,12 +708,101 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rythmes/00-prise-de-reperes@workspace:^, @rythmes/00-prise-de-reperes@workspace:modules/00-prise-de-reperes":
+  version: 0.0.0-use.local
+  resolution: "@rythmes/00-prise-de-reperes@workspace:modules/00-prise-de-reperes"
+  dependencies:
+    "@rythmes/core": "workspace:^"
+    "@rythmes/syllabus": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@rythmes/01-sentir-la-pulsation@workspace:^, @rythmes/01-sentir-la-pulsation@workspace:modules/01-sentir-la-pulsation":
+  version: 0.0.0-use.local
+  resolution: "@rythmes/01-sentir-la-pulsation@workspace:modules/01-sentir-la-pulsation"
+  dependencies:
+    "@rythmes/core": "workspace:^"
+    "@rythmes/syllabus": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@rythmes/02-temps-forts-et-faibles@workspace:^, @rythmes/02-temps-forts-et-faibles@workspace:modules/02-temps-forts-et-faibles":
+  version: 0.0.0-use.local
+  resolution: "@rythmes/02-temps-forts-et-faibles@workspace:modules/02-temps-forts-et-faibles"
+  dependencies:
+    "@rythmes/core": "workspace:^"
+    "@rythmes/syllabus": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@rythmes/03-les-durees@workspace:^, @rythmes/03-les-durees@workspace:modules/03-les-durees":
+  version: 0.0.0-use.local
+  resolution: "@rythmes/03-les-durees@workspace:modules/03-les-durees"
+  dependencies:
+    "@rythmes/core": "workspace:^"
+    "@rythmes/syllabus": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@rythmes/04-lire-et-ecrire@workspace:^, @rythmes/04-lire-et-ecrire@workspace:modules/04-lire-et-ecrire":
+  version: 0.0.0-use.local
+  resolution: "@rythmes/04-lire-et-ecrire@workspace:modules/04-lire-et-ecrire"
+  dependencies:
+    "@rythmes/core": "workspace:^"
+    "@rythmes/syllabus": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@rythmes/05-enrichir-le-vocabulaire@workspace:^, @rythmes/05-enrichir-le-vocabulaire@workspace:modules/05-enrichir-le-vocabulaire":
+  version: 0.0.0-use.local
+  resolution: "@rythmes/05-enrichir-le-vocabulaire@workspace:modules/05-enrichir-le-vocabulaire"
+  dependencies:
+    "@rythmes/core": "workspace:^"
+    "@rythmes/syllabus": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@rythmes/06-composees-et-ternaire@workspace:^, @rythmes/06-composees-et-ternaire@workspace:modules/06-composees-et-ternaire":
+  version: 0.0.0-use.local
+  resolution: "@rythmes/06-composees-et-ternaire@workspace:modules/06-composees-et-ternaire"
+  dependencies:
+    "@rythmes/core": "workspace:^"
+    "@rythmes/syllabus": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@rythmes/07-polyrythmie@workspace:^, @rythmes/07-polyrythmie@workspace:modules/07-polyrythmie":
+  version: 0.0.0-use.local
+  resolution: "@rythmes/07-polyrythmie@workspace:modules/07-polyrythmie"
+  dependencies:
+    "@rythmes/core": "workspace:^"
+    "@rythmes/syllabus": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@rythmes/08-le-rythme-comme-materiau@workspace:^, @rythmes/08-le-rythme-comme-materiau@workspace:modules/08-le-rythme-comme-materiau":
+  version: 0.0.0-use.local
+  resolution: "@rythmes/08-le-rythme-comme-materiau@workspace:modules/08-le-rythme-comme-materiau"
+  dependencies:
+    "@rythmes/core": "workspace:^"
+    "@rythmes/syllabus": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
 "@rythmes/content@workspace:^, @rythmes/content@workspace:packages/content":
   version: 0.0.0-use.local
   resolution: "@rythmes/content@workspace:packages/content"
   dependencies:
+    "@rythmes/00-prise-de-reperes": "workspace:^"
+    "@rythmes/01-sentir-la-pulsation": "workspace:^"
+    "@rythmes/02-temps-forts-et-faibles": "workspace:^"
+    "@rythmes/03-les-durees": "workspace:^"
+    "@rythmes/04-lire-et-ecrire": "workspace:^"
+    "@rythmes/05-enrichir-le-vocabulaire": "workspace:^"
+    "@rythmes/06-composees-et-ternaire": "workspace:^"
+    "@rythmes/07-polyrythmie": "workspace:^"
+    "@rythmes/08-le-rythme-comme-materiau": "workspace:^"
     "@rythmes/core": "workspace:^"
-    "@rythmes/notation": "workspace:^"
     "@rythmes/syllabus": "workspace:^"
     "@types/node": "npm:^26.6.2"
   languageName: unknown
@@ -764,6 +853,14 @@ __metadata:
   dependencies:
     "@mdx-js/react": "npm:^3.1.1"
     "@mdx-js/rollup": "npm:^3.1.1"
+    "@rythmes/01-sentir-la-pulsation": "workspace:^"
+    "@rythmes/02-temps-forts-et-faibles": "workspace:^"
+    "@rythmes/03-les-durees": "workspace:^"
+    "@rythmes/04-lire-et-ecrire": "workspace:^"
+    "@rythmes/05-enrichir-le-vocabulaire": "workspace:^"
+    "@rythmes/06-composees-et-ternaire": "workspace:^"
+    "@rythmes/07-polyrythmie": "workspace:^"
+    "@rythmes/08-le-rythme-comme-materiau": "workspace:^"
     "@rythmes/content": "workspace:^"
     "@rythmes/core": "workspace:^"
     "@rythmes/engine": "workspace:^"

@@ -19,7 +19,8 @@ const sansAccents = (s: string): string =>
     .replace(/[̀-ͯ]/g, '')
 
 /** Les dossiers de module présents sur le disque, avec leur numéro. */
-const MODULES_DIR = join(__dirname, 'modules')
+/** Les libs de module, sur le disque — `modules/` à la racine du dépôt. */
+const MODULES_DIR = join(__dirname, '..', '..', '..', 'modules')
 
 const DOSSIERS = readdirSync(MODULES_DIR, { withFileTypes: true })
   .filter((d) => d.isDirectory())
@@ -28,7 +29,7 @@ const DOSSIERS = readdirSync(MODULES_DIR, { withFileTypes: true })
 
 const lecon = (nom: string): string | null => {
   try {
-    return readFileSync(join(MODULES_DIR, nom, 'lesson.mdx'), 'utf8')
+    return readFileSync(join(MODULES_DIR, nom, 'src', 'lesson.mdx'), 'utf8')
   } catch {
     return null
   }
@@ -36,7 +37,7 @@ const lecon = (nom: string): string | null => {
 
 const motifs = async (nom: string): Promise<Record<string, Pattern>> => {
   try {
-    return (await import(`./modules/${nom}/patterns.ts`)) as Record<string, Pattern>
+    return (await import(`../../../modules/${nom}/src/patterns.ts`)) as Record<string, Pattern>
   } catch {
     return {}
   }

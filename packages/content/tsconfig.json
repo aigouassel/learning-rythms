@@ -18,10 +18,34 @@
       "path": "../core"
     },
     {
-      "path": "../notation"
+      "path": "../syllabus"
     },
     {
-      "path": "../syllabus"
+      "path": "../../modules/00-prise-de-reperes"
+    },
+    {
+      "path": "../../modules/01-sentir-la-pulsation"
+    },
+    {
+      "path": "../../modules/02-temps-forts-et-faibles"
+    },
+    {
+      "path": "../../modules/03-les-durees"
+    },
+    {
+      "path": "../../modules/04-lire-et-ecrire"
+    },
+    {
+      "path": "../../modules/05-enrichir-le-vocabulaire"
+    },
+    {
+      "path": "../../modules/06-composees-et-ternaire"
+    },
+    {
+      "path": "../../modules/07-polyrythmie"
+    },
+    {
+      "path": "../../modules/08-le-rythme-comme-materiau"
     }
   ]
 }

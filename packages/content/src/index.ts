@@ -1,13 +1,13 @@
 import { assembleCours } from '@rythmes/syllabus'
-import module0 from './modules/00-prise-de-reperes'
-import module1 from './modules/01-sentir-la-pulsation'
-import module2 from './modules/02-temps-forts-et-faibles'
-import module3 from './modules/03-les-durees'
-import module4 from './modules/04-lire-et-ecrire'
-import module5 from './modules/05-enrichir-le-vocabulaire'
-import module6 from './modules/06-composees-et-ternaire'
-import module7 from './modules/07-polyrythmie'
-import module8 from './modules/08-le-rythme-comme-materiau'
+import module0 from '@rythmes/00-prise-de-reperes'
+import module1 from '@rythmes/01-sentir-la-pulsation'
+import module2 from '@rythmes/02-temps-forts-et-faibles'
+import module3 from '@rythmes/03-les-durees'
+import module4 from '@rythmes/04-lire-et-ecrire'
+import module5 from '@rythmes/05-enrichir-le-vocabulaire'
+import module6 from '@rythmes/06-composees-et-ternaire'
+import module7 from '@rythmes/07-polyrythmie'
+import module8 from '@rythmes/08-le-rythme-comme-materiau'
 
 /**
  * Le cours, assemblé depuis les libs de ses modules.

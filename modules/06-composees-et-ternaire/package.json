@@ -1,0 +1,17 @@
+{
+  "name": "@rythmes/06-composees-et-ternaire",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./lesson.mdx": "./src/lesson.mdx"
+  },
+  "scripts": {
+    "typecheck": "tsc --build"
+  },
+  "dependencies": {
+    "@rythmes/core": "workspace:^",
+    "@rythmes/syllabus": "workspace:^"
+  }
+}
