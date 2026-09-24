@@ -217,3 +217,103 @@ describe('la référence pour la correction', () => {
     expect(t.expectedTimes(2)).toEqual([0.5, 1.5, 2.5, 3.5])
   })
 })
+
+describe('le décompte', () => {
+  const clock = () => fakeClock()
+
+  it('bat au tempo, une fois par figure de référence', () => {
+    const c = clock()
+    const output = espion()
+    const p = pattern({ meter: meter(4, 4), onsets: [frappe([0, 1])] })
+
+    const t = transport({
+      clock: c,
+      output,
+      pattern: p,
+      tempo: tempo(60, NOIRE),
+      leadMs: 0,
+      countIn: 1,
+    })
+    t.start()
+
+    const decompte = output.events.filter((e) => e.cycle < 0)
+    expect(decompte.map((e) => e.at)).toEqual([0, 1, 2, 3])
+    // L'appui sur le premier : le décompte doit faire entendre le cycle, pas
+    // seulement la vitesse.
+    expect(decompte.map((e) => e.accent)).toEqual([true, false, false, false])
+  })
+
+  it('compte les temps et non les croches, en mesure composée', () => {
+    const c = clock()
+    const output = espion()
+    // 6/8 à ♩. = 60 : deux temps par mesure, pas six.
+    const p = pattern({ meter: meter(6, 8), onsets: [frappe([0, 1], CROCHE)] })
+
+    const t = transport({
+      clock: c,
+      output,
+      pattern: p,
+      tempo: tempo(60, NOIRE_POINTEE),
+      leadMs: 0,
+      countIn: 1,
+    })
+    t.start()
+
+    expect(output.events.filter((e) => e.cycle < 0).map((e) => e.at)).toEqual([0, 1])
+  })
+
+  it('repousse l’origine d’autant, et la correction n’en sait rien', () => {
+    const c = clock()
+    const output = espion()
+    const p = pattern({
+      meter: meter(2, 4),
+      onsets: [frappe([0, 1]), frappe([1, 4])],
+    })
+
+    const t = transport({
+      clock: c,
+      output,
+      pattern: p,
+      tempo: tempo(60, NOIRE),
+      leadMs: 0,
+      countIn: 1,
+    })
+    t.start()
+
+    // Une mesure à deux temps de soixante à la noire : deux secondes.
+    expect(t.origin).toBeCloseTo(2)
+    expect(t.expectedTimes(1)).toEqual([2, 3])
+    // Pendant le décompte, aucun signe ne s'allume.
+    expect(t.positionAt(1)).toBeNull()
+  })
+})
+
+describe('le motif muet', () => {
+  it('ne fait rien sonner mais dit toujours où les attaques tombaient', () => {
+    const c = fakeClock()
+    const output = espion()
+    const p = pattern({
+      meter: meter(2, 4),
+      onsets: [frappe([0, 1]), frappe([1, 4])],
+    })
+
+    const t = transport({
+      clock: c,
+      output,
+      pattern: p,
+      tempo: tempo(60, NOIRE),
+      leadMs: 0,
+      silent: true,
+      countIn: 1,
+    })
+    t.start()
+
+    // C'est tout l'enjeu du déchiffrage : le silence porte sur le son, pas sur
+    // la connaissance de la grille. Vider le motif de ses attaques rendait la
+    // correction impossible — il n'y avait plus rien à attendre.
+    expect(t.expectedTimes(1)).toEqual([2, 3])
+    // Seul le décompte a sonné.
+    expect(output.events.every((e) => e.cycle < 0)).toBe(true)
+    expect(output.events).toHaveLength(2)
+  })
+})

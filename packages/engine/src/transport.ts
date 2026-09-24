@@ -1,4 +1,13 @@
-import { toNumber, type Fraction, type Pattern, type Voice } from '@rythmes/core'
+import {
+  div,
+  fraction,
+  measureLength,
+  mul,
+  toNumber,
+  type Fraction,
+  type Pattern,
+  type Voice,
+} from '@rythmes/core'
 import type { Clock } from './clock'
 import { secondsFor, type Tempo } from './tempo'
 
@@ -40,6 +49,30 @@ export type TransportOptions = {
   readonly loop?: boolean
   /** Le délai avant la première attaque, pour ne pas la placer dans le passé. */
   readonly leadMs?: number
+  /**
+   * Les mesures de décompte avant que le motif ne commence.
+   *
+   * Un exercice de frappe sans décompte est injouable : la première attaque
+   * tombe pendant qu'on lâche encore la souris, et rien n'a donné la pulsation
+   * sur laquelle se placer. Le décompte bat au tempo — une frappe par figure de
+   * référence, donc deux en 6/8 quand le tempo est en noires pointées, et non
+   * six.
+   *
+   * Il déplace `origin`, qui reste l'instant où le motif commence : la
+   * correction n'a pas à savoir qu'un décompte a eu lieu.
+   */
+  readonly countIn?: number
+  readonly countInVoice?: Voice
+  /**
+   * Le motif est placé sur l'horloge mais ne sonne pas.
+   *
+   * C'est le déchiffrage : on lit, on frappe, et rien ne souffle la réponse.
+   * Le transport doit malgré tout connaître les attaques, puisque c'est lui qui
+   * dit où elles étaient attendues — vider le motif de ses attaques le
+   * rendrait muet *et* amnésique. Le décompte, lui, sonne toujours : c'est ce
+   * qui donne le tempo qu'on va devoir tenir seule.
+   */
+  readonly silent?: boolean
   readonly onCycle?: (cycle: number) => void
   readonly onStop?: () => void
 }
@@ -93,12 +126,23 @@ export function transport(options: TransportOptions): Transport {
     intervalMs = 25,
     loop = true,
     leadMs = 50,
+    countIn = 0,
+    countInVoice = 'rimshot',
+    silent = false,
     onCycle,
     onStop,
   } = options
 
   const dureeCycle = secondsFor(pattern.length, tempo)
   const dates = pattern.onsets.map((o) => secondsFor(o.at, tempo))
+
+  const mesure = measureLength(pattern.meter)
+  const dureeMesure = secondsFor(mesure, tempo)
+  const dureeBattement = secondsFor(tempo.per, tempo)
+  // Combien de fois la figure du tempo entre dans une mesure. Arrondi parce
+  // qu'un chiffrage inhabituel peut ne pas tomber juste — mieux vaut un
+  // décompte d'un battement de trop qu'une boucle sur une fraction.
+  const battements = Math.max(1, Math.round(toNumber(div(mesure, tempo.per))))
 
   let origine = 0
   let index = 0
@@ -127,14 +171,18 @@ export function transport(options: TransportOptions): Transport {
       const at = origine + cycle * dureeCycle + dates[index]!
       if (at > horizon) return
 
-      output.schedule({
-        at,
-        voice: onset.voice,
-        accent: onset.accent ?? false,
-        ...(onset.pitch !== undefined ? { pitch: onset.pitch } : {}),
-        position: onset.at,
-        cycle,
-      })
+      // En déchiffrage on avance sans faire sonner : la progression des cycles
+      // et l'arrêt en fin de motif restent identiques, seul le son manque.
+      if (!silent) {
+        output.schedule({
+          at,
+          voice: onset.voice,
+          accent: onset.accent ?? false,
+          ...(onset.pitch !== undefined ? { pitch: onset.pitch } : {}),
+          position: onset.at,
+          cycle,
+        })
+      }
       index += 1
     }
   }
@@ -149,9 +197,32 @@ export function transport(options: TransportOptions): Transport {
   return {
     start() {
       if (arreter) return
-      origine = clock.now() + leadMs / 1000
+      const depart = clock.now() + leadMs / 1000
+      origine = depart + countIn * dureeMesure
       index = 0
       cycle = 0
+
+      // Le décompte est placé d'un coup, sans passer par l'horizon glissant.
+      // Il dure une ou deux secondes et sa dernière date est connue dès le
+      // départ : lui appliquer le lookahead ne protégerait de rien, puisqu'il
+      // n'y a pas de suite à approvisionner.
+      for (let m = 0; m < countIn; m += 1) {
+        for (let b = 0; b < battements; b += 1) {
+          output.schedule({
+            at: depart + m * dureeMesure + b * dureeBattement,
+            voice: countInVoice,
+            // Le premier battement de chaque mesure porte l'appui : c'est ce
+            // qui fait entendre le cycle, et pas seulement la vitesse.
+            accent: b === 0,
+            position: mul(tempo.per, fraction(b)),
+            // Négatif : le décompte est en amont du motif, et `positionAt` le
+            // laisse déjà hors du curseur en refusant les instants d'avant
+            // l'origine.
+            cycle: m - countIn,
+          })
+        }
+      }
+
       arreter = clock.every(intervalMs, tick)
       // Un premier approvisionnement immédiat : attendre le premier réveil
       // retarderait le début d'autant.
