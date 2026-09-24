@@ -2,7 +2,7 @@ import type { Exercise } from '@rythmes/content'
 import { fraction, type Fraction, type Pattern, type Voice } from '@rythmes/core'
 import { secondsFor, tempo as tempoOf } from '@rythmes/engine'
 import { analyseTiming, diagnose, type TimingAnalysis } from '@rythmes/scoring'
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLecture } from '../audio/useLecture'
 import { useTaps } from '../audio/useTaps'
 import { Portee } from '../components/Portee'
@@ -43,21 +43,35 @@ export function FrappeMesuree({
   const [analyse, setAnalyse] = useState<TimingAnalysis | null>(null)
   const { taps, ecouter, vider } = useTaps()
   const [attendu, setAttendu] = useState<readonly number[]>([])
+  /** L'instant où le motif commence — après le décompte. */
+  const [origine, setOrigine] = useState<number | null>(null)
+  /**
+   * Le décompte court encore.
+   *
+   * Un état explicite plutôt que « le transport ne rend aucune position » :
+   * cette dernière est également vraie une fois le son arrêté, et le message de
+   * préparation reparaissait alors au milieu de l'exercice — précisément quand
+   * le clic se retire et qu'il faut tenir seule. Elle dépend de surcroît de la
+   * boucle d'animation, que l'arrière-plan gèle.
+   */
+  const [prepare, setPrepare] = useState(false)
+  const minuterieRef = useRef<number | null>(null)
+  const preparationRef = useRef<number | null>(null)
 
   // Le motif tourne — ou se tait, en déchiffrage. Dans les deux cas le
   // transport reste l'autorité du temps : c'est lui qui dit où les attaques
-  // étaient attendues.
+  // étaient attendues. En déchiffrage il les connaît sans les jouer, au lieu
+  // de recevoir un motif vidé de ses attaques — qui le rendait muet, mais
+  // aussi incapable de dire quoi que ce soit à la correction.
   const sonores = cyclesSonores ?? cycles
 
   const lecture = useLecture({
-    pattern: avecSon ? pattern : silencieux(pattern),
+    pattern,
     bpm,
     parTemps,
     cycles: sonores,
-    // Quand le clic se retire avant la fin, ce n'est pas l'exercice qui
-    // s'arrête : c'est là qu'il commence vraiment. On laisse donc la minuterie
-    // ci-dessous décider de la fin.
-    ...(sonores === cycles ? { onFin: () => setPhase('finie') } : {}),
+    muet: !avecSon,
+    countIn: 1,
   })
 
   useEffect(() => {
@@ -65,33 +79,63 @@ export function FrappeMesuree({
     const audio = lecture.audio()
     if (!audio) return
     return ecouter(audio.ctx)
-  }, [phase, lecture, ecouter])
+  }, [phase, lecture.audio, ecouter])
+
+  useEffect(
+    () => () => {
+      if (minuterieRef.current !== null) window.clearTimeout(minuterieRef.current)
+      if (preparationRef.current !== null) window.clearTimeout(preparationRef.current)
+    },
+    [],
+  )
 
   useEffect(() => {
     if (phase !== 'finie' || attendu.length === 0) return
-    setAnalyse(analyseTiming(attendu, taps, { calibrationMs: calibration() }))
-  }, [phase, attendu, taps])
+
+    // Les frappes du décompte ne sont pas des fautes : on se cale, on ne joue
+    // pas encore. Les compter les ferait toutes passer pour des attaques en
+    // trop, et le verdict porterait sur l'échauffement.
+    const jouees = origine === null ? taps : taps.filter((t) => t.at >= origine - MARGE)
+    setAnalyse(analyseTiming(attendu, jouees, { calibrationMs: calibration() }))
+  }, [phase, attendu, taps, origine])
 
   const commencer = async () => {
+    // Une minuterie d'essai précédent terminerait celui-ci avant l'heure.
+    if (minuterieRef.current !== null) window.clearTimeout(minuterieRef.current)
+    if (preparationRef.current !== null) window.clearTimeout(preparationRef.current)
     vider()
     setAnalyse(null)
     const t = await lecture.demarrer()
+    if (!t) return
 
     // Les attaques attendues sur tous les passages, y compris ceux que le son
     // n'accompagnera pas — et seulement celles de la voix demandée.
-    const toutes = t?.expectedTimes(cycles) ?? []
+    const toutes = t.expectedTimes(cycles)
     const n = pattern.onsets.length
     setAttendu(
       voix && n > 0 ? toutes.filter((_, i) => pattern.onsets[i % n]!.voice === voix) : toutes,
     )
+    setOrigine(t.origin)
+    setPrepare(true)
     setPhase('en-cours')
 
-    if (sonores < cycles && t) {
-      const parCycle = secondsFor(pattern.length, tempoOf(bpm, parTemps))
-      const reste = (cycles - sonores) * parCycle
-      window.setTimeout(() => setPhase('finie'), reste * 1000 + 200)
-    }
+    // La fin se compte depuis l'origine du motif, sur l'horloge audio — jamais
+    // depuis l'instant du clic. Comptée depuis le clic, elle oubliait le
+    // décompte et l'amorce du transport ; et quand le clic s'arrête en cours
+    // de route, elle tombait au moment même où le son se taisait, coupant
+    // l'exercice à l'endroit précis où il commençait vraiment.
+    const parCycle = secondsFor(pattern.length, tempoOf(bpm, parTemps))
+    const finie = t.origin + cycles * parCycle
+    const ctx = lecture.audio()?.ctx
+    const maintenant = ctx?.currentTime ?? 0
+    const reste = Math.max(0, finie - maintenant)
+    minuterieRef.current = window.setTimeout(() => setPhase('finie'), reste * 1000 + 250)
+
+    const versOrigine = Math.max(0, t.origin - maintenant)
+    preparationRef.current = window.setTimeout(() => setPrepare(false), versOrigine * 1000)
   }
+
+  const decompte = phase === 'en-cours' && prepare
 
   return (
     <div className="repondre frappe">
@@ -110,7 +154,9 @@ export function FrappeMesuree({
         </button>
       )}
 
-      {phase === 'en-cours' && (
+      {decompte && <p className="aide gros">Une mesure pour se préparer…</p>}
+
+      {phase === 'en-cours' && !decompte && (
         <p className="aide gros">
           Barre d’espace, en place. {taps.length} frappe{taps.length > 1 ? 's' : ''}.
           {sonores < cycles && !lecture.joue && ' — à toi de tenir, maintenant.'}
@@ -162,8 +208,14 @@ function Verdict({ analyse }: { readonly analyse: TimingAnalysis }) {
 
 const signe = (ms: number): string => `${ms > 0 ? '+' : ''}${ms.toFixed(0)}`
 
-/** Le même motif, sans voix : la grille existe, mais ne sonne pas. */
-const silencieux = (p: Pattern): Pattern => ({ ...p, onsets: [] })
+/**
+ * Ce qu'on accorde avant l'origine, en secondes.
+ *
+ * Une frappe un peu en avance sur la première attaque est une frappe en
+ * avance, pas une frappe du décompte : la même tolérance que l'appariement,
+ * pour que les deux racontent la même histoire.
+ */
+const MARGE = 0.15
 
 export function ExerciceFrappe({ exercice }: { readonly exercice: Frappe }) {
   return (
