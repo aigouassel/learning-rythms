@@ -16,8 +16,28 @@ du cours dans [`docs/lexique.md`](docs/lexique.md).
 | `@rythmes/notation` | fractions ⇄ figures ⇄ syllabes | `core` |
 | `@rythmes/engine` | transport et scheduler, sur une horloge injectée | `core` |
 | `@rythmes/scoring` | correction temporelle et symbolique | `core`, `notation` |
-| `@rythmes/content` | les modules du cours et leurs exercices | `core`, `notation` |
+| `@rythmes/syllabus` | le contrat du cours : ce qu'est un module, un terme, un exercice | `core` |
+| `@rythmes/NN-slug` | un module du cours — neuf libs dans `modules/` | `core`, `syllabus` |
+| `@rythmes/content` | le cours assemblé, et ses tests transverses | `syllabus`, les neuf modules |
 | `@rythmes/web` | l'application — React, VexFlow, smplr | tous |
+
+Le cours tient en trois couches, et l'ordre est imposé par `tsc --build`, dont
+les références de projets forment obligatoirement un graphe acyclique :
+
+```
+packages/syllabus   le contrat, sans aucune donnée
+      ↑
+modules/00-… 08-…   un workspace par module : métadonnée, lexique,
+      ↑             motifs, exercices, leçon
+packages/content    l'assemblage, et ce qu'on ne peut vérifier qu'entier
+      ↑
+apps/web            l'application
+```
+
+Un module ne connaît ni ses voisins ni l'application : il déclare ses prérequis
+par leur numéro, et `assembleCours` en fait un graphe. Deux champs n'y sont pas
+rédigés mais déduits — les termes qu'un module introduit *sont* son lexique, et
+un terme est introduit là où il est écrit.
 
 VexFlow et smplr restent confinés dans `apps/web` : les paquets logiques ne les
 connaissent pas, et la bibliothèque de rendu reste remplaçable.

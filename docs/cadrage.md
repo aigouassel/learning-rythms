@@ -487,11 +487,22 @@ et seule qui permette de **comparer** deux rythmes symboliquement sans ambiguït
 
 ### 8.2 Le contenu : MDX et données typées
 
+Un module est un **workspace**, et tout ce qui le concerne y tient :
+
 ```
-content/modules/03-les-durees/
-├── lesson.mdx        la prose + les <Exemple> jouables
-└── exercises.ts      les exercices, en données typées
+modules/03-les-durees/
+└── src/
+    ├── module.ts       les prérequis et les répertoires de styles
+    ├── lexique.ts      les termes que le module installe
+    ├── patterns.ts     les motifs, en fractions exactes
+    ├── exercises.ts    les exercices, en données typées
+    ├── lesson.mdx      la prose + les <Exemple> jouables
+    └── index.ts        ce que le module apporte au cours
 ```
+
+`@rythmes/content` assemble les neuf libs ; `@rythmes/syllabus` porte le contrat
+qu'elles respectent, sans aucune donnée — condition pour qu'un module dépende du
+contrat sans que le contrat dépende des modules.
 
 La prose en MDX est agréable à rédiger et laisse insérer un exemple au moment
 exact où le concept est expliqué. Les exercices en TS typé sont vérifiés par le
