@@ -1,6 +1,4 @@
-import { MODULES } from './modules'
-import { exercisesOf } from './registry'
-import type { Exercise, ExerciseKind } from './types'
+import type { Exercise, ExerciseKind, Module } from './types'
 
 /**
  * Le contrôle : vingt questions prises dans tout le cours.
@@ -11,7 +9,8 @@ import type { Exercise, ExerciseKind } from './types'
  * sujets et les difficultés, pour poser la seule question qu'un module ne peut
  * pas poser : *reconnaîtrais-tu ça sans savoir d'où ça vient ?*
  *
- * Tout ici est une fonction pure d'une graine. Deux conséquences qui valent
+ * Tout ici est une fonction pure d'un vivier et d'une graine. Deux conséquences
+ * qui valent
  * les quelques lignes du générateur pseudo-aléatoire : le tirage est rejouable
  * (`#examen/7a3f` redonne le même contrôle, d'une séance à l'autre et d'une
  * machine à l'autre) et il est testable — ce qu'un `Math.random` dispersé dans
@@ -71,8 +70,10 @@ export const NOMBRE_DE_STRATES = 3
  * aucune compétence au tirage : tenir une pulsation, compter un cycle et lire
  * une figure sont repris et approfondis par les modules 1 à 4.
  */
-export const vivier = (): readonly Exercise[] =>
-  MODULES.filter((m) => m.number > 0).flatMap((m) => [...exercisesOf(m.number)])
+export const vivier = (
+  modules: readonly Module[],
+  exercicesDe: (module: number) => readonly Exercise[],
+): readonly Exercise[] => modules.filter((m) => m.number > 0).flatMap((m) => [...exercicesDe(m.number)])
 
 /**
  * Les trois strates, par tertiles de la population réelle.
@@ -87,8 +88,8 @@ export const vivier = (): readonly Exercise[] =>
  * strates dépendrait de la stabilité du tri du moteur, et le contrôle ne serait
  * plus tout à fait le même d'un navigateur à l'autre pour une graine donnée.
  */
-export function strates(): readonly (readonly Exercise[])[] {
-  const ordonne = [...vivier()].sort(
+export function strates(vivier: readonly Exercise[]): readonly (readonly Exercise[])[] {
+  const ordonne = [...vivier].sort(
     (a, b) => difficulte(a) - difficulte(b) || (a.id < b.id ? -1 : 1),
   )
   return Array.from({ length: NOMBRE_DE_STRATES }, (_, i) =>
@@ -117,9 +118,13 @@ export type Controle = {
  *    mal ordonnées se lisent encore comme un module : c'est l'étape qui fait
  *    la différence à l'écran.
  */
-export function controle(graine: string, taille: number = TAILLE_DU_CONTROLE): Controle {
+export function controle(
+  vivier: readonly Exercise[],
+  graine: string,
+  taille: number = TAILLE_DU_CONTROLE,
+): Controle {
   const tirer = alea(graine)
-  const bandes = strates()
+  const bandes = strates(vivier)
   const parts = quotas(taille, bandes.length, tirer)
 
   const tires: Tire[] = []

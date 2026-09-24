@@ -3,10 +3,14 @@ import { readFileSync } from 'node:fs'
 import { readdirSync } from 'node:fs'
 import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
-import { exerciseProblems, forwardReferences } from '../coherence'
-import { termBySlug } from '../lexique'
-import { MODULES, moduleByNumber } from '../modules'
-import { EXERCISES_BY_MODULE } from '../registry'
+import {
+  EXERCISES_BY_MODULE,
+  exerciseProblems,
+  forwardReferences,
+  moduleByNumber,
+  MODULES,
+  termBySlug,
+} from './index'
 
 const sansAccents = (s: string): string =>
   s
@@ -15,14 +19,16 @@ const sansAccents = (s: string): string =>
     .replace(/[̀-ͯ]/g, '')
 
 /** Les dossiers de module présents sur le disque, avec leur numéro. */
-const DOSSIERS = readdirSync(__dirname, { withFileTypes: true })
+const MODULES_DIR = join(__dirname, 'modules')
+
+const DOSSIERS = readdirSync(MODULES_DIR, { withFileTypes: true })
   .filter((d) => d.isDirectory())
   .map((d) => ({ nom: d.name, numero: Number(d.name.slice(0, 2)) }))
   .sort((a, b) => a.numero - b.numero)
 
 const lecon = (nom: string): string | null => {
   try {
-    return readFileSync(join(__dirname, nom, 'lesson.mdx'), 'utf8')
+    return readFileSync(join(MODULES_DIR, nom, 'lesson.mdx'), 'utf8')
   } catch {
     return null
   }
@@ -30,7 +36,7 @@ const lecon = (nom: string): string | null => {
 
 const motifs = async (nom: string): Promise<Record<string, Pattern>> => {
   try {
-    return (await import(`./${nom}/patterns.ts`)) as Record<string, Pattern>
+    return (await import(`./modules/${nom}/patterns.ts`)) as Record<string, Pattern>
   } catch {
     return {}
   }

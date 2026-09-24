@@ -1,5 +1,5 @@
 import { fraction } from '@rythmes/core'
-import type { Exercise } from '../../types'
+import type { Exercise } from '@rythmes/syllabus'
 import {
   clic,
   enDeux,
@@ -33,7 +33,7 @@ const NOIRE = fraction(1, 4)
  * précaution de façade : à ce stade, nommer serait déjà enseigner. On demande
  * de compter et de comparer, pas de qualifier.
  */
-export const DIAGNOSTIC: readonly Exercise[] = [
+export const EXERCISES: readonly Exercise[] = [
   {
     kind: 'frappe',
     id: '00-tenir',

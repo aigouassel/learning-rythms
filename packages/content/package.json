@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "@rythmes/core": "workspace:^",
-    "@rythmes/notation": "workspace:^"
+    "@rythmes/notation": "workspace:^",
+    "@rythmes/syllabus": "workspace:^"
   },
   "devDependencies": {
     "@types/node": "^26.6.2"

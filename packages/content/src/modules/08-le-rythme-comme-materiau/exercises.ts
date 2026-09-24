@@ -1,5 +1,5 @@
 import { fraction, meter } from '@rythmes/core'
-import type { Exercise } from '../../types'
+import type { Exercise } from '@rythmes/syllabus'
 import {
   augmente,
   boucle,

@@ -8,7 +8,7 @@ import type { Fraction, Meter, Pattern, Style, Voice } from '@rythmes/core'
  * module 0. Une erreur de rédaction devient un test rouge plutôt qu'une
  * impasse découverte en naviguant.
  */
-export type Module = {
+export type ModuleRedige = {
   readonly number: number
   readonly slug: string
   readonly title: string
@@ -16,7 +16,20 @@ export type Module = {
   readonly requires: readonly number[]
   /** Les répertoires qui **démontrent** le concept, pas ceux qui l'illustrent. */
   readonly styles: readonly Style[]
-  /** Les termes que ce module installe — les slugs du lexique. */
+}
+
+/**
+ * Un module, tel que le cours assemblé le présente.
+ *
+ * `introduces` n'est pas rédigé : il se déduit du lexique que la lib du module
+ * porte. Avant que chaque module ait son paquet, la liste des slugs était
+ * saisie à la main *et* chaque terme déclarait son module d'origine — deux
+ * écritures de la même chose, qu'un contrôle de cohérence devait comparer.
+ * Faire tenir les deux au même endroit rend ce désaccord impossible à écrire,
+ * ce qui vaut mieux qu'un test qui l'attrape.
+ */
+export type Module = ModuleRedige & {
+  /** Les termes que ce module installe — les slugs de son lexique. */
   readonly introduces: readonly string[]
 }
 
@@ -28,7 +41,7 @@ export type Module = {
  * qui commencerait par la définition formelle trahirait ce principe au seul
  * endroit où l'on vient chercher un mot qu'on ne possède pas encore.
  */
-export type Term = {
+export type TermeRedige = {
   readonly slug: string
   readonly nom: string
   /** Les synonymes d'usage — *anacrouse* et *levée* désignent la même chose. */
@@ -36,7 +49,6 @@ export type Term = {
   /** Ce que ça fait à l'oreille, avant d'avoir un nom. */
   readonly sensation: string
   readonly definition: string
-  readonly introduitAu: number
   /**
    * Le mot existe aussi en français ordinaire.
    *
@@ -53,6 +65,30 @@ export type Term = {
   /** Les voisins, et surtout ceux avec lesquels on le confond. */
   readonly voirAussi?: readonly string[]
   readonly style?: Style
+}
+
+/**
+ * Un terme, tel que le cours assemblé le présente.
+ *
+ * `introduitAu` vient de la lib qui porte le terme : un terme écrit dans
+ * `modules/03-les-durees` est introduit au module 3, et ne peut pas prétendre
+ * le contraire.
+ */
+export type Term = TermeRedige & {
+  readonly introduitAu: number
+}
+
+/**
+ * Ce qu'une lib de module expose — le contrat entre un module et l'agrégat.
+ *
+ * La prose n'en fait pas partie : un `.mdx` demande un compilateur que les
+ * tests n'ont pas, et l'application l'importe donc directement depuis la lib.
+ * Ici ne passe que ce qui est vérifiable sans navigateur.
+ */
+export type ModuleDuCours = {
+  readonly module: ModuleRedige
+  readonly termes: readonly TermeRedige[]
+  readonly exercices: readonly Exercise[]
 }
 
 type Commun = {

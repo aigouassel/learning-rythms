@@ -1,5 +1,5 @@
 import { fraction } from '@rythmes/core'
-import type { Exercise } from '../../types'
+import type { Exercise } from '@rythmes/syllabus'
 import {
   cinqHuitCourt,
   cinqHuitLong,

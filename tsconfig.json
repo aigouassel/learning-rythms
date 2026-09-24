@@ -1,11 +1,26 @@
 {
   "files": [],
   "references": [
-    { "path": "./packages/core" },
-    { "path": "./packages/notation" },
-    { "path": "./packages/engine" },
-    { "path": "./packages/scoring" },
-    { "path": "./packages/content" },
-    { "path": "./apps/web" }
+    {
+      "path": "./packages/core"
+    },
+    {
+      "path": "./packages/notation"
+    },
+    {
+      "path": "./packages/engine"
+    },
+    {
+      "path": "./packages/scoring"
+    },
+    {
+      "path": "./packages/syllabus"
+    },
+    {
+      "path": "./packages/content"
+    },
+    {
+      "path": "./apps/web"
+    }
   ]
 }

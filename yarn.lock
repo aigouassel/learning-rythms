@@ -714,6 +714,7 @@ __metadata:
   dependencies:
     "@rythmes/core": "workspace:^"
     "@rythmes/notation": "workspace:^"
+    "@rythmes/syllabus": "workspace:^"
     "@types/node": "npm:^26.6.2"
   languageName: unknown
   linkType: soft
@@ -746,6 +747,14 @@ __metadata:
   dependencies:
     "@rythmes/core": "workspace:^"
     "@rythmes/notation": "workspace:^"
+  languageName: unknown
+  linkType: soft
+
+"@rythmes/syllabus@workspace:^, @rythmes/syllabus@workspace:packages/syllabus":
+  version: 0.0.0-use.local
+  resolution: "@rythmes/syllabus@workspace:packages/syllabus"
+  dependencies:
+    "@rythmes/core": "workspace:^"
   languageName: unknown
   linkType: soft
 

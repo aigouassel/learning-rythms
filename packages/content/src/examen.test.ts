@@ -7,7 +7,7 @@ import {
   strates,
   TAILLE_DU_CONTROLE,
   vivier,
-} from './examen'
+} from './index'
 
 /**
  * Deux cents graines : assez pour que les propriétés énoncées valent comme

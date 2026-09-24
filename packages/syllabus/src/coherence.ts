@@ -1,7 +1,5 @@
 import { isWellFormed, measureLength, toNumber, type Pattern } from '@rythmes/core'
-import { LEXIQUE } from './lexique'
-import { MODULES } from './modules'
-import type { Contrainte, Exercise } from './types'
+import type { Contrainte, Exercise, Module, Term } from './types'
 
 /**
  * Les vérifications de cohérence du cours.
@@ -10,10 +8,15 @@ import type { Contrainte, Exercise } from './types'
  * attrapent les fautes qu'on commet en écrivant du contenu par morceaux, et
  * qu'aucune relecture ne voit passer — un prérequis qui boucle, un module
  * devenu inatteignable, un mot employé trois modules avant d'être défini.
+ *
+ * Chacun reçoit les données qu'il examine plutôt que de les lire dans une
+ * globale : c'est ce qui permet à ce paquet de ne dépendre d'aucun module, donc
+ * aux modules de dépendre de lui. `assembleCours` fait la liaison, et les
+ * appelants retrouvent des fonctions sans argument de données.
  */
 
 /** Les modules qui participent à un cycle de prérequis. */
-export function cycles(): readonly number[][] {
+export function cycles(modules: readonly Module[]): readonly number[][] {
   const trouves: number[][] = []
   const etat = new Map<number, 'en-cours' | 'fini'>()
 
@@ -24,24 +27,24 @@ export function cycles(): readonly number[][] {
       return
     }
     etat.set(n, 'en-cours')
-    for (const p of MODULES.find((m) => m.number === n)?.requires ?? []) {
+    for (const p of modules.find((m) => m.number === n)?.requires ?? []) {
       visiter(p, [...chemin, n])
     }
     etat.set(n, 'fini')
   }
 
-  for (const m of MODULES) visiter(m.number, [])
+  for (const m of modules) visiter(m.number, [])
   return trouves
 }
 
 /** Les modules qu'aucun chemin de prérequis ne relie au module 0. */
-export function unreachable(): readonly number[] {
+export function unreachable(modules: readonly Module[]): readonly number[] {
   const atteints = new Set<number>()
   let change = true
 
   while (change) {
     change = false
-    for (const m of MODULES) {
+    for (const m of modules) {
       if (atteints.has(m.number)) continue
       if (m.requires.length === 0 || m.requires.every((r) => atteints.has(r))) {
         atteints.add(m.number)
@@ -50,50 +53,22 @@ export function unreachable(): readonly number[] {
     }
   }
 
-  return MODULES.filter((m) => !atteints.has(m.number)).map((m) => m.number)
+  return modules.filter((m) => !atteints.has(m.number)).map((m) => m.number)
 }
 
 /** Les prérequis qui désignent un module inexistant. */
-export const danglingRequires = (): readonly string[] =>
-  MODULES.flatMap((m) =>
+export const danglingRequires = (modules: readonly Module[]): readonly string[] =>
+  modules.flatMap((m) =>
     m.requires
-      .filter((r) => !MODULES.some((x) => x.number === r))
+      .filter((r) => !modules.some((x) => x.number === r))
       .map((r) => `le module ${m.number} exige le module ${r}, qui n’existe pas`),
   )
 
-/** Les désaccords entre `module.introduces` et `term.introduitAu`. */
-export function termMismatches(): readonly string[] {
-  const problemes: string[] = []
-
-  for (const m of MODULES) {
-    for (const slug of m.introduces) {
-      const terme = LEXIQUE.find((t) => t.slug === slug)
-      if (!terme) {
-        problemes.push(`le module ${m.number} annonce « ${slug} », absent du lexique`)
-      } else if (terme.introduitAu !== m.number) {
-        problemes.push(
-          `« ${slug} » est annoncé par le module ${m.number} mais se dit introduit au ${terme.introduitAu}`,
-        )
-      }
-    }
-  }
-
-  for (const t of LEXIQUE) {
-    const m = MODULES.find((x) => x.number === t.introduitAu)
-    if (!m) problemes.push(`« ${t.slug} » dit venir du module ${t.introduitAu}, qui n’existe pas`)
-    else if (!m.introduces.includes(t.slug)) {
-      problemes.push(`« ${t.slug} » dit venir du module ${t.introduitAu}, qui ne l’annonce pas`)
-    }
-  }
-
-  return problemes
-}
-
 /** Les renvois `voirAussi` qui pointent vers un terme absent. */
-export const danglingSeeAlso = (): readonly string[] =>
-  LEXIQUE.flatMap((t) =>
+export const danglingSeeAlso = (lexique: readonly Term[]): readonly string[] =>
+  lexique.flatMap((t) =>
     (t.voirAussi ?? [])
-      .filter((s) => !LEXIQUE.some((x) => x.slug === s))
+      .filter((s) => !lexique.some((x) => x.slug === s))
       .map((s) => `« ${t.slug} » renvoie à « ${s} », absent du lexique`),
   )
 
@@ -112,7 +87,11 @@ export const danglingSeeAlso = (): readonly string[] =>
  * reformuler lève l'alerte, et la reformulation est presque toujours plus
  * claire que la phrase qui l'avait provoquée.
  */
-export function forwardReferences(texte: string, module: number): readonly string[] {
+export function forwardReferences(
+  lexique: readonly Term[],
+  texte: string,
+  module: number,
+): readonly string[] {
   const normalise = (s: string) =>
     s
       .toLowerCase()
@@ -121,7 +100,8 @@ export function forwardReferences(texte: string, module: number): readonly strin
 
   const corps = normalise(texte)
 
-  return LEXIQUE.filter((t) => t.introduitAu > module)
+  return lexique
+    .filter((t) => t.introduitAu > module)
     .filter((t) => !t.courant)
     .filter((t) =>
       [t.nom, ...(t.aussiAppele ?? [])].some((mot) =>

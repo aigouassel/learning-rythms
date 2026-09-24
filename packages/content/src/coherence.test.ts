@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest'
 import {
   cycles,
-  exerciseProblems,
   danglingRequires,
   danglingSeeAlso,
+  EXERCISES_BY_MODULE,
+  exerciseProblems,
   forwardReferences,
-  termMismatches,
+  LEXIQUE,
+  misplacedExercises,
+  MODULES,
   unreachable,
-} from './coherence'
-import { LEXIQUE } from './lexique'
-import { MODULES } from './modules'
-import { EXERCISES_BY_MODULE } from './registry'
+} from './index'
 
 describe('le graphe du cours', () => {
   it('ne boucle pas', () => {
@@ -41,10 +41,21 @@ describe('le graphe du cours', () => {
   })
 })
 
-describe('le lexique', () => {
-  it('s’accorde avec les modules sur qui introduit quoi', () => {
-    expect(termMismatches()).toEqual([])
+describe('le découpage en libs', () => {
+  it('ne laisse aucun exercice dans le module d’un autre', () => {
+    // Une lib porte ses exercices, et chaque exercice porte son numéro de
+    // module : la jointure que le découpage a créée, et que rien dans les types
+    // ne contraint.
+    expect(misplacedExercises()).toEqual([])
   })
+})
+
+describe('le lexique', () => {
+  // Le désaccord entre « le module annonce ce terme » et « le terme dit venir
+  // de ce module » n'a plus de test parce qu'il n'a plus d'existence : les deux
+  // se lisent maintenant sur la même écriture, le lexique que porte la lib du
+  // module. Voir `assembleCours`.
+
 
   it('ne renvoie à aucun terme absent', () => {
     expect(danglingSeeAlso()).toEqual([])
