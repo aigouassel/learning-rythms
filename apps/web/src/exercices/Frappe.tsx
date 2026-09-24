@@ -27,16 +27,17 @@ export function FrappeMesuree({
   parTemps,
   cycles,
   avecSon,
-  cyclesSonores,
+  clicSArrete,
   voix,
 }: {
   readonly pattern: Pattern
   readonly bpm: number
   readonly parTemps: Fraction
+  /** Les passages que l'exercice propose — l'élève peut en décider autrement. */
   readonly cycles: number
   readonly avecSon: boolean
-  /** Après quoi le son se retire et la frappe continue sans lui. Tous, par défaut. */
-  readonly cyclesSonores?: number
+  /** Le son se retire à la moitié, et la frappe continue sans lui. */
+  readonly clicSArrete?: boolean
   /** Les lignes à frapper, dans l'ordre des touches. */
   readonly voix?: readonly Voice[]
 }) {
@@ -57,7 +58,10 @@ export function FrappeMesuree({
    * boucle d'animation, que l'arrière-plan gèle.
    */
   const [prepare, setPrepare] = useState(false)
+  /** Combien de mesures ont déjà passé — le repère de fin. */
+  const [faites, setFaites] = useState(0)
   const minuterieRef = useRef<number | null>(null)
+  const avanceeRef = useRef<number | null>(null)
   const preparationRef = useRef<number | null>(null)
 
   // Le motif tourne — ou se tait, en déchiffrage. Dans les deux cas le
@@ -65,7 +69,26 @@ export function FrappeMesuree({
   // étaient attendues. En déchiffrage il les connaît sans les jouer, au lieu
   // de recevoir un motif vidé de ses attaques — qui le rendait muet, mais
   // aussi incapable de dire quoi que ce soit à la correction.
-  const sonores = cyclesSonores ?? cycles
+  /**
+   * Combien de mesures dure l'exercice.
+   *
+   * L'exercice en propose un nombre ; l'élève le remplace. Tenir quatre
+   * mesures et en tenir huit ne sont pas le même travail — la dérive ne se
+   * voit qu'à la longue, et la tenue sans clic n'a de sens que si elle dure.
+   *
+   * Le choix se compte en mesures et non en passages du motif : c'est en
+   * mesures qu'on compte quand on joue. La conversion se fait ici, une fois.
+   */
+  const parCycle = toNumber(measureCount(pattern))
+  const [mesures, setMesures] = useState(cycles * parCycle)
+  const cyclesChoisis = Math.max(1, Math.round(mesures / parCycle))
+  const sonores = clicSArrete ? Math.ceil(cyclesChoisis / 2) : cyclesChoisis
+
+  /** Les durées proposées, réduites à celles que ce motif peut atteindre. */
+  const durees = useMemo(() => {
+    const voulues = new Set([2, 4, 8, cycles * parCycle])
+    return [...voulues].filter((m) => m % parCycle === 0 && m >= parCycle).sort((a, b) => a - b)
+  }, [cycles, parCycle])
 
   /**
    * Les lignes à jouer.
@@ -95,6 +118,19 @@ export function FrappeMesuree({
     countIn: 1,
   })
 
+  /**
+   * La grille juste, rejouée après coup.
+   *
+   * C'est en déchiffrage qu'elle manquait le plus : on y lit et l'on frappe
+   * dans le silence, et rien, jamais, ne faisait entendre ce qu'il fallait
+   * jouer. Un passage suffit — il s'agit de comparer, pas de recommencer.
+   *
+   * Une seconde lecture plutôt qu'un réglage de la première : celle-ci porte
+   * le décompte, le silence du déchiffrage et le retrait du clic, dont aucun
+   * n'a de sens ici.
+   */
+  const modele = useLecture({ pattern, bpm, parTemps, cycles: 1, loop: false })
+
   useEffect(() => {
     if (phase !== 'en-cours') return
     const audio = lecture.audio()
@@ -106,9 +142,16 @@ export function FrappeMesuree({
     () => () => {
       if (minuterieRef.current !== null) window.clearTimeout(minuterieRef.current)
       if (preparationRef.current !== null) window.clearTimeout(preparationRef.current)
+      if (avanceeRef.current !== null) window.clearInterval(avanceeRef.current)
     },
     [],
   )
+
+  useEffect(() => {
+    if (phase === 'en-cours') return
+    if (avanceeRef.current !== null) window.clearInterval(avanceeRef.current)
+    avanceeRef.current = null
+  }, [phase])
 
   useEffect(() => {
     if (phase !== 'finie' || attendu.length === 0) return
@@ -135,6 +178,7 @@ export function FrappeMesuree({
     // Une minuterie d'essai précédent terminerait celui-ci avant l'heure.
     if (minuterieRef.current !== null) window.clearTimeout(minuterieRef.current)
     if (preparationRef.current !== null) window.clearTimeout(preparationRef.current)
+    if (avanceeRef.current !== null) window.clearInterval(avanceeRef.current)
     vider()
     setAnalyse(null)
     const t = await lecture.demarrer()
@@ -142,7 +186,7 @@ export function FrappeMesuree({
 
     // Les attaques attendues sur tous les passages, y compris ceux que le son
     // n'accompagnera pas — et seulement celles de la voix demandée.
-    const toutes = t.expectedTimes(cycles)
+    const toutes = t.expectedTimes(cyclesChoisis)
     const n = pattern.onsets.length
     setAttendu(
       voixAFrapper.map((v) => ({
@@ -159,8 +203,8 @@ export function FrappeMesuree({
     // décompte et l'amorce du transport ; et quand le clic s'arrête en cours
     // de route, elle tombait au moment même où le son se taisait, coupant
     // l'exercice à l'endroit précis où il commençait vraiment.
-    const parCycle = secondsFor(pattern.length, tempoOf(bpm, parTemps))
-    const finie = t.origin + cycles * parCycle
+    const dureeCycle = secondsFor(pattern.length, tempoOf(bpm, parTemps))
+    const finie = t.origin + cyclesChoisis * dureeCycle
     const ctx = lecture.audio()?.ctx
     const maintenant = ctx?.currentTime ?? 0
     const reste = Math.max(0, finie - maintenant)
@@ -168,6 +212,18 @@ export function FrappeMesuree({
 
     const versOrigine = Math.max(0, t.origin - maintenant)
     preparationRef.current = window.setTimeout(() => setPrepare(false), versOrigine * 1000)
+
+    // L'avancée se lit sur l'horloge audio, et non sur la boucle d'animation
+    // que l'arrière-plan gèle : un repère de fin qui se fige est pire que pas
+    // de repère du tout.
+    const dureeMesure = dureeCycle / parCycle
+    setFaites(0)
+    avanceeRef.current = window.setInterval(() => {
+      const ctx2 = lecture.audio()?.ctx
+      if (!ctx2) return
+      const ecoule = ctx2.currentTime - t.origin
+      setFaites(Math.max(0, Math.min(mesures, Math.floor(ecoule / dureeMesure))))
+    }, 80)
   }
 
   const decompte = phase === 'en-cours' && prepare
@@ -176,11 +232,16 @@ export function FrappeMesuree({
     <div className="repondre frappe">
       <Consigne
         touches={touches}
-        mesures={cycles * toNumber(measureCount(pattern))}
-        tenirSeule={sonores < cycles}
+        mesures={mesures}
+        tenirSeule={sonores < cyclesChoisis}
       />
 
-      <Portee pattern={pattern} position={lecture.position} aFrapper={voixAFrapper} touches={touches} />
+      <Portee
+        pattern={pattern}
+        position={modele.joue ? modele.position : lecture.position}
+        aFrapper={voixAFrapper}
+        touches={touches}
+      />
 
       {!calibrationFaite() && (
         <p className="aide">
@@ -189,23 +250,69 @@ export function FrappeMesuree({
         </p>
       )}
 
+      {phase !== 'en-cours' && durees.length > 1 && (
+        <p className="duree-choisie">
+          <span>Durée :</span>
+          {durees.map((m) => (
+            <button
+              type="button"
+              key={m}
+              className={m === mesures ? 'choisie' : ''}
+              aria-pressed={m === mesures}
+              onClick={() => setMesures(m)}
+            >
+              {m} mesures
+            </button>
+          ))}
+        </p>
+      )}
+
       {phase !== 'en-cours' && (
-        <button type="button" onClick={commencer} disabled={lecture.chargement}>
-          {lecture.chargement ? 'chargement…' : analyse ? 'recommencer' : 'commencer'}
-        </button>
+        <p className="actions">
+          <button type="button" onClick={commencer} disabled={lecture.chargement}>
+            {lecture.chargement ? 'chargement…' : analyse ? 'recommencer' : 'commencer'}
+          </button>
+
+          {analyse && (
+            <button type="button" onClick={modele.basculer} disabled={modele.chargement}>
+              {modele.joue ? '⏸ la grille juste' : '▶ écouter la grille juste'}
+            </button>
+          )}
+        </p>
       )}
 
       {decompte && <p className="aide gros">Une mesure pour se préparer…</p>}
 
       {phase === 'en-cours' && !decompte && (
-        <p className="aide gros">
-          En place. {taps.length} frappe{taps.length > 1 ? 's' : ''}.
-          {sonores < cycles && !lecture.joue && ' — à toi de tenir, maintenant.'}
-        </p>
+        <>
+          <p className="aide gros">
+            En place. {taps.length} frappe{taps.length > 1 ? 's' : ''}.
+            {sonores < cyclesChoisis && !lecture.joue && ' — à toi de tenir, maintenant.'}
+          </p>
+          <Avancee faites={faites} total={mesures} />
+        </>
       )}
 
       {analyse && <Verdict analyse={analyse} />}
     </div>
+  )
+}
+
+/**
+ * Où l'on en est, et combien il reste.
+ *
+ * Un jeton par mesure, qui se remplit quand elle est passée. Sans ce repère,
+ * rien ne disait si l'exercice durait encore ou si l'on avait perdu le fil :
+ * la portée montre un passage du motif et se répète à l'identique, donc elle
+ * ne peut pas dire où l'on en est de l'ensemble.
+ */
+function Avancee({ faites, total }: { readonly faites: number; readonly total: number }) {
+  return (
+    <p className="avancee" aria-label={`mesure ${Math.min(faites + 1, total)} sur ${total}`}>
+      {Array.from({ length: total }, (_, i) => (
+        <span key={i} className={i < faites ? 'passee' : ''} />
+      ))}
+    </p>
   )
 }
 
@@ -302,7 +409,7 @@ export function ExerciceFrappe({ exercice }: { readonly exercice: Frappe }) {
       parTemps={exercice.parTemps}
       cycles={exercice.cycles}
       avecSon
-      {...(exercice.clicSArrete ? { cyclesSonores: Math.ceil(exercice.cycles / 2) } : {})}
+      {...(exercice.clicSArrete ? { clicSArrete: true } : {})}
       {...(exercice.voix ? { voix: exercice.voix } : {})}
     />
   )

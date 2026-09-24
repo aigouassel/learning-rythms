@@ -631,6 +631,54 @@ kbd {
   white-space: nowrap;
 }
 
+/* Le choix de durée, avant de commencer. */
+.duree-choisie {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+  font-size: 0.85rem;
+  color: var(--doux);
+}
+
+.duree-choisie button.choisie {
+  border-color: var(--encre);
+  background: var(--encre);
+  color: var(--papier);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0 0;
+}
+
+/* Un jeton par mesure : le repère de fin.
+
+   La portée montre un passage du motif et se répète à l'identique — elle ne
+   peut donc pas dire où l'on en est de l'ensemble. Ces jetons le disent d'un
+   coup d'œil, sans qu'il faille lire un chiffre au milieu d'un exercice qui
+   demande déjà de compter. */
+.avancee {
+  display: flex;
+  gap: 0.4rem;
+  margin: 0.4rem 0 0;
+}
+
+.avancee span {
+  width: 0.7rem;
+  height: 0.7rem;
+  border: 1px solid var(--trait);
+  border-radius: 50%;
+}
+
+.avancee span.passee {
+  border-color: var(--appui);
+  background: var(--appui);
+}
+
 /* La ligne qu'on ne joue pas reste écrite, mais s'efface.
 
    En retrait plutôt qu'absente : voir le charleston aide à se situer dans la
